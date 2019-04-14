@@ -198,6 +198,9 @@ function hitBomb (player, bomb)
 
     player.anims.play('turn');
 
+    const playerName = prompt("Bra jobba! Skriv inn fullt navn:");
+    localStorage.setItem(playerName, score);
+
     gameOver = true;
 }
 
