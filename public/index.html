@@ -2,7 +2,7 @@
 <html lang="en"> 
 <head> 
     <meta charset="UTF-8" />
-    <title>Assets showcase</title>
+    <title>Clave Platformer</title>
     <script src="//cdn.jsdelivr.net/npm/phaser@3.11.0/dist/phaser.js"></script>
     <style type="text/css">
         body {
@@ -198,11 +198,31 @@ function hitBomb (player, bomb)
 
     player.anims.play('turn');
 
-    const playerName = prompt("Bra jobba! Skriv inn fullt navn:");
-    localStorage.setItem(playerName, score);
+    recordHighScore();
 
     gameOver = true;
 }
+
+const recordHighScore = () => {
+
+    let highScoreArray = JSON.parse(localStorage.getItem("highScoreArray"));
+
+    if (highScoreArray === null || highScoreArray === undefined) {
+        highScoreArray = [];
+    }
+
+    const playerName = prompt("Bra jobba! Skriv inn fullt navn:");
+
+    const gameRecord = {
+      player: playerName,
+      playerScore: score
+    };
+
+    highScoreArray.push(gameRecord);
+
+    localStorage.setItem("highScoreArray", JSON.stringify(highScoreArray));
+
+};
 
 </script>
 
