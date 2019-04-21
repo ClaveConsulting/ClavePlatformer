@@ -200,6 +200,8 @@ function hitBomb (player, bomb)
 
     recordHighScore();
 
+    printHighScoreToScreen(this);
+
     gameOver = true;
 }
 
@@ -220,8 +222,41 @@ const recordHighScore = () => {
 
     highScoreArray.push(gameRecord);
 
+    highScoreArray.sort(compareGameRecords);
+
+    if(highScoreArray.length > 15) {
+        highScoreArray.pop()
+    }
+
     localStorage.setItem("highScoreArray", JSON.stringify(highScoreArray));
 
+};
+
+const printHighScoreToScreen = (context) => {
+    //context er 'this' i parent
+
+    let highScoreArray = JSON.parse(localStorage.getItem("highScoreArray"));
+
+    highScoreText = context.add.text(300, 60, 'HIGH SCORE', {fontSize: '40px', fill: '#000'});
+
+    let yPos = 130;
+
+    highScoreArray.forEach(function(gameRecord) {
+            highScoreText = context.add.text(120, yPos, gameRecord.player +': ', {fontSize: '32px', fill: '#000'});
+            highScoreText = context.add.text(600, yPos, gameRecord.playerScore, {fontSize: '32px', fill: '#000'});
+            yPos += 30;
+        }
+    );
+};
+
+const compareGameRecords = (a, b) => {
+    if(a.playerScore < b.playerScore){
+        return 1;
+    }
+    if(a.playerScore > b.playerScore){
+        return -1;
+    }
+    return 0
 };
 
 </script>
