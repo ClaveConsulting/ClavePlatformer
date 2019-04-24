@@ -199,10 +199,10 @@
 
         const recordHighScore = () => {
 
-            let highScoreArray = JSON.parse(localStorage.getItem("highScoreArray"));
+            let highScoreArrayAssetsShowcase = JSON.parse(localStorage.getItem("highScoreArrayAssetsShowcase"));
 
-            if (highScoreArray === null || highScoreArray === undefined) {
-                highScoreArray = [];
+            if (highScoreArrayAssetsShowcase === null || highScoreArrayAssetsShowcase === undefined) {
+                highScoreArrayAssetsShowcase = [];
             }
 
             const playerName = prompt("Bra jobba! Skriv inn fullt navn:");
@@ -212,34 +212,33 @@
                 playerScore: score
             };
 
-            highScoreArray.push(gameRecord);
+            highScoreArrayAssetsShowcase.push(gameRecord);
 
-            highScoreArray.sort(compareGameRecords);
+            highScoreArrayAssetsShowcase.sort(compareGameRecords);
 
-            if (highScoreArray.length > 15) {
-                highScoreArray.pop()
+            if (highScoreArrayAssetsShowcase.length > 15) {
+                highScoreArrayAssetsShowcase.pop()
             }
 
-            localStorage.setItem("highScoreArray", JSON.stringify(highScoreArray));
+            localStorage.setItem("highScoreArrayAssetsShowcase", JSON.stringify(highScoreArrayAssetsShowcase));
 
         };
 
         const printHighScoreToScreen = (context) => {
             //context er 'this' i parent
 
-            let highScoreArray = JSON.parse(localStorage.getItem("highScoreArray"));
+            let highScoreArrayAssetsShowcase = JSON.parse(localStorage.getItem("highScoreArrayAssetsShowcase"));
 
             highScoreText = context.add.text(300, 60, 'HIGH SCORE', { fontSize: '40px', fill: '#000' })
-                .setScrollFactor(0);;
-
+                .setScrollFactor(0);
             let yPos = 130;
 
-            highScoreArray.forEach(function (gameRecord) {
+            highScoreArrayAssetsShowcase.forEach(function (gameRecord) {
                 highScoreText = context.add.text(120, yPos, gameRecord.player + ': ', { fontSize: '32px', fill: '#000' })
-                    .setScrollFactor(0);;
-                highScoreText = context.add.text(600, yPos, gameRecord.playerScore, { fontSize: '32px', fill: '#000' })
-                    .setScrollFactor(0);;
-                yPos += 30;
+                    .setScrollFactor(0);
+                    highScoreText = context.add.text(600, yPos, gameRecord.playerScore, { fontSize: '32px', fill: '#000' })
+                        .setScrollFactor(0);
+                    yPos += 30;
             }
             );
         };
