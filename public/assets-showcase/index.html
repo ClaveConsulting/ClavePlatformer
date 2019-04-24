@@ -229,6 +229,10 @@
 
             let highScoreArrayAssetsShowcase = JSON.parse(localStorage.getItem("highScoreArrayAssetsShowcase"));
 
+            if (highScoreArrayAssetsShowcase === null || highScoreArrayAssetsShowcase === undefined) {
+                highScoreArrayAssetsShowcase = [];
+            }
+
             highScoreText = context.add.text(300, 60, 'HIGH SCORE', { fontSize: '40px', fill: '#000' })
                 .setScrollFactor(0);
             let yPos = 130;

@@ -246,6 +246,10 @@ const printHighScoreToScreen = (context) => {
 
     let highScoreArray = JSON.parse(localStorage.getItem("highScoreArray"));
 
+    if (highScoreArray === null || highScoreArray === undefined) {
+        highScoreArray = [];
+    }
+
     highScoreText = context.add.text(300, 60, 'HIGH SCORE', {fontSize: '40px', fill: '#000'});
 
     let yPos = 130;
