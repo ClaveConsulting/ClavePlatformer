@@ -42,6 +42,9 @@
         var score = 0;
         var gameOver = false;
         var scoreText;
+        var keyboardInput;
+        var spaceKey;
+        var highScoreText;
 
         var game = new Phaser.Game(config);
 
@@ -86,12 +89,14 @@
 
             //  Input Events
             cursors = this.input.keyboard.createCursorKeys();
+            keyboardInput = this.input.keyboard.addKeys('H');
+            spaceKey = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.SPACE);
 
             //  Some stars to collect, 12 in total, evenly spaced 70 pixels apart along the x axis
             stars = this.physics.add.group({
                 key: 'star',
                 repeat: 11,
-                setXY: { x: 12, y: 0, stepX: 70 }
+                setXY: { x: 25, y: 0, stepX: 170 }
             });
 
             stars.children.iterate(function (child) {
@@ -118,11 +123,11 @@
             //  Checks to see if the player overlaps with any of the stars, if he does call the collectStar function
             this.physics.add.overlap(player, stars, collectStar, null, this);
             this.physics.add.collider(player, bombs, hitBomb, null, this);
-            
+
             this.cameras.main.startFollow(player, true, 0.3, 0.3);
             this.cameras.main.setBounds(0, 0, map.widthInPixels, map.heightInPixels);
             this.physics.world.setBounds(0, 0, map.widthInPixels, map.heightInPixels, true, true, true, true);
-            
+
         }
 
         function update() {
@@ -142,8 +147,12 @@
                 player.setVelocityX(0);
             }
 
-            if (cursors.space.isDown && player.body.blocked.down) {
+            if (spaceKey.isDown && player.body.blocked.down) {
                 player.setVelocityY(-350);
+            }
+
+            if (Phaser.Input.Keyboard.JustDown(keyboardInput.H)) {
+                printHighScoreToScreen(this);
             }
         }
 
@@ -180,8 +189,70 @@
 
             player.anims.play('turn');
 
+            recordHighScore();
+
+            printHighScoreToScreen(this);
+
+
             gameOver = true;
         }
+
+        const recordHighScore = () => {
+
+            let highScoreArray = JSON.parse(localStorage.getItem("highScoreArray"));
+
+            if (highScoreArray === null || highScoreArray === undefined) {
+                highScoreArray = [];
+            }
+
+            const playerName = prompt("Bra jobba! Skriv inn fullt navn:");
+
+            const gameRecord = {
+                player: playerName,
+                playerScore: score
+            };
+
+            highScoreArray.push(gameRecord);
+
+            highScoreArray.sort(compareGameRecords);
+
+            if (highScoreArray.length > 15) {
+                highScoreArray.pop()
+            }
+
+            localStorage.setItem("highScoreArray", JSON.stringify(highScoreArray));
+
+        };
+
+        const printHighScoreToScreen = (context) => {
+            //context er 'this' i parent
+
+            let highScoreArray = JSON.parse(localStorage.getItem("highScoreArray"));
+
+            highScoreText = context.add.text(300, 60, 'HIGH SCORE', { fontSize: '40px', fill: '#000' })
+                .setScrollFactor(0);;
+
+            let yPos = 130;
+
+            highScoreArray.forEach(function (gameRecord) {
+                highScoreText = context.add.text(120, yPos, gameRecord.player + ': ', { fontSize: '32px', fill: '#000' })
+                    .setScrollFactor(0);;
+                highScoreText = context.add.text(600, yPos, gameRecord.playerScore, { fontSize: '32px', fill: '#000' })
+                    .setScrollFactor(0);;
+                yPos += 30;
+            }
+            );
+        };
+
+        const compareGameRecords = (a, b) => {
+            if (a.playerScore < b.playerScore) {
+                return 1;
+            }
+            if (a.playerScore > b.playerScore) {
+                return -1;
+            }
+            return 0
+        };
 
     </script>
 </body>
