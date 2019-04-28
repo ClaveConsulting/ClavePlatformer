@@ -148,7 +148,7 @@
             }
 
             if (spaceKey.isDown && player.body.blocked.down) {
-                player.setVelocityY(-350);
+                player.setVelocityY(-400);
             }
 
             if (Phaser.Input.Keyboard.JustDown(keyboardInput.H)) {
@@ -171,13 +171,16 @@
 
                 });
 
-                var x = (player.x < 400) ? Phaser.Math.Between(400, 800) : Phaser.Math.Between(0, 400);
-
-                var bomb = bombs.create(x, 16, 'bomb');
-                bomb.setBounce(1);
-                bomb.setCollideWorldBounds(true);
-                bomb.setVelocity(Phaser.Math.Between(-200, 200), 20);
-                bomb.allowGravity = false;
+                //make 2 bombs//
+                const numberOfBombsSpawned = 2;
+                for (var i = 0; i < numberOfBombsSpawned; i++) {
+                    var x =  Phaser.Math.Between(0, 2080);
+                    var bomb = bombs.create(x, 16, 'bomb');
+                    bomb.setBounce(1);
+                    bomb.setCollideWorldBounds(true);
+                    bomb.setVelocity(Phaser.Math.Between(-200, 200), 20);
+                    bomb.allowGravity = false;
+                }
 
             }
         }
