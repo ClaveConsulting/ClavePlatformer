@@ -16,6 +16,7 @@ var button;
 var counterText;
 var counter = 0;
 var timedEvent;
+var finishline;
 
 export default class uio{
     preload() {
@@ -25,6 +26,7 @@ export default class uio{
         this.load.image('bomb', 'assets/uio/bomb.png');
         this.load.image('ball', 'assets/uio/ball.png');
         this.load.image('sky', 'assets/uio/sky.png');
+        this.load.image('finishLine', 'assets/uio/finishLine.png');
         this.load.spritesheet('dude', 'assets/uio/dude-1.png', { frameWidth: 32, frameHeight: 42 });
     }
     
@@ -32,7 +34,7 @@ export default class uio{
 
 
         this.add.image(0, 0, 'sky');
-    
+
         var map = this.make.tilemap({ key: "map", tileWidth: 32, tileHeight: 32 });
         var tileset = map.addTilesetImage('tileset', 'tileset');
         var background = map.createStaticLayer('background', tileset, 0, 0);
@@ -82,6 +84,11 @@ export default class uio{
         bombs = this.physics.add.group();
         balls = this.physics.add.group();
 
+        // Adding finishline
+        finishline = this.physics.add.image(1500, 30, 'finishLine');
+
+
+
         //  The score
         scoreText = this.add.text(16, 16, 'CLAVE CREDITS: 0',
             {
@@ -92,6 +99,7 @@ export default class uio{
             })
             .setScrollFactor(0);
         //  Collide the player and the stars with the ground
+        this.physics.add.collider(finishline, ground);
         this.physics.add.collider(player, ground);
         this.physics.add.collider(stars, ground);
         this.physics.add.collider(bombs, ground);
@@ -103,6 +111,9 @@ export default class uio{
 
         // See if ball overlaps with bomb
         this.physics.add.overlap(bombs, balls, hitBombBall, null, this);
+
+        // Checks to see if player is at finishline
+        this.physics.add.overlap(player, finishline, crossedFinishline, null, this);
     
         this.cameras.main.startFollow(player, true, 0.3, 0.3);
         this.cameras.main.setBounds(0, 0, map.widthInPixels, map.heightInPixels);
@@ -145,6 +156,11 @@ export default class uio{
             .setScrollFactor(0);
 
             timedEvent = this.time.addEvent({delay: 1000, callback: updateCounter, callbackScope: this, loop: true});
+
+
+
+
+
     }
     
     update() {
@@ -179,6 +195,21 @@ export default class uio{
         }
 
     }
+}
+
+function crossedFinishline() {
+    this.physics.pause();
+
+    player.setTint(0xff0000);
+
+    player.anims.play('turn');
+
+    recordHighScore();
+
+    printHighScoreToScreen(this);
+
+
+    gameOver = true;
 }
 
 function updateCounter() {
