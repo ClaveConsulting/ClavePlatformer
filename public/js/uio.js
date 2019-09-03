@@ -122,6 +122,13 @@ export default class uio{
             gameOver=false;
             score =0;
         });
+        button.on('pointerover', () => {
+            button.setBackgroundColor("#0f0");
+        });
+        button.on('pointerout', () => {
+            button.setBackgroundColor("#fff");
+        });
+
 
     }
     
