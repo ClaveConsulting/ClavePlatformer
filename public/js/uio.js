@@ -12,6 +12,7 @@ var spaceKey;
 var highScoreText;
 var balls;
 var direction;
+var button;
 
 export default class uio{
     preload() {
@@ -25,6 +26,7 @@ export default class uio{
     }
     
     create() {
+
 
         this.add.image(0, 0, 'sky');
     
@@ -66,7 +68,7 @@ export default class uio{
         stars = this.physics.add.group({
             key: 'star',
             repeat: 11,
-            setXY: { x: 25, y: 0, stepX: 170 }
+            setXY: { x: 100, y: 0, stepX: 170 }
         });
     
         stars.children.iterate(function (child) {
@@ -102,7 +104,25 @@ export default class uio{
         this.cameras.main.startFollow(player, true, 0.3, 0.3);
         this.cameras.main.setBounds(0, 0, map.widthInPixels, map.heightInPixels);
         this.physics.world.setBounds(0, 0, map.widthInPixels, map.heightInPixels, true, true, true, true);
-    
+
+
+        // New Game Button
+        button = this.add.text(250, 16, 'New Game',
+            {
+                font: "18px monospace",
+                fill: "#000000",
+                padding: { x: 20, y: 10 },
+                backgroundColor: "#ffffff"
+            })
+            .setScrollFactor(0);
+
+        button.setInteractive();
+        button.on('pointerdown', () => {
+            this.scene.restart();
+            gameOver=false;
+            score =0;
+        });
+
     }
     
     update() {
@@ -138,6 +158,7 @@ export default class uio{
 
     }
 }
+
 
 function throwBall() {
     var ball = balls.create(player.x,player.y,'ball');
@@ -182,6 +203,7 @@ function collectStar(player, star) {
 
     }
 }
+
 
 function hitBomb(player, bomb) {
     this.physics.pause();
