@@ -13,6 +13,9 @@ var highScoreText;
 var balls;
 var direction;
 var button;
+var counterText;
+var counter = 0;
+var timedEvent;
 
 export default class uio{
     preload() {
@@ -121,6 +124,7 @@ export default class uio{
             this.scene.restart();
             gameOver=false;
             score =0;
+            counter = 0;
         });
         button.on('pointerover', () => {
             button.setBackgroundColor("#0f0");
@@ -130,6 +134,17 @@ export default class uio{
         });
 
 
+        // TIMER
+        counterText = this.add.text(400, 16, 'Time: 0',
+            {
+                font: "18px monospace",
+                fill: "#000000",
+                padding: { x: 20, y: 10 },
+                backgroundColor: "#ffffff"
+            })
+            .setScrollFactor(0);
+
+            timedEvent = this.time.addEvent({delay: 1000, callback: updateCounter, callbackScope: this, loop: true});
     }
     
     update() {
@@ -166,6 +181,10 @@ export default class uio{
     }
 }
 
+function updateCounter() {
+    counter++;
+    counterText.setText('Time: ' + counter + 'S');
+}
 
 function throwBall() {
     var ball = balls.create(player.x,player.y,'ball');
