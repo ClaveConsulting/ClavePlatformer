@@ -7,8 +7,11 @@ var score = 0;
 var gameOver = false;
 var scoreText;
 var keyboardInput;
+var keyboardInputC;
 var spaceKey;
 var highScoreText;
+var balls;
+var direction;
 
 export default class uio{
     preload() {
@@ -16,11 +19,13 @@ export default class uio{
         this.load.image('tileset', 'assets/uio/tileset.png');
         this.load.image('star', 'assets/uio/star.png');
         this.load.image('bomb', 'assets/uio/bomb.png');
+        this.load.image('ball', 'assets/uio/ball.png');
         this.load.image('sky', 'assets/uio/sky.png');
         this.load.spritesheet('dude', 'assets/uio/dude-1.png', { frameWidth: 32, frameHeight: 42 });
     }
     
     create() {
+
         this.add.image(0, 0, 'sky');
     
         var map = this.make.tilemap({ key: "map", tileWidth: 32, tileHeight: 32 });
@@ -35,7 +40,8 @@ export default class uio{
         player.setCollideWorldBounds(true);
         player.onWorldBounds = true;
         player.setBounce(0.1);
-    
+
+
         this.anims.create({
             key: 'left',
             frames: this.anims.generateFrameNumbers('dude', { start: 4, end: 5 }),
@@ -53,6 +59,7 @@ export default class uio{
         //  Input Events
         cursors = this.input.keyboard.createCursorKeys();
         keyboardInput = this.input.keyboard.addKeys('H');
+        keyboardInputC = this.input.keyboard.addKeys('C');
         spaceKey = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.SPACE);
     
         //  Some stars to collect, 12 in total, evenly spaced 70 pixels apart along the x axis
@@ -68,7 +75,8 @@ export default class uio{
         });
     
         bombs = this.physics.add.group();
-    
+        balls = this.physics.add.group();
+
         //  The score
         scoreText = this.add.text(16, 16, 'CLAVE CREDITS: 0',
             {
@@ -82,10 +90,14 @@ export default class uio{
         this.physics.add.collider(player, ground);
         this.physics.add.collider(stars, ground);
         this.physics.add.collider(bombs, ground);
+
     
         //  Checks to see if the player overlaps with any of the stars, if he does call the collectStar function
         this.physics.add.overlap(player, stars, collectStar, null, this);
         this.physics.add.collider(player, bombs, hitBomb, null, this);
+
+        // See if ball overlaps with bomb
+        this.physics.add.overlap(bombs, balls, hitBombBall, null, this);
     
         this.cameras.main.startFollow(player, true, 0.3, 0.3);
         this.cameras.main.setBounds(0, 0, map.widthInPixels, map.heightInPixels);
@@ -101,10 +113,12 @@ export default class uio{
         if (cursors.left.isDown) {
             player.setVelocityX(-260);
             player.anims.play('left', true);
+            direction = 'left';
         }
         else if (cursors.right.isDown) {
             player.setVelocityX(260);
             player.anims.play('right', true);
+            direction = 'right';
         } else {
             player.anims.stop();
             player.setVelocityX(0);
@@ -117,10 +131,28 @@ export default class uio{
         if (Phaser.Input.Keyboard.JustDown(keyboardInput.H)) {
             printHighScoreToScreen(this);
         }
+
+        if (Phaser.Input.Keyboard.JustDown(keyboardInputC.C)) {
+            throwBall();
+        }
+
     }
 }
 
+function throwBall() {
+    var ball = balls.create(player.x,player.y,'ball');
+    if(direction === 'right'){
+        ball.setVelocity(1000, -200);
+    }
+    if(direction === 'left'){
+        ball.setVelocity(-1000, -200);
+    }
+}
 
+function hitBombBall(bomb, ball){
+    bomb.disableBody(true, true);
+    ball.disableBody(true, true);
+}
 
 function collectStar(player, star) {
     star.disableBody(true, true);
