@@ -91,8 +91,8 @@ export default class uio{
         balls = this.physics.add.group();
 
         // Adding finishline at end of the map
-        finishline = this.physics.add.image(map.widthInPixels - 30, 30, 'finishLine');
-        // finishline = this.physics.add.image(500, 30, 'finishLine');
+        // finishline = this.physics.add.image(map.widthInPixels - 30, 30, 'finishLine');
+        finishline = this.physics.add.image(500, 30, 'finishLine');
 
 
 
@@ -105,6 +105,7 @@ export default class uio{
                 backgroundColor: "#ffffff"
             })
             .setScrollFactor(0);
+
 
         //  Collide the player and the stars with the ground
         this.physics.add.collider(finishline, ground);
@@ -206,20 +207,28 @@ export default class uio{
 }
 
 function crossedFinishline() {
-    this.physics.pause();
 
-    timedEvent.destroy();
+    if(starsRemaining === 0){
 
-    player.setTint(0xff0000);
+        this.physics.pause();
 
-    player.anims.play('turn');
+        timedEvent.destroy();
 
-    recordTime();
+        player.setTint(0xff0000);
 
-    printTime(this);
+        player.anims.play('turn');
 
+        recordTime();
 
-    gameOver = true;
+        printTime(this);
+
+        gameOver = true;
+    } else{
+        scoreText.setBackgroundColor('#f00');
+        this.time.addEvent({delay: 500, callback: ()=> {scoreText.setBackgroundColor('#fff')} });
+
+    }
+
 }
 
 function updateCounter() {
@@ -289,7 +298,7 @@ const recordTime = () => {
 
     timeArrayAssetsShowcase.push(gameRecord);
 
-    timeArrayAssetsShowcase.sort(compareGameRecords);
+    timeArrayAssetsShowcase.sort(compareGameRecordsTime);
 
     if (timeArrayAssetsShowcase.length > 15) {
         timeArrayAssetsShowcase.pop()
