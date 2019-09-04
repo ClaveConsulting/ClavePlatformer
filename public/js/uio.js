@@ -17,6 +17,7 @@ var counterText;
 var counter = 0;
 var timedEvent;
 var finishline;
+const numberOfStars = 10;
 
 export default class uio{
     preload() {
@@ -69,12 +70,15 @@ export default class uio{
         keyboardInputC = this.input.keyboard.addKeys('C');
         spaceKey = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.SPACE);
     
-        //  Some stars to collect, 12 in total, evenly spaced 70 pixels apart along the x axis
+        //  Some stars to collect
+        var spacing = new Phaser.Math.RandomDataGenerator();
+
         stars = this.physics.add.group({
             key: 'star',
-            repeat: 11,
-            setXY: { x: 100, y: 0, stepX: 170 }
+            repeat: numberOfStars,
+            setXY: { x: 100, y: 0, stepX: spacing.between(150,300) }
         });
+
     
         stars.children.iterate(function (child) {
             child.setBounceY(Phaser.Math.FloatBetween(0.4, 0.8));
@@ -339,3 +343,8 @@ const compareGameRecords = (a, b) => {
     }
     return 0
 };
+
+/*
+    NOTE: Collect all stars to finish ??
+
+ */
