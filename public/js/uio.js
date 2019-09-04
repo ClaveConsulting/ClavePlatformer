@@ -47,8 +47,6 @@ export default class uio{
         var ground = map.createStaticLayer('ground', tileset, 0, 0);
 
 
-
-
         //Before you can use the collide function you need to set what tiles can collide
         map.setCollisionBetween(1, 100, true, 'ground');
         
@@ -66,8 +64,6 @@ export default class uio{
 
         foreground.setTileIndexCallback(deadlyTiles, deadlyTileHit, this);
 
-
-        // foreground.setTileLocationCallback(120,18,64,32,deadlyTileHit,this,foreground);
 
         this.anims.create({
             key: 'left',
@@ -188,7 +184,15 @@ export default class uio{
             timedEvent = this.time.addEvent({delay: 1000, callback: updateCounter, callbackScope: this, loop: true});
 
 
-
+        const numberOfBombsSpawned = 2;
+        for (var i = 0; i < numberOfBombsSpawned; i++) {
+            var x =  Phaser.Math.Between(0, 2080);
+            var bomb = bombs.create(x, 16, 'bomb');
+            bomb.setBounce(1);
+            bomb.setCollideWorldBounds(true);
+            bomb.setVelocity(Phaser.Math.Between(-200, 200), 20);
+            bomb.allowGravity = false;
+        }
 
 
     }
@@ -389,19 +393,24 @@ const compareGameRecordsTime = (a, b) => {
 };
 
 
-
-// ------------------------------------------------------- OLD --------------------------------------------------
 function hitBomb(player, bomb) {
     this.physics.pause();
+
+    timedEvent.destroy();
 
     player.setTint(0xff0000);
 
     player.anims.play('turn');
 
-    recordHighScore();
-
-    printHighScoreToScreen(this);
-
+    // "New "Game" Button
+    gameOverText = this.add.text(300, 300, 'GAME OVER',
+        {
+            font: "18px monospace",
+            fill: "#000000",
+            padding: { x: 20, y: 10 },
+            backgroundColor: "#f00"
+        })
+        .setScrollFactor(0);
 
     gameOver = true;
 }
