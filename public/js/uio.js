@@ -32,6 +32,7 @@ export default class uio{
         this.load.image('bomb', 'assets/uio/bomb.png');
         this.load.image('ball', 'assets/uio/ball.png');
         this.load.image('sky', 'assets/uio/sky.png');
+        this.load.spritesheet('dude', 'assets/uio/dude-1.png', { frameWidth: 16, frameHeight: 37 });
         this.load.image('finishLine', 'assets/uio/finishLine.png');
         this.load.spritesheet('dude', 'assets/uio/dude-1.png', { frameWidth: 32, frameHeight: 42 });
     }
@@ -105,6 +106,7 @@ export default class uio{
         starsRemaining = numberOfStars;
 
         stars.children.iterate(function (child) {
+            child.body.setCircle(12);
             child.setBounceY(Phaser.Math.FloatBetween(0.4, 0.8));
         });
     
@@ -336,6 +338,17 @@ function collectStar(player, star) {
      */
 }
 
+        //make 2 bombs//
+        const numberOfBombsSpawned = 2;
+        for (var i = 0; i < numberOfBombsSpawned; i++) {
+            var x =  Phaser.Math.Between(0, 2080);
+            var bomb = bombs.create(x, 16, 'bomb');
+            bomb.setBounce(1);
+            bomb.body.setCircle(7);
+            bomb.setCollideWorldBounds(true);
+            bomb.setVelocity(Phaser.Math.Between(-200, 200), 20);
+            bomb.allowGravity = false;
+        }
 const getWinners = () => {
     let timeArrayAssetsShowcase = JSON.parse(localStorage.getItem("timeArrayAssetsShowcase"));
     let random =Phaser.Math.Between(1, timeArrayAssetsShowcase.length -1);
