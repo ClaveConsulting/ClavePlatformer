@@ -217,7 +217,7 @@ export default class uio{
         }
     
         if (Phaser.Input.Keyboard.JustDown(keyboardInput.H)) {
-            printHighScoreToScreen(this);
+            printTime(this);
         }
 
         if (Phaser.Input.Keyboard.JustDown(keyboardInputC.C)) {
