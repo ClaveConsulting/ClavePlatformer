@@ -6,6 +6,7 @@ var cursors;
 var score = 0;
 var gameOver = false;
 var scoreText;
+var gameOverText;
 var leaderboard;
 var keyboardInput;
 var keyboardInputC;
@@ -20,6 +21,8 @@ var timedEvent;
 var finishline;
 const numberOfStars = 10;
 var starsRemaining = numberOfStars;
+var deadlyTiles = [];
+var isRed = true;
 
 export default class uio{
     preload() {
@@ -42,7 +45,10 @@ export default class uio{
         var tileset = map.addTilesetImage('tileset', 'tileset');
         var background = map.createStaticLayer('background', tileset, 0, 0);
         var ground = map.createStaticLayer('ground', tileset, 0, 0);
-        
+
+
+
+
         //Before you can use the collide function you need to set what tiles can collide
         map.setCollisionBetween(1, 100, true, 'ground');
         
@@ -52,6 +58,16 @@ export default class uio{
         player.setBounce(0.1);
         var foreground = map.createStaticLayer('foreground', tileset, 0, 0);
 
+        foreground.forEachTile((tile) => {
+            if(tile.properties.deadly === true){
+                deadlyTiles.push(tile.index);
+            }
+        });
+
+        foreground.setTileIndexCallback(deadlyTiles, deadlyTileHit, this);
+
+
+        // foreground.setTileLocationCallback(120,18,64,32,deadlyTileHit,this,foreground);
 
         this.anims.create({
             key: 'left',
@@ -124,6 +140,9 @@ export default class uio{
 
         // Checks to see if player is at finishline
         this.physics.add.overlap(player, finishline, crossedFinishline, null, this);
+
+
+        this.physics.add.overlap(player, foreground);
     
         this.cameras.main.startFollow(player, true, 0.3, 0.3);
         this.cameras.main.setBounds(0, 0, map.widthInPixels, map.heightInPixels);
@@ -146,6 +165,7 @@ export default class uio{
             gameOver=false;
             score =0;
             counter = 0;
+            starsRemaining = 10;
         });
         button.on('pointerover', () => {
             button.setBackgroundColor("#0f0");
@@ -205,6 +225,33 @@ export default class uio{
         }
 
     }
+}
+
+function deadlyTileHit(sprite, tile) {
+
+    this.physics.pause();
+
+    timedEvent.destroy();
+
+    player.setTint(0xff0000);
+
+    player.anims.play('turn');
+
+    // "New "Game" Button
+    gameOverText = this.add.text(300, 300, 'GAME OVER',
+        {
+            font: "18px monospace",
+            fill: "#000000",
+            padding: { x: 20, y: 10 },
+            backgroundColor: "#f00"
+        })
+        .setScrollFactor(0);
+
+    gameOver = true;
+
+
+
+
 }
 
 function crossedFinishline() {
