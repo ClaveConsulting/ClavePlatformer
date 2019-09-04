@@ -6,6 +6,7 @@ var cursors;
 var score = 0;
 var gameOver = false;
 var scoreText;
+var leaderboard;
 var keyboardInput;
 var keyboardInputC;
 var spaceKey;
@@ -18,6 +19,7 @@ var counter = 0;
 var timedEvent;
 var finishline;
 const numberOfStars = 10;
+var starsRemaining = numberOfStars;
 
 export default class uio{
     preload() {
@@ -75,7 +77,7 @@ export default class uio{
 
         stars = this.physics.add.group({
             key: 'star',
-            repeat: numberOfStars,
+            repeat: numberOfStars-1,
             setXY: { x: 100, y: 0, stepX: spacing.between(150,300) }
         });
 
@@ -95,7 +97,7 @@ export default class uio{
 
 
         //  The score
-        scoreText = this.add.text(16, 16, 'CLAVE CREDITS: 0',
+        scoreText = this.add.text(16, 16, 'Stars Remaining: ' + numberOfStars,
             {
                 font: "18px monospace",
                 fill: "#000000",
@@ -103,6 +105,7 @@ export default class uio{
                 backgroundColor: "#ffffff"
             })
             .setScrollFactor(0);
+
         //  Collide the player and the stars with the ground
         this.physics.add.collider(finishline, ground);
         this.physics.add.collider(player, ground);
@@ -211,9 +214,9 @@ function crossedFinishline() {
 
     player.anims.play('turn');
 
-    recordHighScore();
+    recordTime();
 
-    printHighScoreToScreen(this);
+    printTime(this);
 
 
     gameOver = true;
@@ -243,9 +246,10 @@ function collectStar(player, star) {
     star.disableBody(true, true);
 
     //  Add and update the score
-    score += 10;
-    scoreText.setText('CLAVE CREDITS: ' + score);
+    starsRemaining -=1;
+    scoreText.setText('Stars Remaining: ' + starsRemaining);
 
+    /*
     if (stars.countActive(true) === 0) {
         //  A new batch of stars to collect
         stars.children.iterate(function (child) {
@@ -266,9 +270,70 @@ function collectStar(player, star) {
         }
 
     }
+     */
 }
 
+const recordTime = () => {
+    let timeArrayAssetsShowcase = JSON.parse(localStorage.getItem("timeArrayAssetsShowcase"));
 
+    if (timeArrayAssetsShowcase === null || timeArrayAssetsShowcase === undefined) {
+        timeArrayAssetsShowcase = [];
+    }
+
+    const playerName = prompt("Bra jobba! Skriv inn fullt navn:");
+
+    const gameRecord = {
+        player: playerName,
+        playerTime: counter
+    };
+
+    timeArrayAssetsShowcase.push(gameRecord);
+
+    timeArrayAssetsShowcase.sort(compareGameRecords);
+
+    if (timeArrayAssetsShowcase.length > 15) {
+        timeArrayAssetsShowcase.pop()
+    }
+
+    localStorage.setItem("timeArrayAssetsShowcase", JSON.stringify(timeArrayAssetsShowcase));
+};
+
+const printTime = (context) => {
+    //context er 'this' i parent
+
+    let timeArrayAssetsShowcase = JSON.parse(localStorage.getItem("timeArrayAssetsShowcase"));
+
+    if (timeArrayAssetsShowcase === null || timeArrayAssetsShowcase === undefined) {
+        timeArrayAssetsShowcase = [];
+    }
+
+    leaderboard = context.add.text(300, 60, 'Leaderboard', { fontSize: '40px', fill: '#000' })
+        .setScrollFactor(0);
+    let yPos = 130;
+
+    timeArrayAssetsShowcase.forEach(function (gameRecord) {
+            leaderboard = context.add.text(120, yPos, gameRecord.player + ': ', { fontSize: '32px', fill: '#000' })
+                .setScrollFactor(0);
+            leaderboard = context.add.text(600, yPos, gameRecord.playerTime + 'S', { fontSize: '32px', fill: '#000' })
+                .setScrollFactor(0);
+            yPos += 30;
+        }
+    );
+};
+
+const compareGameRecordsTime = (a, b) => {
+    if (a.playerTime < b.playerTime) {
+        return 1;
+    }
+    if (a.playerTime > b.playerTime) {
+        return -1;
+    }
+    return 0
+};
+
+
+
+// ------------------------------------------------------- OLD --------------------------------------------------
 function hitBomb(player, bomb) {
     this.physics.pause();
 
@@ -343,6 +408,8 @@ const compareGameRecords = (a, b) => {
     }
     return 0
 };
+
+
 
 /*
     NOTE: Collect all stars to finish ??
