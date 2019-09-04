@@ -42,14 +42,15 @@ export default class uio{
         var tileset = map.addTilesetImage('tileset', 'tileset');
         var background = map.createStaticLayer('background', tileset, 0, 0);
         var ground = map.createStaticLayer('ground', tileset, 0, 0);
-    
+        
         //Before you can use the collide function you need to set what tiles can collide
         map.setCollisionBetween(1, 100, true, 'ground');
-    
+        
         player = this.physics.add.sprite(32, 32, 'dude');
         player.setCollideWorldBounds(true);
         player.onWorldBounds = true;
         player.setBounce(0.1);
+        var foreground = map.createStaticLayer('foreground', tileset, 0, 0);
 
 
         this.anims.create({
