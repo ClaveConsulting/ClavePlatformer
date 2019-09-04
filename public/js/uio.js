@@ -84,8 +84,9 @@ export default class uio{
         bombs = this.physics.add.group();
         balls = this.physics.add.group();
 
-        // Adding finishline
-        finishline = this.physics.add.image(1500, 30, 'finishLine');
+        // Adding finishline at end of the map
+        finishline = this.physics.add.image(map.widthInPixels - 30, 30, 'finishLine');
+        // finishline = this.physics.add.image(500, 30, 'finishLine');
 
 
 
@@ -120,7 +121,7 @@ export default class uio{
         this.physics.world.setBounds(0, 0, map.widthInPixels, map.heightInPixels, true, true, true, true);
 
 
-        // New Game Button
+        // "New "Game" Button
         button = this.add.text(250, 16, 'New Game',
             {
                 font: "18px monospace",
@@ -199,6 +200,8 @@ export default class uio{
 
 function crossedFinishline() {
     this.physics.pause();
+
+    timedEvent.destroy();
 
     player.setTint(0xff0000);
 
