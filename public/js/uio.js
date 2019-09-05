@@ -22,7 +22,7 @@ var timedEvent;
 var finishline;
 var numberOfStars = 0;
 var deadlyTiles = [];
-var walkspeed = 800;
+var walkspeed = 700;
 var jumpspeed = 800;
 var starsCollected = 0;
 
