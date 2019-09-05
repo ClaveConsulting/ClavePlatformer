@@ -10,6 +10,7 @@ var gameOverText;
 var leaderboard;
 var keyboardInput;
 var keyboardInputC;
+var keyboardInputQ;
 var spaceKey;
 var highScoreText;
 var balls;
@@ -88,6 +89,7 @@ export default class uio{
         cursors = this.input.keyboard.createCursorKeys();
         keyboardInput = this.input.keyboard.addKeys('H');
         keyboardInputC = this.input.keyboard.addKeys('C');
+        keyboardInputQ = this.input.keyboard.addKeys('Q');
         spaceKey = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.SPACE);
     
 
@@ -236,6 +238,10 @@ export default class uio{
             throwBall();
         }
 
+        if (Phaser.Input.Keyboard.JustDown(keyboardInputQ.Q)) {
+            clearLeaderboard();
+        }
+
     }
 }
 
@@ -342,6 +348,13 @@ function collectStar(player, star) {
      */
 }
 
+const clearLeaderboard = () =>{
+    let timeArrayAssetsShowcase = JSON.parse(localStorage.getItem("timeArrayAssetsShowcase"));
+    timeArrayAssetsShowcase = [];
+    localStorage.setItem("timeArrayAssetsShowcase", JSON.stringify(timeArrayAssetsShowcase));
+
+}
+
 const recordTime = () => {
     let timeArrayAssetsShowcase = JSON.parse(localStorage.getItem("timeArrayAssetsShowcase"));
 
@@ -350,10 +363,12 @@ const recordTime = () => {
     }
 
     const playerName = prompt("Bra jobba! Skriv inn fullt navn:");
+    const playerPhone = prompt("Og telefonnummer:")
 
     const gameRecord = {
         player: playerName,
-        playerTime: counter
+        playerTime: counter,
+        playerPhone: playerPhone
     };
 
     timeArrayAssetsShowcase.push(gameRecord);
