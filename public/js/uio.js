@@ -375,17 +375,16 @@ const recordTime = () => {
 
     timeArrayAssetsShowcase.sort(compareGameRecordsTime);
 
-    if (timeArrayAssetsShowcase.length > 15) {
-        timeArrayAssetsShowcase.pop()
-    }
-
     localStorage.setItem("timeArrayAssetsShowcase", JSON.stringify(timeArrayAssetsShowcase));
 };
 
 const printTime = (context) => {
     //context er 'this' i parent
 
+
     let timeArrayAssetsShowcase = JSON.parse(localStorage.getItem("timeArrayAssetsShowcase"));
+
+
 
     if (timeArrayAssetsShowcase === null || timeArrayAssetsShowcase === undefined) {
         timeArrayAssetsShowcase = [];
@@ -395,12 +394,18 @@ const printTime = (context) => {
         .setScrollFactor(0);
     let yPos = 130;
 
+
+    if(timeArrayAssetsShowcase.length > 15){
+        timeArrayAssetsShowcase = timeArrayAssetsShowcase.slice(0,14);
+    }
+
     timeArrayAssetsShowcase.forEach(function (gameRecord) {
-            leaderboard = context.add.text(120, yPos, gameRecord.player + ': ', { fontSize: '32px', fill: '#000' })
-                .setScrollFactor(0);
-            leaderboard = context.add.text(600, yPos, gameRecord.playerTime + 'S', { fontSize: '32px', fill: '#000' })
-                .setScrollFactor(0);
-            yPos += 30;
+        leaderboard = context.add.text(120, yPos, gameRecord.player + ': ', { fontSize: '32px', fill: '#000' })
+            .setScrollFactor(0);
+        leaderboard = context.add.text(600, yPos, gameRecord.playerTime + 'S', { fontSize: '32px', fill: '#000' })
+            .setScrollFactor(0);
+        yPos += 30;
+
         }
     );
 };
