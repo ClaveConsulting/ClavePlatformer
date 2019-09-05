@@ -367,11 +367,24 @@ const recordTime = () => {
         playerPhone: playerPhone
     };
 
-    timeArrayAssetsShowcase.push(gameRecord);
+
+    let previousAttempt = timeArrayAssetsShowcase.filter(object => (object.playerPhone == gameRecord.playerPhone));
+    if (previousAttempt.length > 0){
+        // Returns -1 if gameRecord have a lower score than previousAttempt
+        if(!compareGameRecordsTime(gameRecord, previousAttempt[0])){
+            timeArrayAssetsShowcase[timeArrayAssetsShowcase.findIndex(object => (object == previousAttempt[0]))] = gameRecord;
+        }
+    }else{
+        timeArrayAssetsShowcase.push(gameRecord);
+    }
 
     timeArrayAssetsShowcase.sort(compareGameRecordsTime);
 
     localStorage.setItem("timeArrayAssetsShowcase", JSON.stringify(timeArrayAssetsShowcase));
+
+
+
+
 };
 
 const printTime = (context) => {
@@ -412,10 +425,10 @@ const printTime = (context) => {
 const compareGameRecordsTime = (a, b) => {
 
     if (a.playerScore < b.playerScore) {
-        return -1;
+        return false;
     }
     if (a.playerScore > b.playerScore) {
-        return 1;
+        return true;
     }
     return 0
 };
