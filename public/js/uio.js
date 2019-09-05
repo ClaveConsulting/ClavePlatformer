@@ -26,7 +26,7 @@ var deadlyTiles = [];
 
 export default class uio{
     preload() {
-        this.load.tilemapTiledJSON('map', 'assets/uio/level-1.json');
+        this.load.tilemapTiledJSON('map', 'assets/uio/ntnu-1.json');
         this.load.image('tileset', 'assets/uio/tileset.png');
         this.load.image('star', 'assets/uio/star.png');
         this.load.image('bomb', 'assets/uio/bomb.png');
