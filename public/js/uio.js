@@ -23,6 +23,8 @@ var finishline;
 var numberOfStars = 0;
 var starsRemaining;
 var deadlyTiles = [];
+var walkspeed =  400;
+var jumpspeed = 600;
 
 export default class uio{
     preload() {
@@ -32,9 +34,8 @@ export default class uio{
         this.load.image('bomb', 'assets/uio/bomb.png');
         this.load.image('ball', 'assets/uio/ball.png');
         this.load.image('sky', 'assets/uio/sky.png');
-        this.load.spritesheet('dude', 'assets/uio/dude-1.png', { frameWidth: 16, frameHeight: 37 });
+        this.load.spritesheet('dude', 'assets/uio/dude-1.png', { frameWidth: 16, frameHeight: 32 });
         this.load.image('finishLine', 'assets/uio/finishLine.png');
-        this.load.spritesheet('dude', 'assets/uio/dude-1.png', { frameWidth: 32, frameHeight: 42 });
     }
     
     create() {
@@ -215,12 +216,12 @@ export default class uio{
         }
     
         if (cursors.left.isDown) {
-            player.setVelocityX(-300);
+            player.setVelocityX(-walkspeed);
             player.anims.play('left', true);
             direction = 'left';
         }
         else if (cursors.right.isDown) {
-            player.setVelocityX(300);
+            player.setVelocityX(walkspeed);
             player.anims.play('right', true);
             direction = 'right';
         } else {
@@ -229,7 +230,7 @@ export default class uio{
         }
     
         if (spaceKey.isDown && player.body.blocked.down) {
-            player.setVelocityY(-700);
+            player.setVelocityY(-jumpspeed);
         }
     
         if (Phaser.Input.Keyboard.JustDown(keyboardInput.H)) {
