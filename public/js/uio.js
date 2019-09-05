@@ -21,10 +21,10 @@ var counter = 0;
 var timedEvent;
 var finishline;
 var numberOfStars = 0;
-var starsRemaining;
 var deadlyTiles = [];
 var walkspeed = 800;
 var jumpspeed = 600;
+var starsCollected = 0;
 
 export default class uio {
     preload() {
@@ -110,8 +110,6 @@ export default class uio {
             star.setBounce(1);
         });
 
-        starsRemaining = numberOfStars;
-
         stars.children.iterate(function (child) {
             child.body.setCircle(12);
             child.setBounceY(Phaser.Math.FloatBetween(0.4, 0.8));
@@ -125,7 +123,7 @@ export default class uio {
         finishline = this.physics.add.image(finishPoint.x, finishPoint.y, 'finishLine');
 
         //  The score
-        scoreText = this.add.text(16, 16, 'Stars Remaining: ' + starsRemaining, {
+        scoreText = this.add.text(16, 16, 'Stars collected: ' + starsCollected, {
                 font: "18px monospace",
                 fill: "#000000",
                 padding: {
@@ -176,6 +174,7 @@ export default class uio {
             gameOver = false;
             counter = 0;
             numberOfStars = 0;
+            starsCollected = 0;
             this.scene.restart();
 
         });
@@ -282,30 +281,19 @@ function deadlyTileHit(sprite, tile) {
 
 function crossedFinishline() {
 
-    if (starsRemaining === 0) {
+    this.physics.pause();
 
-        this.physics.pause();
+    timedEvent.destroy();
 
-        timedEvent.destroy();
+    player.setTint(0xff0000);
 
-        player.setTint(0xff0000);
+    player.anims.play('turn');
 
-        player.anims.play('turn');
+    recordTime();
 
-        recordTime();
+    printTime(this);
 
-        printTime(this);
-
-        gameOver = true;
-    } else {
-        scoreText.setBackgroundColor('#f00');
-        this.time.addEvent({
-            delay: 500,
-            callback: () => {
-                scoreText.setBackgroundColor('#fff')
-            }
-        });
-    }
+    gameOver = true;
 }
 
 function updateCounter() {
@@ -331,9 +319,10 @@ function hitBombBall(bomb, ball) {
 function collectStar(player, star) {
     star.disableBody(true, true);
 
+    starsCollected +=1;
+
     //  Add and update the score
-    starsRemaining -= 1;
-    scoreText.setText('Stars Remaining: ' + starsRemaining);
+    scoreText.setText('Stars Collected: ' + starsCollected);
 
     /*
     if (stars.countActive(true) === 0) {
@@ -372,7 +361,9 @@ const recordTime = () => {
 
     const gameRecord = {
         player: playerName,
+        playerStars: starsCollected,
         playerTime: counter,
+        playerScore: counter - starsCollected*2,
         playerPhone: playerPhone
     };
 
@@ -408,7 +399,7 @@ const printTime = (context) => {
                 fill: '#000'
             })
             .setScrollFactor(0);
-        leaderboard = context.add.text(600, yPos, gameRecord.playerTime + 'S', {
+        leaderboard = context.add.text(600, yPos, gameRecord.playerScore , {
                 fontSize: '32px',
                 fill: '#000'
             })
@@ -416,14 +407,14 @@ const printTime = (context) => {
         yPos += 30;
     });
 
-    getWinners();
 };
 
 const compareGameRecordsTime = (a, b) => {
-    if (a.playerTime < b.playerTime) {
+
+    if (a.playerScore < b.playerScore) {
         return -1;
     }
-    if (a.playerTime > b.playerTime) {
+    if (a.playerScore > b.playerScore) {
         return 1;
     }
     return 0
