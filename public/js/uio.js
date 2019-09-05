@@ -106,13 +106,15 @@ export default class uio {
         stars = this.physics.add.group();
         map.getObjectLayer("spawnpoints").objects.forEach((o) => {
             var star = stars.create(o.x, o.y, 'star');
+            star.body.moves = false;
             numberOfStars += 1;
-            star.setBounce(1);
+
         });
+
 
         stars.children.iterate(function (child) {
             child.body.setCircle(12);
-            child.setBounceY(Phaser.Math.FloatBetween(0.4, 0.8));
+            //child.setBounceY(Phaser.Math.FloatBetween(0.4, 0.8));
         });
 
         bombs = this.physics.add.group();
