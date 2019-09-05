@@ -55,6 +55,9 @@ export default class uio{
         player.setCollideWorldBounds(true);
         player.onWorldBounds = true;
         player.setBounce(0.1);
+        player.body.allowGravity;
+        player.body.setGravityY(750);
+
 
         // Setting deadly tiles
         var foreground = map.createStaticLayer('foreground', tileset, 0, 0);
@@ -208,12 +211,12 @@ export default class uio{
         }
     
         if (cursors.left.isDown) {
-            player.setVelocityX(-260);
+            player.setVelocityX(-300);
             player.anims.play('left', true);
             direction = 'left';
         }
         else if (cursors.right.isDown) {
-            player.setVelocityX(260);
+            player.setVelocityX(300);
             player.anims.play('right', true);
             direction = 'right';
         } else {
@@ -222,7 +225,7 @@ export default class uio{
         }
     
         if (spaceKey.isDown && player.body.blocked.down) {
-            player.setVelocityY(-400);
+            player.setVelocityY(-700);
         }
     
         if (Phaser.Input.Keyboard.JustDown(keyboardInput.H)) {
@@ -389,10 +392,10 @@ const printTime = (context) => {
 
 const compareGameRecordsTime = (a, b) => {
     if (a.playerTime < b.playerTime) {
-        return 1;
+        return -1;
     }
     if (a.playerTime > b.playerTime) {
-        return -1;
+        return 1;
     }
     return 0
 };
