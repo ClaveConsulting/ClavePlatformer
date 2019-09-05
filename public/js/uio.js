@@ -19,10 +19,9 @@ var counterText;
 var counter = 0;
 var timedEvent;
 var finishline;
-const numberOfStars = 10;
-var starsRemaining = numberOfStars;
+var numberOfStars = 0;
+var starsRemaining;
 var deadlyTiles = [];
-var isRed = true;
 
 export default class uio{
     preload() {
@@ -47,24 +46,27 @@ export default class uio{
         var ground = map.createStaticLayer('ground', tileset, 0, 0);
 
 
-        //Before you can use the collide function you need to set what tiles can collide
+        // Before you can use the collide function you need to set what tiles can collide
         map.setCollisionBetween(1, 100, true, 'ground');
-        
-        player = this.physics.add.sprite(32, 32, 'dude');
+
+        // Add player to the game
+        const spawnPoint = map.findObject("spawnpoints", obj => obj.name === "player");
+        player = this.physics.add.sprite(spawnPoint.x, spawnPoint.y, 'dude');
         player.setCollideWorldBounds(true);
         player.onWorldBounds = true;
         player.setBounce(0.1);
-        var foreground = map.createStaticLayer('foreground', tileset, 0, 0);
 
+        // Setting deadly tiles
+        var foreground = map.createStaticLayer('foreground', tileset, 0, 0);
         foreground.forEachTile((tile) => {
             if(tile.properties.deadly === true){
                 deadlyTiles.push(tile.index);
             }
         });
-
         foreground.setTileIndexCallback(deadlyTiles, deadlyTileHit, this);
 
 
+        // Player animations
         this.anims.create({
             key: 'left',
             frames: this.anims.generateFrameNumbers('dude', { start: 4, end: 5 }),
@@ -85,32 +87,33 @@ export default class uio{
         keyboardInputC = this.input.keyboard.addKeys('C');
         spaceKey = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.SPACE);
     
-        //  Some stars to collect
-        var spacing = new Phaser.Math.RandomDataGenerator();
 
-        stars = this.physics.add.group({
-            key: 'star',
-            repeat: numberOfStars-1,
-            setXY: { x: 100, y: 0, stepX: spacing.between(150,300) }
+
+        // Adding stars to the game
+        stars = this.physics.add.group();
+        map.getObjectLayer("spawnpoints").objects.forEach((o) => {
+            var star = stars.create(o.x,o.y,'star');
+            numberOfStars +=1;
+            star.setBounce(1);
         });
 
-    
+        starsRemaining = numberOfStars;
+
         stars.children.iterate(function (child) {
             child.setBounceY(Phaser.Math.FloatBetween(0.4, 0.8));
-    
         });
     
         bombs = this.physics.add.group();
         balls = this.physics.add.group();
 
         // Adding finishline at end of the map
-        // finishline = this.physics.add.image(map.widthInPixels - 30, 30, 'finishLine');
-        finishline = this.physics.add.image(500, 30, 'finishLine');
+        const finishPoint = map.findObject("spawnpoints", obj => obj.name === "finishline");
+        finishline = this.physics.add.image(finishPoint.x, finishPoint.y, 'finishLine');
 
 
 
         //  The score
-        scoreText = this.add.text(16, 16, 'Stars Remaining: ' + numberOfStars,
+        scoreText = this.add.text(16, 16, 'Stars Remaining: ' + starsRemaining,
             {
                 font: "18px monospace",
                 fill: "#000000",
@@ -157,11 +160,11 @@ export default class uio{
 
         button.setInteractive();
         button.on('pointerdown', () => {
-            this.scene.restart();
             gameOver=false;
-            score =0;
             counter = 0;
-            starsRemaining = 10;
+            numberOfStars = 0;
+            this.scene.restart();
+
         });
         button.on('pointerover', () => {
             button.setBackgroundColor("#0f0");
@@ -184,9 +187,11 @@ export default class uio{
             timedEvent = this.time.addEvent({delay: 1000, callback: updateCounter, callbackScope: this, loop: true});
 
 
+
+
         const numberOfBombsSpawned = 2;
         for (var i = 0; i < numberOfBombsSpawned; i++) {
-            var x =  Phaser.Math.Between(0, 2080);
+            var x =  Phaser.Math.Between(1000, 2080);
             var bomb = bombs.create(x, 16, 'bomb');
             bomb.setBounce(1);
             bomb.setCollideWorldBounds(true);
