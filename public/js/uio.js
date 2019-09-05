@@ -238,6 +238,7 @@ export default class uio{
             throwBall();
         }
 
+
         if (Phaser.Input.Keyboard.JustDown(keyboardInputQ.Q)) {
             clearLeaderboard();
         }
@@ -332,20 +333,18 @@ function collectStar(player, star) {
             child.enableBody(true, child.x, 0, true, true);
 
         });
-
-        //make 2 bombs//
-        const numberOfBombsSpawned = 2;
-        for (var i = 0; i < numberOfBombsSpawned; i++) {
-            var x =  Phaser.Math.Between(0, 2080);
-            var bomb = bombs.create(x, 16, 'bomb');
-            bomb.setBounce(1);
-            bomb.setCollideWorldBounds(true);
-            bomb.setVelocity(Phaser.Math.Between(-200, 200), 20);
-            bomb.allowGravity = false;
-        }
-
-    }
      */
+}
+
+const getWinners = () => {
+    let timeArrayAssetsShowcase = JSON.parse(localStorage.getItem("timeArrayAssetsShowcase"));
+    let random =Phaser.Math.Between(1, timeArrayAssetsShowcase.length -1);
+
+    console.log("BEST TIME WINNER:");
+    console.log(timeArrayAssetsShowcase[0]);
+    console.log("RANDOM WINNER:");
+    console.log(timeArrayAssetsShowcase[random]);
+
 }
 
 const clearLeaderboard = () =>{
@@ -408,6 +407,8 @@ const printTime = (context) => {
 
         }
     );
+
+    getWinners();
 };
 
 const compareGameRecordsTime = (a, b) => {
