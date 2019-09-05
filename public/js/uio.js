@@ -131,8 +131,7 @@ export default class uio {
                     y: 10
                 },
                 backgroundColor: "#ffffff"
-            })
-            .setScrollFactor(0);
+            }).setScrollFactor(0);
 
         //  Collide the player and the stars with the ground
         this.physics.add.collider(finishline, ground);
@@ -184,7 +183,6 @@ export default class uio {
         button.on('pointerout', () => {
             button.setBackgroundColor("#fff");
         });
-
 
         // TIMER
         counterText = this.add.text(400, 16, 'Time: 0', {
@@ -246,7 +244,6 @@ export default class uio {
             throwBall();
         }
 
-
         if (Phaser.Input.Keyboard.JustDown(keyboardInputQ.Q)) {
             clearLeaderboard();
         }
@@ -273,9 +270,7 @@ function deadlyTileHit(sprite, tile) {
                 y: 10
             },
             backgroundColor: "#f00"
-        })
-        .setScrollFactor(0);
-
+        }).setScrollFactor(0);
     gameOver = true;
 }
 
@@ -381,10 +376,6 @@ const recordTime = () => {
     timeArrayAssetsShowcase.sort(compareGameRecordsTime);
 
     localStorage.setItem("timeArrayAssetsShowcase", JSON.stringify(timeArrayAssetsShowcase));
-
-
-
-
 };
 
 const printTime = (context) => {
