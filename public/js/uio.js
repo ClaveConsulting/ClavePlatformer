@@ -263,12 +263,12 @@ function deadlyTileHit(sprite, tile) {
     player.anims.play('turn');
 
     // GAME OVER
-    gameOverText = this.add.text(600, 500, 'GAME OVER OVER', {
+    gameOverText = this.add.text(350, 300, 'GAME OVER', {
         font: "36px monospace",
         fill: "#000000",
         padding: {
-            x: 300,
-            y: 150
+            x: 100,
+            y: 50
         },
         backgroundColor: "#f00"
     }).setScrollFactor(0);
