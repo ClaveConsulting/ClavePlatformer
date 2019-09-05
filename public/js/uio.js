@@ -23,7 +23,7 @@ var finishline;
 var numberOfStars = 0;
 var deadlyTiles = [];
 var walkspeed = 800;
-var jumpspeed = 600;
+var jumpspeed = 800;
 var starsCollected = 0;
 
 export default class uio {
@@ -157,7 +157,6 @@ export default class uio {
         this.cameras.main.setBounds(0, 0, map.widthInPixels, map.heightInPixels);
         this.physics.world.setBounds(0, 0, map.widthInPixels, map.heightInPixels, true, true, true, true);
 
-
         // "New "Game" Button
         button = this.add.text(250, 16, 'New Game', {
                 font: "18px monospace",
@@ -263,16 +262,16 @@ function deadlyTileHit(sprite, tile) {
 
     player.anims.play('turn');
 
-    // "New "Game" Button
-    gameOverText = this.add.text(300, 300, 'GAME OVER', {
-            font: "18px monospace",
-            fill: "#000000",
-            padding: {
-                x: 20,
-                y: 10
-            },
-            backgroundColor: "#f00"
-        }).setScrollFactor(0);
+    // GAME OVER
+    gameOverText = this.add.text(600, 500, 'GAME OVER OVER', {
+        font: "36px monospace",
+        fill: "#000000",
+        padding: {
+            x: 300,
+            y: 150
+        },
+        backgroundColor: "#f00"
+    }).setScrollFactor(0);
     gameOver = true;
 }
 
@@ -435,15 +434,15 @@ function hitBomb(player, bomb) {
 
     player.anims.play('turn');
 
-    // "New "Game" Button
-    gameOverText = this.add.text(300, 300, 'GAME OVER', {
-            font: "18px monospace",
-            fill: "#000000",
-            padding: {
-                x: 20,
-                y: 10
-            },
-            backgroundColor: "#f00"
-        }).setScrollFactor(0);
+    // GAME OVER
+    gameOverText = this.add.text(350, 300, 'GAME OVER', {
+        font: "36px monospace",
+        fill: "#000000",
+        padding: {
+            x: 100,
+            y: 50
+        },
+        backgroundColor: "#f00"
+    }).setScrollFactor(0);
     gameOver = true;
 }
