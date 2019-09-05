@@ -23,7 +23,7 @@ var finishline;
 var numberOfStars = 0;
 var starsRemaining;
 var deadlyTiles = [];
-var walkspeed =  400;
+var walkspeed =  800;
 var jumpspeed = 600;
 
 export default class uio{
