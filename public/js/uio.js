@@ -265,8 +265,7 @@ export default class uio {
         if (Phaser.Input.Keyboard.JustDown(keyboardInputQ.Q)) {
             clearLeaderboard();
         }
-
-
+        
         var i = 0;
         caves.forEach((cave) => {
             if(player.x >= cave.x && player.x <= cave.x + cave.width && player.y >= cave.y && player.y <= cave.y + cave.height){
