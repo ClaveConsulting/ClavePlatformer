@@ -106,7 +106,7 @@ export default class uio {
             }
         });
         foreground.setTileIndexCallback(deadlyTiles, deadlyTileHit, this);
-        
+
         hiding = map.createStaticLayer('hiding', tileset, 0, 0);
 
         // Player animations
@@ -279,8 +279,8 @@ export default class uio {
         }
 
         if (Phaser.Input.Keyboard.JustDown(keyboardInputQ.Q)) {
-            clearLeaderboard();
-            //getWinners();
+            //clearLeaderboard();
+            getWinners();
         }
 
         var i = 0;
