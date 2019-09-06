@@ -408,7 +408,6 @@ const recordTime = () => {
     }
 
     timeArrayAssetsShowcase.sort(compareGameRecordsTime);
-    debugger
 
     localStorage.setItem("timeArrayAssetsShowcase", JSON.stringify(timeArrayAssetsShowcase));
 };
