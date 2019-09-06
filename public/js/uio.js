@@ -25,6 +25,9 @@ var deadlyTiles = [];
 var walkspeed = 700;
 var jumpspeed = 800;
 var starsCollected = 0;
+var hiding;
+var caves = [];
+var insideCave = [];
 
 export default class uio {
     preload() {
@@ -66,6 +69,14 @@ export default class uio {
         player.body.allowGravity;
         player.body.setGravityY(750);
 
+        // Finding Caves
+        map.getObjectLayer("spawnpoints").objects.forEach((object) =>{
+           if(object.name === "cave"){
+               caves.push(object);
+               insideCave.push(false);
+           }
+        });
+
         // Adding stars to the game
         stars = this.physics.add.group();
         map.getObjectLayer("spawnpoints").objects.forEach((o) => {
@@ -81,15 +92,7 @@ export default class uio {
             //child.setBounceY(Phaser.Math.FloatBetween(0.4, 0.8));
         });
 
-        var hiding = map.createStaticLayer('hiding', tileset, 0, 0);
-        hiding.setTileLocationCallback(0, 0, 32, 32, hiding.forEachTile((tile) =>{
-            tile.alpha = 0;
-        }), this );
-        //
-        // hiding.setTileIndexCallback(0, hiding.forEachTile((tile) =>{
-        //     tile.alpha = 0;
-        // }), this);
-
+        hiding = map.createStaticLayer('hiding', tileset, 0, 0);
 
         // Setting deadly tiles
         var foreground = map.createStaticLayer('foreground', tileset, 0, 0);
@@ -261,6 +264,19 @@ export default class uio {
 
         if (Phaser.Input.Keyboard.JustDown(keyboardInputQ.Q)) {
             clearLeaderboard();
+        }
+
+
+        var i = 0;
+        caves.forEach((cave) => {
+            if(player.x >= cave.x && player.x <= cave.x + cave.width && player.y >= cave.y && player.y <= cave.y + cave.height){
+                i++;
+            }
+        })
+        if(i > 0){
+            hiding.alpha = 0;
+        }else{
+            hiding.alpha = 1;
         }
 
     }
