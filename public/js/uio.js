@@ -41,7 +41,10 @@ export default class uio {
             frameWidth: 16,
             frameHeight: 32
         });
-        this.load.image('finishLine', 'assets/uio/finishLine.png');
+        this.load.image('finishLine', 'assets/uio/finishLine.png', {
+            frameHeight: 60,
+            frameWidth: 40
+        });
     }
 
     create() {
@@ -397,7 +400,7 @@ const recordTime = () => {
     let previousAttempt = timeArrayAssetsShowcase.filter(object => (object.playerPhone == gameRecord.playerPhone));
     if (previousAttempt.length > 0){
         // Returns -1 if gameRecord have a lower score than previousAttempt
-        if(!compareGameRecordsTime(gameRecord, previousAttempt[0])){
+        if(compareGameRecordsTime(gameRecord, previousAttempt[0]) < 0){
             timeArrayAssetsShowcase[timeArrayAssetsShowcase.findIndex(object => (object == previousAttempt[0]))] = gameRecord;
         }
     }else{
@@ -405,6 +408,7 @@ const recordTime = () => {
     }
 
     timeArrayAssetsShowcase.sort(compareGameRecordsTime);
+    debugger
 
     localStorage.setItem("timeArrayAssetsShowcase", JSON.stringify(timeArrayAssetsShowcase));
 };
@@ -449,10 +453,10 @@ const printTime = (context) => {
 const compareGameRecordsTime = (a, b) => {
 
     if (a.playerScore < b.playerScore) {
-        return false;
+        return -1;
     }
     if (a.playerScore > b.playerScore) {
-        return true;
+        return 1;
     }
     return 0
 };
