@@ -19,6 +19,7 @@ var button;
 var counterText;
 var counter = 0;
 var timedEvent;
+var timedEvent2;
 var finishline;
 var numberOfStars = 0;
 var deadlyTiles = [];
@@ -48,6 +49,7 @@ export default class uio {
     }
 
     create() {
+
         this.add.image(0, 0, 'sky');
 
         var map = this.make.tilemap({
@@ -219,12 +221,21 @@ export default class uio {
             .setScrollFactor(0);
 
         timedEvent = this.time.addEvent({
-            delay: 1000,
+            delay: 10,
             callback: updateCounter,
             callbackScope: this,
             loop: true
         });
 
+        timedEvent2 = this.time.addEvent({
+            delay: 100,
+            callback: printCounter,
+            callbackScope: this,
+            loop: true
+        });
+
+
+        /*
         const numberOfBombsSpawned = 2;
         for (var i = 0; i < numberOfBombsSpawned; i++) {
             var x = Phaser.Math.Between(1000, 2080);
@@ -235,6 +246,7 @@ export default class uio {
             bomb.body.setMaxVelocity(1000);
             bomb.allowGravity = false;
         }
+         */
     }
 
     update() {
@@ -268,7 +280,8 @@ export default class uio {
         }
 
         if (Phaser.Input.Keyboard.JustDown(keyboardInputQ.Q)) {
-            clearLeaderboard();
+            //clearLeaderboard();
+            getWinners();
         }
 
         var i = 0;
@@ -328,8 +341,12 @@ function crossedFinishline() {
 }
 
 function updateCounter() {
-    counter++;
-    counterText.setText('Time: ' + counter + 'S');
+    // counter = Math.round((counter + 0.1)*100)/100;
+    counter = counter + 0.01;
+}
+
+function printCounter() {
+    counterText.setText('Time: ' + counter.toFixed(2) + 'S');
 }
 
 function throwBall() {
@@ -351,10 +368,18 @@ function collectStar(player, star) {
     star.disableBody(true, true);
 
     starsCollected +=1;
+    counter = counter -2;
 
     //  Add and update the score
     scoreText.setText('Stars Collected: ' + starsCollected);
-
+    counterText.setBackgroundColor('#FFBE2E');
+    this.time.addEvent({
+        delay: 500,
+        callback: () => {
+            counterText.setBackgroundColor('#fff');
+        },
+        callbackScope: this
+    });
     /*
     if (stars.countActive(true) === 0) {
         //  A new batch of stars to collect
@@ -393,8 +418,7 @@ const recordTime = () => {
     const gameRecord = {
         player: playerName,
         playerStars: starsCollected,
-        playerTime: counter,
-        playerScore: counter - starsCollected*2,
+        playerTime: counter.toFixed(2),
         playerPhone: playerPhone
     };
 
@@ -440,7 +464,7 @@ const printTime = (context) => {
                 fill: '#000'
             })
             .setScrollFactor(0);
-        leaderboard = context.add.text(900, yPos, gameRecord.playerScore , {
+        leaderboard = context.add.text(900, yPos, gameRecord.playerTime , {
                 fontSize: '45px',
                 fontStyle: 'bold',
                 fill: '#000'
@@ -453,10 +477,10 @@ const printTime = (context) => {
 
 const compareGameRecordsTime = (a, b) => {
 
-    if (a.playerScore < b.playerScore) {
+    if (a.playerTime < b.playerTime) {
         return -1;
     }
-    if (a.playerScore > b.playerScore) {
+    if (a.playerTime > b.playerTime) {
         return 1;
     }
     return 0
