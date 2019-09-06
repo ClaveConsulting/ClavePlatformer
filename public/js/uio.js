@@ -53,6 +53,7 @@ export default class uio {
         var background = map.createStaticLayer('background', tileset, 0, 0);
         var ground = map.createStaticLayer('ground', tileset, 0, 0);
 
+
         // Before you can use the collide function you need to set what tiles can collide
         map.setCollisionBetween(1, 100, true, 'ground');
 
@@ -65,6 +66,31 @@ export default class uio {
         player.body.allowGravity;
         player.body.setGravityY(750);
 
+        // Adding stars to the game
+        stars = this.physics.add.group();
+        map.getObjectLayer("spawnpoints").objects.forEach((o) => {
+            if(o.name === "star"){
+                var star = stars.create(o.x, o.y, 'star');
+                star.body.moves = false;
+                numberOfStars += 1;
+            }
+        });
+
+        stars.children.iterate(function (child) {
+            child.body.setCircle(12);
+            //child.setBounceY(Phaser.Math.FloatBetween(0.4, 0.8));
+        });
+
+        var hiding = map.createStaticLayer('hiding', tileset, 0, 0);
+        hiding.setTileLocationCallback(0, 0, 32, 32, hiding.forEachTile((tile) =>{
+            tile.alpha = 0;
+        }), this );
+        //
+        // hiding.setTileIndexCallback(0, hiding.forEachTile((tile) =>{
+        //     tile.alpha = 0;
+        // }), this);
+
+
         // Setting deadly tiles
         var foreground = map.createStaticLayer('foreground', tileset, 0, 0);
         foreground.forEachTile((tile) => {
@@ -73,6 +99,7 @@ export default class uio {
             }
         });
         foreground.setTileIndexCallback(deadlyTiles, deadlyTileHit, this);
+
 
         // Player animations
         this.anims.create({
@@ -102,20 +129,7 @@ export default class uio {
         keyboardInputQ = this.input.keyboard.addKeys('Q');
         spaceKey = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.SPACE);
 
-        // Adding stars to the game
-        stars = this.physics.add.group();
-        map.getObjectLayer("spawnpoints").objects.forEach((o) => {
-            var star = stars.create(o.x, o.y, 'star');
-            star.body.moves = false;
-            numberOfStars += 1;
 
-        });
-
-
-        stars.children.iterate(function (child) {
-            child.body.setCircle(12);
-            //child.setBounceY(Phaser.Math.FloatBetween(0.4, 0.8));
-        });
 
         bombs = this.physics.add.group();
         balls = this.physics.add.group();
@@ -274,6 +288,7 @@ function deadlyTileHit(sprite, tile) {
     }).setScrollFactor(0);
     gameOver = true;
 }
+
 
 function crossedFinishline() {
 
