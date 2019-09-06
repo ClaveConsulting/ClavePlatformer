@@ -8,4 +8,4 @@ npm start
 ```
 
 Controls:
-Move with arrow-keys, jump with space. Show High Score with H-key. Throw ball with C-key
+Move with arrow-keys, jump with space. Show High Score with H-key. Throw ball with C-key. Print winners to console by pressing Q-Key.
