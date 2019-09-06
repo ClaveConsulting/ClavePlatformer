@@ -2,8 +2,8 @@ import uio from './uio.js';
 
 var config = {
     type: Phaser.AUTO,
-    width: 1200,
-    height: 1000,
+    width: 2000,
+    height: 1125,
     pixelArt: true,
     physics: {
         default: 'arcade',

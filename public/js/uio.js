@@ -43,8 +43,8 @@ export default class uio {
             frameHeight: 32
         });
         this.load.image('finishLine', 'assets/uio/finishLine.png', {
-            frameHeight: 60,
-            frameWidth: 40
+            frameHeight: 79,
+            frameWidth: 35
         });
     }
 
