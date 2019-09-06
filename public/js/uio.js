@@ -22,7 +22,7 @@ var timedEvent;
 var finishline;
 var numberOfStars = 0;
 var deadlyTiles = [];
-var walkspeed = 700;
+var walkspeed = 500;
 var jumpspeed = 800;
 var starsCollected = 0;
 var hiding;
@@ -71,6 +71,7 @@ export default class uio {
         player.setBounce(0.1);
         player.body.allowGravity;
         player.body.setGravityY(750);
+        player.body.setMaxVelocity(jumpspeed);
 
         // Finding Caves
         map.getObjectLayer("spawnpoints").objects.forEach((object) =>{
@@ -231,6 +232,7 @@ export default class uio {
             bomb.setBounce(1);
             bomb.setCollideWorldBounds(true);
             bomb.setVelocity(Phaser.Math.Between(-200, 200), 20);
+            bomb.body.setMaxVelocity(1000);
             bomb.allowGravity = false;
         }
     }
