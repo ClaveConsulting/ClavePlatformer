@@ -143,7 +143,7 @@ export default class uio {
 
         //  The score
         scoreText = this.add.text(16, 16, 'Stars collected: ' + starsCollected, {
-                font: "18px monospace",
+                font: "27px monospace",
                 fill: "#000000",
                 padding: {
                     x: 20,
@@ -175,8 +175,8 @@ export default class uio {
         this.physics.world.setBounds(0, 0, map.widthInPixels, map.heightInPixels, true, true, true, true);
 
         // "New "Game" Button
-        button = this.add.text(250, 16, 'New Game', {
-                font: "18px monospace",
+        button = this.add.text(1000, 16, 'New Game', {
+                font: "27px monospace",
                 fill: "#000000",
                 padding: {
                     x: 20,
@@ -204,7 +204,7 @@ export default class uio {
 
         // TIMER
         counterText = this.add.text(400, 16, 'Time: 0', {
-                font: "18px monospace",
+                font: "27px monospace",
                 fill: "#000000",
                 padding: {
                     x: 20,
@@ -265,7 +265,7 @@ export default class uio {
         if (Phaser.Input.Keyboard.JustDown(keyboardInputQ.Q)) {
             clearLeaderboard();
         }
-        
+
         var i = 0;
         caves.forEach((cave) => {
             if(player.x >= cave.x && player.x <= cave.x + cave.width && player.y >= cave.y && player.y <= cave.y + cave.height){
@@ -417,29 +417,31 @@ const printTime = (context) => {
         timeArrayAssetsShowcase = [];
     }
 
-    leaderboard = context.add.text(300, 60, 'Leaderboard', {
-            fontSize: '40px',
+    leaderboard = context.add.text(400, 200, 'Leaderboard', {
+            fontSize: '70px',
+            fontStyle: 'bold',
             fill: '#000'
-        })
-        .setScrollFactor(0);
-    let yPos = 130;
+        }).setScrollFactor(0);
+    let yPos = 300;
 
     if (timeArrayAssetsShowcase.length > 15) {
         timeArrayAssetsShowcase = timeArrayAssetsShowcase.slice(0, 14);
     }
 
     timeArrayAssetsShowcase.forEach(function (gameRecord) {
-        leaderboard = context.add.text(120, yPos, gameRecord.player + ': ', {
-                fontSize: '32px',
+        leaderboard = context.add.text(350, yPos, gameRecord.player + ': ', {
+                fontSize: '45px',
+                fontStyle: 'bold',
                 fill: '#000'
             })
             .setScrollFactor(0);
-        leaderboard = context.add.text(600, yPos, gameRecord.playerScore , {
-                fontSize: '32px',
+        leaderboard = context.add.text(900, yPos, gameRecord.playerScore , {
+                fontSize: '45px',
+                fontStyle: 'bold',
                 fill: '#000'
             })
             .setScrollFactor(0);
-        yPos += 30;
+        yPos += 40;
     });
 
 };
