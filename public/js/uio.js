@@ -98,8 +98,6 @@ export default class uio {
             //child.setBounceY(Phaser.Math.FloatBetween(0.4, 0.8));
         });
 
-        hiding = map.createStaticLayer('hiding', tileset, 0, 0);
-
         // Setting deadly tiles
         var foreground = map.createStaticLayer('foreground', tileset, 0, 0);
         foreground.forEachTile((tile) => {
@@ -108,7 +106,8 @@ export default class uio {
             }
         });
         foreground.setTileIndexCallback(deadlyTiles, deadlyTileHit, this);
-
+        
+        hiding = map.createStaticLayer('hiding', tileset, 0, 0);
 
         // Player animations
         this.anims.create({
@@ -280,8 +279,8 @@ export default class uio {
         }
 
         if (Phaser.Input.Keyboard.JustDown(keyboardInputQ.Q)) {
-            //clearLeaderboard();
-            getWinners();
+            clearLeaderboard();
+            //getWinners();
         }
 
         var i = 0;
@@ -341,7 +340,6 @@ function crossedFinishline() {
 }
 
 function updateCounter() {
-    // counter = Math.round((counter + 0.1)*100)/100;
     counter = counter + 0.01;
 }
 
@@ -368,7 +366,7 @@ function collectStar(player, star) {
     star.disableBody(true, true);
 
     starsCollected +=1;
-    counter = counter -2;
+    counter = counter -1;
 
     //  Add and update the score
     scoreText.setText('Stars Collected: ' + starsCollected);
@@ -477,10 +475,10 @@ const printTime = (context) => {
 
 const compareGameRecordsTime = (a, b) => {
 
-    if (a.playerTime < b.playerTime) {
+    if (parseFloat(a.playerTime) < parseFloat(b.playerTime)) {
         return -1;
     }
-    if (a.playerTime > b.playerTime) {
+    if (parseFloat(a.playerTime) > parseFloat(b.playerTime)) {
         return 1;
     }
     return 0
