@@ -32,7 +32,7 @@ var insideCave = [];
 
 export default class uio {
     preload() {
-        this.load.tilemapTiledJSON('map', 'assets/uio/ntnu-1.json');
+        this.load.tilemapTiledJSON('map', 'assets/uio/UIO2.json');
         this.load.image('tileset', 'assets/uio/tileset.png');
         this.load.image('star', 'assets/uio/star.png');
         this.load.image('bomb', 'assets/uio/bomb.png');
