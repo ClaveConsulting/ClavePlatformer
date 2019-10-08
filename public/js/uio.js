@@ -63,7 +63,7 @@ export default class uio {
 
 
         // Before you can use the collide function you need to set what tiles can collide
-        map.setCollisionBetween(1, 100, true, 'ground');
+        map.setCollisionBetween(1, 10000, true, 'ground');
 
         // Add player to the game
         const spawnPoint = map.findObject("spawnpoints", obj => obj.name === "player");
