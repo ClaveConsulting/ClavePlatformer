@@ -1,7 +1,4 @@
-var counter = 0;
-var timedEvent;
 var movementDirection;
-var starsCollected = 0;
 
 export const { Each } = Phaser.Utils.Array;
 
