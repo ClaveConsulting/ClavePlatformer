@@ -1,17 +1,17 @@
 import gameScene from './gameScene.js';
 
 
-export default class uio extends gameScene {
+export default class ntnu extends gameScene {
     
     preload() {
-        this.load.tilemapTiledJSON('map', 'assets/uio/uio.json');
+        this.load.tilemapTiledJSON('map', 'assets/ntnu/ntnu.json');
 
 
         this.load.image('tileset', 'assets/common/tileset.png');
         this.load.image('star', 'assets/common/star.png');
         this.load.image('ball', 'assets/common/ball.png');
         this.load.image('sky', 'assets/common/sky.png');
-        this.load.spritesheet('dude', 'assets/common/dude-1.png', {
+        this.load.spritesheet('dude', 'assets/common/claveDude.png', {
             frameWidth: 16,
             frameHeight: 32
         });
