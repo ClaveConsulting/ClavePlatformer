@@ -1,4 +1,5 @@
-{ "height":50,
+{ "compressionlevel":-1,
+ "height":50,
  "infinite":false,
  "layers":[
         {
@@ -1102,13 +1103,13 @@
  "nextobjectid":101,
  "orientation":"orthogonal",
  "renderorder":"right-down",
- "tiledversion":"1.2.4",
+ "tiledversion":"1.8.2",
  "tileheight":32,
  "tilesets":[
         {
          "columns":20,
          "firstgid":1,
-         "image":"tileset.png",
+         "image":"..\/common\/tileset.png",
          "imageheight":640,
          "imagewidth":640,
          "margin":0,
@@ -1166,6 +1167,6 @@
         }],
  "tilewidth":32,
  "type":"map",
- "version":1.2,
+ "version":"1.8",
  "width":370
 }

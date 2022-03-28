@@ -1,9 +1,12 @@
-import uio from './uio.js';
+import ntnu from './ntnu.js';
+
+var width = window.innerWidth;
+var height = window.innerHeight;
 
 var config = {
     type: Phaser.AUTO,
-    width: 2000,
-    height: 1125,
+    width: width,
+    height: height,
     pixelArt: true,
     physics: {
         default: 'arcade',
@@ -11,7 +14,10 @@ var config = {
             gravity: { y: 700 },
         }
     },
-    scene: uio
+    input: {
+        gamepad: true
+    },
+    scene: ntnu
 };
 
 const game = new Phaser.Game(config);
