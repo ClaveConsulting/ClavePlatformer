@@ -1,6 +1,5 @@
-//import uio from './uio.js';
 import ntnu from './ntnu.js';
-//import gameScene from './gameScene.js';
+
 var width = window.innerWidth;
 var height = window.innerHeight;
 
