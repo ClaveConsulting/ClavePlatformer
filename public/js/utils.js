@@ -1,6 +1,13 @@
 //TODO: Move basic functions here??
+//var balls;
+var counter = 0;
+var timedEvent;
+var movementDirection;
+var starsCollected = 0;
 
-export function movePlayer(direction){
+export const { Each } = Phaser.Utils.Array;
+
+export function movePlayer(player,direction,speed,acceleration){
 
     if (direction == 'left'){
         movementDirection = -1;
@@ -8,7 +15,7 @@ export function movePlayer(direction){
         movementDirection = 1;
     }
 
-    if (Math.abs(player.body.velocity.x) < walkspeed) {
+    if (Math.abs(player.body.velocity.x) < speed) {
         
         if (Math.abs(player.body.velocity.x)<10){
             player.setVelocityX(10*movementDirection);
@@ -30,7 +37,7 @@ export function movePlayer(direction){
     player.anims.play(direction, true);
 }
 
-export function stopPlayer(direction) {
+export function stopPlayer(player,direction,acceleration) {
     if (direction == 'right' && player.body.velocity.x > 0){
         player.setAccelerationX(-2*acceleration);
     } else if (direction == 'left' && player.body.velocity.x < 0){
@@ -42,9 +49,9 @@ export function stopPlayer(direction) {
     }
 }
 
-export function deadlyTileHit(sprite, tile) {
+export function deadlyTileHit(scene, timedEvent, player, gameOverText, gameOver) {
 
-    this.physics.pause();
+    scene.physics.pause();
 
     timedEvent.destroy();
 
@@ -53,7 +60,7 @@ export function deadlyTileHit(sprite, tile) {
     player.anims.play('turn');
 
     // GAME OVER
-    gameOverText = this.add.text(350, 300, 'GAME OVER', {
+    gameOverText = scene.add.text(350, 300, 'GAME OVER', {
         font: "36px monospace",
         fill: "#000000",
         padding: {
@@ -65,9 +72,9 @@ export function deadlyTileHit(sprite, tile) {
     gameOver = true;
 }
 
-export function crossedFinishline() {
+export function crossedFinishline(scene, timedEvent, player, gameOver,leaderboard) {
 
-    this.physics.pause();
+    scene.physics.pause();
 
     timedEvent.destroy();
 
@@ -77,57 +84,79 @@ export function crossedFinishline() {
 
     recordTime();
 
-    printTime(this);
+    printTime(scene,leaderboard);
 
     gameOver = true;
 }
 
 export function updateCounter() {
-    counter = counter + 0.01;
+    return counter = counter + 0.01;
 }
 
-export function printCounter() {
+export function printCounter(counterText) {
+    console.log({})
     counterText.setText('Time: ' + counter.toFixed(2) + 'S');
 }
 
-export function throwBall() {
-    var ball = balls.create(player.x, player.y, 'ball');
-    if (direction === 'right') {
-        ball.setVelocity(1000, -200);
-    }
-    if (direction === 'left') {
-        ball.setVelocity(-1000, -200);
+
+export function updateBall(ball,delta){
+    ball.state -= delta;
+    if (ball.state <= 0){
+        ball.disableBody(true,true);
     }
 }
 
-export function hitBombBall(bomb, ball) {
-    bomb.disableBody(true, true);
-    ball.disableBody(true, true);
+export function throwBallFromPlayer(ballLifeSpan, balls, player,direction) {
+    throwBallFromGroup(
+      balls,
+      player.x,
+      player.y,
+      ballLifeSpan,
+      direction
+    );
+  }
+
+function throwBallFromGroup(group, x, y, lifespan, direction) {
+    const ball = group.getFirstDead(false);
+  
+    if (ball) {
+        if (direction === 'right') {
+            
+            var vx = 1000
+            var vy = -200
+        }
+        if (direction === 'left') {
+            
+            var vx = -1000
+            var vy = -200
+        }
+        throwBall(ball, x, y, vx, vy, lifespan);
+    }
+}
+  
+function throwBall(ball, x, y, vx, vy, lifespan) {
+    ball.enableBody(true, x, y, true, true);
+    ball.setVelocity(vx, vy);
+    ball.setState(lifespan);
+    ball.setBounceX(0.5);
+    ball.setBounceY(0.5);
+
 }
 
-export function collectStar(player, star) {
+export function collectStar(object, star, starsCollected, scoreText, counterText,scene) {
     star.disableBody(true, true);
-
-    starsCollected +=1;
-    counter = counter -1;
 
     //  Add and update the score
     scoreText.setText('Stars Collected: ' + starsCollected);
     counterText.setBackgroundColor('#FFBE2E');
-    this.time.addEvent({
+    scene.time.addEvent({
         delay: 500,
         callback: () => {
             counterText.setBackgroundColor('#fff');
         },
-        callbackScope: this
+        callbackScope: scene
     });
-    /*
-    if (stars.countActive(true) === 0) {
-        //  A new batch of stars to collect
-        stars.children.iterate(function (child) {
-            child.enableBody(true, child.x, 0, true, true);
-        });
-     */
+
 }
 
 export const getWinners = () => {
@@ -144,7 +173,7 @@ export const clearLeaderboard = () => {
     let timeArrayAssetsShowcase = JSON.parse(localStorage.getItem("timeArrayAssetsShowcase"));
     timeArrayAssetsShowcase = [];
     localStorage.setItem("timeArrayAssetsShowcase", JSON.stringify(timeArrayAssetsShowcase));
-}
+};
 
 export const recordTime = () => {
     let timeArrayAssetsShowcase = JSON.parse(localStorage.getItem("timeArrayAssetsShowcase"));
@@ -179,7 +208,7 @@ export const recordTime = () => {
     localStorage.setItem("timeArrayAssetsShowcase", JSON.stringify(timeArrayAssetsShowcase));
 };
 
-export const printTime = (context) => {
+export const printTime = (context,leaderboard) => {
     //context er 'this' i parent
     let timeArrayAssetsShowcase = JSON.parse(localStorage.getItem("timeArrayAssetsShowcase"));
 
@@ -227,27 +256,6 @@ export const compareGameRecordsTime = (a, b) => {
     return 0
 };
 
-export function hitBomb(player, bomb) {
-    this.physics.pause();
-
-    timedEvent.destroy();
-
-    player.setTint(0xff0000);
-
-    player.anims.play('turn');
-
-    // GAME OVER
-    gameOverText = this.add.text(350, 300, 'GAME OVER', {
-        font: "36px monospace",
-        fill: "#000000",
-        padding: {
-            x: 100,
-            y: 50
-        },
-        backgroundColor: "#f00"
-    }).setScrollFactor(0);
-    gameOver = true;
-}
 
 export function dump() {
 

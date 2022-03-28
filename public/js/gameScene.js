@@ -1,22 +1,14 @@
 //TODO Add import from utils 
-import {deadlyTileHit} from './utils.js';
+import {deadlyTileHit, movePlayer, stopPlayer, crossedFinishline, updateCounter, printCounter, throwBallFromPlayer, collectStar, getWinners, printTime,updateBall} from './utils.js';
 
 var player;
 var stars;
-var bombs;
-var ground;
 var cursors;
-var score = 0;
 var gameOver = false;
-var scoreText;
-var gameOverText;
-var leaderboard;
 var keyboardInput;
 var keyboardInputC;
 var keyboardInputQ;
-var padB
 var spaceKey;
-var highScoreText;
 var balls;
 var direction = 'right';
 var button;
@@ -27,11 +19,6 @@ var timedEvent2;
 var finishline;
 var numberOfStars = 0;
 var deadlyTiles = [];
-var walkspeed = 500;
-var jumpspeed = 600;
-var maxspeed = 800;
-var acceleration = 1800;
-var movementDirection;
 var starsCollected = 0;
 var hiding;
 var caves = [];
@@ -39,18 +26,21 @@ var insideCave = [];
 var doubleJumpAvailable = true;
 var jumping = false;
 var throwing = false;
+var scoreText;
+var leaderboard;
 
+const WALKSPEED = 500;
+const JUMPSPEED = 600;
+const MAXSPEED = 800;
+const ACCELERATION = 1800;
 const BALL_LIFE_SPAN = 2;
 const MAX_NUMBER_OF_BALLS = 10;
-
 const { Each } = Phaser.Utils.Array;
 
 
 export default class gameScene  {
 
-    constructor(pathToMap) {
-        console.log(pathToMap)
-        this.mapPath = pathToMap;
+    constructor() {
         this.pad = null;
     }
 
@@ -98,7 +88,7 @@ export default class gameScene  {
         player.setBounce(0.1);
         player.body.allowGravity;
         player.body.setGravityY(750);
-        player.body.setMaxVelocity(maxspeed);
+        player.body.setMaxVelocity(MAXSPEED);
         player.setVelocityX(0);
 
 
@@ -132,7 +122,8 @@ export default class gameScene  {
                 deadlyTiles.push(tile.index);
             }
         });
-        foreground.setTileIndexCallback(deadlyTiles, deadlyTileHit, this);
+
+        foreground.setTileIndexCallback(deadlyTiles, (player,gameOverText) => deadlyTileHit(this, timedEvent, player, gameOverText, gameOver), this);
 
         hiding = map.createLayer('hiding', tileset, 0, 0);
 
@@ -164,8 +155,6 @@ export default class gameScene  {
         keyboardInputQ = this.input.keyboard.addKeys('Q');
         spaceKey = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.SPACE);
 
-        padB = this.input.gamepad.B;
-
 
 
 
@@ -173,7 +162,6 @@ export default class gameScene  {
         // Dualshock 4 BT  
         if (this.input.gamepad.total === 0)
         {
-            console.log('NO gamepad')
             var text = this.add.text(10, 10, 'Press any button on a connected Gamepad', { font: '16px Courier', fill: '#00ff00' });
     
             this.input.gamepad.once('connected', function (pad) {
@@ -223,13 +211,34 @@ export default class gameScene  {
 
 
         //  Checks to see if the player overlaps with any of the stars, if he does call the collectStar function
-        this.physics.add.overlap(player, stars, collectStar, null, this);
+        this.physics.add.overlap(
+            player, 
+            stars, 
+            (player,star) => {                
+                starsCollected +=1;
+                counter = counter -1;
+                collectStar(player,star, starsCollected, scoreText, counterText, this)
+            },
+            null, 
+            this
+        );
 
         // See if ball overlaps with star
-        this.physics.add.overlap(balls, stars, collectStar, null, this);
-
+        //this.physics.add.overlap(balls, stars, collectStar, null, this);
+        this.physics.add.overlap(
+            balls, 
+            stars, 
+            (ball, star) => {                
+                starsCollected +=1;
+                counter = counter -1;
+                collectStar(ball, star, starsCollected, scoreText, counterText, this)
+            },
+            null, 
+            this
+        );
+        
         // Checks to see if player is at finishline
-        this.physics.add.overlap(player, finishline, crossedFinishline, null, this);
+        this.physics.add.overlap(player, finishline, (player) => crossedFinishline(this,timedEvent,player,gameOver), null, this);
 
         this.physics.add.overlap(player, foreground);
 
@@ -237,7 +246,7 @@ export default class gameScene  {
         this.cameras.main.setBounds(0, 0, map.widthInPixels, map.heightInPixels);
         this.physics.world.setBounds(0, 0, map.widthInPixels, map.heightInPixels, true, true, true, true);
 
-        this.physics.world.on('worldstep', worldStep, this)
+        this.physics.world.on('worldstep', worldStep, this);
 
         // "New "Game" Button
         button = this.add.text(1000, 16, 'New Game', {
@@ -281,14 +290,18 @@ export default class gameScene  {
 
         timedEvent = this.time.addEvent({
             delay: 10,
-            callback: updateCounter,
+            callback: () => {
+                counter = counter + 0.01
+            },
             callbackScope: this,
             loop: true
         });
 
         timedEvent2 = this.time.addEvent({
             delay: 100,
-            callback: printCounter,
+            callback: () => {
+                counterText.setText('Time: ' + counter.toFixed(2) + 'S')
+            },
             callbackScope: this,
             loop: true
         });
@@ -306,27 +319,25 @@ export default class gameScene  {
 
         if (cursors.left.isDown || (pad && pad.left)) {
             direction = 'left';
-            movePlayer(direction);
+            movePlayer(player,direction,WALKSPEED,ACCELERATION);
         }
         
         else if (cursors.right.isDown|| (pad && pad.right)) {
             direction = 'right';
-            movePlayer(direction);
+            movePlayer(player, direction,WALKSPEED,ACCELERATION);
         } 
 
         else {
-            stopPlayer(direction)   
+            stopPlayer(player, direction,ACCELERATION)   
         }
 
         if ((spaceKey.isDown || (pad && pad.A)) && player.body.blocked.down) {
             jumping = true;
-            console.log("Jump")
 
-            player.setVelocityY(-jumpspeed);
+            player.setVelocityY(-JUMPSPEED);
         } else if ((spaceKey.isDown || (pad && pad.A)) && doubleJumpAvailable && jumping == false) {
-            console.log("Double Jump")
             doubleJumpAvailable = false;
-            player.setVelocityY(-jumpspeed);
+            player.setVelocityY(-JUMPSPEED);
             jumping = true;
         }
         
@@ -340,12 +351,12 @@ export default class gameScene  {
         }
 
         if (Phaser.Input.Keyboard.JustDown(keyboardInput.H)) {
-            printTime(this);
+            printTime(this,leaderboard);
         }
 
         if ((Phaser.Input.Keyboard.JustDown(keyboardInputC.C) || (pad && pad.B)) && !throwing) {
             throwing = true;
-            throwBallFromPlayer();
+            throwBallFromPlayer(BALL_LIFE_SPAN,balls,player,direction);
         }
 
         if (!(Phaser.Input.Keyboard.JustDown(keyboardInputC.C) || (pad && pad.B))) {
@@ -356,13 +367,6 @@ export default class gameScene  {
             //clearLeaderboard();
             getWinners();
         }
-
-
-
-
-        // Update balls and removing old
-
-
 
 
         //Hiding and unhiding cave overlay
@@ -381,314 +385,7 @@ export default class gameScene  {
     }
 }
 
-//TODO Remove this from gameScene.js
-    
-
-function movePlayer(direction){
-
-    if (direction == 'left'){
-        movementDirection = -1;
-    } else {
-        movementDirection = 1;
-    }
-
-    if (Math.abs(player.body.velocity.x) < walkspeed) {
-        
-        if (Math.abs(player.body.velocity.x)<10){
-            player.setVelocityX(10*movementDirection);
-        }
-
-        player.setAccelerationX(movementDirection * acceleration);
-        
-    }
-    else if (player.body.velocity.x/movementDirection<0){
-
-        player.setAccelerationX(movementDirection * 2 * acceleration)
-
-    }
-
-    else {
-        player.setAccelerationX(0);
-    }
-
-    player.anims.play(direction, true);
-}
-
-function stopPlayer(direction) {
-    if (direction == 'right' && player.body.velocity.x > 0){
-        player.setAccelerationX(-2*acceleration);
-    } else if (direction == 'left' && player.body.velocity.x < 0){
-        player.setAccelerationX(2*acceleration);
-    } else {
-        player.setAccelerationX(0)
-        player.setVelocityX(0);
-        player.anims.stop();
-    }
-}
-
-/*
-function deadlyTileHit(sprite, tile) {
-
-    this.physics.pause();
-
-    timedEvent.destroy();
-
-    player.setTint(0xff0000);
-
-    player.anims.play('turn');
-
-    // GAME OVER
-    gameOverText = this.add.text(350, 300, 'GAME OVER', {
-        font: "36px monospace",
-        fill: "#000000",
-        padding: {
-            x: 100,
-            y: 50
-        },
-        backgroundColor: "#f00"
-    }).setScrollFactor(0);
-    gameOver = true;
-}
-*/
-
-function crossedFinishline() {
-
-    this.physics.pause();
-
-    timedEvent.destroy();
-
-    player.setTint(0xff0000);
-
-    player.anims.play('turn');
-
-    recordTime();
-
-    printTime(this);
-
-    gameOver = true;
-}
-
-function updateCounter() {
-    counter = counter + 0.01;
-}
-
-function printCounter() {
-    counterText.setText('Time: ' + counter.toFixed(2) + 'S');
-}
-
-
-
-function hitBombBall(bomb, ball) {
-    bomb.disableBody(true, true);
-    ball.disableBody(true, true);
-}
-
-function collectStar(player, star) {
-    star.disableBody(true, true);
-
-    starsCollected +=1;
-    counter = counter -1;
-
-    //  Add and update the score
-    scoreText.setText('Stars Collected: ' + starsCollected);
-    counterText.setBackgroundColor('#FFBE2E');
-    this.time.addEvent({
-        delay: 500,
-        callback: () => {
-            counterText.setBackgroundColor('#fff');
-        },
-        callbackScope: this
-    });
-    /*
-    if (stars.countActive(true) === 0) {
-        //  A new batch of stars to collect
-        stars.children.iterate(function (child) {
-            child.enableBody(true, child.x, 0, true, true);
-        });
-     */
-}
-
-const getWinners = () => {
-    let timeArrayAssetsShowcase = JSON.parse(localStorage.getItem("timeArrayAssetsShowcase"));
-    let random = Phaser.Math.Between(1, timeArrayAssetsShowcase.length - 1);
-
-    console.log("BEST TIME WINNER:");
-    console.log(timeArrayAssetsShowcase[0]);
-    console.log("RANDOM WINNER:");
-    console.log(timeArrayAssetsShowcase[random]);
-}
-
-const clearLeaderboard = () => {
-    let timeArrayAssetsShowcase = JSON.parse(localStorage.getItem("timeArrayAssetsShowcase"));
-    timeArrayAssetsShowcase = [];
-    localStorage.setItem("timeArrayAssetsShowcase", JSON.stringify(timeArrayAssetsShowcase));
-}
-
-const recordTime = () => {
-    let timeArrayAssetsShowcase = JSON.parse(localStorage.getItem("timeArrayAssetsShowcase"));
-
-    if (timeArrayAssetsShowcase === null || timeArrayAssetsShowcase === undefined) {
-        timeArrayAssetsShowcase = [];
-    }
-
-    const playerName = prompt("Bra jobba! Skriv inn fullt navn:");
-    const playerPhone = prompt("Og telefonnummer:")
-
-    const gameRecord = {
-        player: playerName,
-        playerStars: starsCollected,
-        playerTime: counter.toFixed(2),
-        playerPhone: playerPhone
-    };
-
-
-    let previousAttempt = timeArrayAssetsShowcase.filter(object => (object.playerPhone == gameRecord.playerPhone));
-    if (previousAttempt.length > 0){
-        // Returns -1 if gameRecord have a lower score than previousAttempt
-        if(compareGameRecordsTime(gameRecord, previousAttempt[0]) < 0){
-            timeArrayAssetsShowcase[timeArrayAssetsShowcase.findIndex(object => (object == previousAttempt[0]))] = gameRecord;
-        }
-    }else{
-        timeArrayAssetsShowcase.push(gameRecord);
-    }
-
-    timeArrayAssetsShowcase.sort(compareGameRecordsTime);
-
-    localStorage.setItem("timeArrayAssetsShowcase", JSON.stringify(timeArrayAssetsShowcase));
-};
-
-const printTime = (context) => {
-    //context er 'this' i parent
-    let timeArrayAssetsShowcase = JSON.parse(localStorage.getItem("timeArrayAssetsShowcase"));
-
-    if (timeArrayAssetsShowcase === null || timeArrayAssetsShowcase === undefined) {
-        timeArrayAssetsShowcase = [];
-    }
-
-    leaderboard = context.add.text(400, 200, 'Leaderboard', {
-            fontSize: '70px',
-            fontStyle: 'bold',
-            fill: '#000'
-        }).setScrollFactor(0);
-    let yPos = 300;
-
-    if (timeArrayAssetsShowcase.length > 15) {
-        timeArrayAssetsShowcase = timeArrayAssetsShowcase.slice(0, 14);
-    }
-
-    timeArrayAssetsShowcase.forEach(function (gameRecord) {
-        leaderboard = context.add.text(350, yPos, gameRecord.player + ': ', {
-                fontSize: '45px',
-                fontStyle: 'bold',
-                fill: '#000'
-            })
-            .setScrollFactor(0);
-        leaderboard = context.add.text(900, yPos, gameRecord.playerTime , {
-                fontSize: '45px',
-                fontStyle: 'bold',
-                fill: '#000'
-            })
-            .setScrollFactor(0);
-        yPos += 40;
-    });
-
-};
-
-const compareGameRecordsTime = (a, b) => {
-
-    if (parseFloat(a.playerTime) < parseFloat(b.playerTime)) {
-        return -1;
-    }
-    if (parseFloat(a.playerTime) > parseFloat(b.playerTime)) {
-        return 1;
-    }
-    return 0
-};
-
-function hitBomb(player, bomb) {
-    this.physics.pause();
-
-    timedEvent.destroy();
-
-    player.setTint(0xff0000);
-
-    player.anims.play('turn');
-
-    // GAME OVER
-    gameOverText = this.add.text(350, 300, 'GAME OVER', {
-        font: "36px monospace",
-        fill: "#000000",
-        padding: {
-            x: 100,
-            y: 50
-        },
-        backgroundColor: "#f00"
-    }).setScrollFactor(0);
-    gameOver = true;
-}
-
 
 function worldStep(delta){
     Each(balls.getChildren(),updateBall,this,[delta]);
 }
-
-function updateBall(ball,delta){
-    ball.state -= delta;
-    if (ball.state <= 0){
-        ball.disableBody(true,true);
-    }
-}
-
-
-function throwBallFromPlayer() {
-    throwBallFromGroup(
-      balls,
-      player.x,
-      player.y,
-      BALL_LIFE_SPAN
-    );
-  }
-
-function throwBallFromGroup(group, x, y, lifespan) {
-    const ball = group.getFirstDead(false);
-  
-    if (ball) {
-        if (direction === 'right') {
-            
-            var vx = 1000
-            var vy = -200
-        }
-        if (direction === 'left') {
-            
-            var vx = -1000
-            var vy = -200
-        }
-        throwBall(ball, x, y, vx, vy, lifespan);
-    }
-}
-  
-  function throwBall(ball, x, y, vx, vy, lifespan) {
-    console.log({ball:ball})
-    ball.enableBody(true, x, y, true, true);
-    ball.setVelocity(vx, vy);
-    ball.setState(lifespan);
-    ball.setBounceX(0.5);
-    ball.setBounceY(0.5);
-
-}
-  
-/*
-  function throwBall() {
-    var ball = balls.create(player.x, player.y, 'ball');
-    console.log(ball)
-    if (direction === 'right') {
-        ball.setVelocity(1000, -200);
-    }
-    if (direction === 'left') {
-        ball.setVelocity(-1000, -200);
-    }
-
-
-    ball.setState(BALL_LIFE_SPAN);
-}
-*/
