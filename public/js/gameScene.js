@@ -27,6 +27,8 @@ var jumping = false;
 var throwing = false;
 var scoreText;
 var leaderboard;
+var platformCollider;
+var falling = false;
 
 const WALKSPEED = 500;
 const JUMPSPEED = 600;
@@ -74,10 +76,18 @@ export default class gameScene  {
         var tileset = map.addTilesetImage('tileset', 'tileset');
         var background = map.createLayer('background', tileset, 0, 0);
         var ground = map.createLayer('ground', tileset, 0, 0);
+        var platforms = map.createLayer('platforms', tileset, 0, 0);
+
+
+        console.log(ground);
+        console.log(platforms);
+        
 
 
         // Before you can use the collide function you need to set what tiles can collide
-        map.setCollisionBetween(1, 10000, true, 'ground');
+        map.setCollisionBetween(1, 10000, true, false,'ground');
+        map.setCollisionBetween(1, 10000, true, false,'platforms');
+
 
         // Add player to the game
         const spawnPoint = map.findObject("spawnpoints", obj => obj.name === "player");
@@ -205,6 +215,7 @@ export default class gameScene  {
         //  Collide the player and the stars with the ground
         this.physics.add.collider(finishline, ground);
         this.physics.add.collider(player, ground);
+        platformCollider = this.physics.add.collider(player, platforms);
         this.physics.add.collider(stars, ground);
         this.physics.add.collider(balls, ground);
 
@@ -310,45 +321,55 @@ export default class gameScene  {
     update() {
 
         var pad = this.input.gamepad.pad1;
-
-
+        
         if (gameOver) {
             return;
         }
 
+        // Movement logic
+
         if (cursors.left.isDown || (pad && pad.left)) {
             direction = 'left';
             movePlayer(player,direction,WALKSPEED,ACCELERATION);
-        }
-        
-        else if (cursors.right.isDown|| (pad && pad.right)) {
+        } else if (cursors.right.isDown|| (pad && pad.right)) {
             direction = 'right';
             movePlayer(player, direction,WALKSPEED,ACCELERATION);
-        } 
-
-        else {
+        } else {
             stopPlayer(player, direction,ACCELERATION)   
         }
 
-        if ((spaceKey.isDown || (pad && pad.A)) && player.body.blocked.down) {
-            jumping = true;
+        // Jumping logic
 
-            player.setVelocityY(-JUMPSPEED);
-        } else if ((spaceKey.isDown || (pad && pad.A)) && doubleJumpAvailable && jumping == false) {
-            doubleJumpAvailable = false;
-            player.setVelocityY(-JUMPSPEED);
-            jumping = true;
-        }
-        
-        if (!spaceKey.isDown && !(pad && pad.A)){
+        if (spaceKey.isDown || (pad && pad.A)){
+            if (player.body.blocked.down){
+                jumping = true;
+                player.setVelocityY(-JUMPSPEED);
+            } else if (doubleJumpAvailable && jumping == false) {
+                doubleJumpAvailable = false;
+                player.setVelocityY(-JUMPSPEED);
+                jumping = true;
+            }
+        } else if (!spaceKey.isDown && !(pad && pad.A)){
             jumping = false;
         }
-
 
         if (player.body.blocked.down){
             doubleJumpAvailable = true;
         }
 
+        // Platform logic
+
+        // TODO add logic for controlled falling through platforms. 
+
+        if (player.body.velocity.y < 0){
+            platformCollider.active = false;
+        } else {
+            platformCollider.active = true;
+        }
+
+
+
+        
         if (Phaser.Input.Keyboard.JustDown(keyboardInput.H)) {
             printTime(this,leaderboard);
         }
