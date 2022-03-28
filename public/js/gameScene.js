@@ -1,4 +1,3 @@
-//TODO Add import from utils 
 import {deadlyTileHit, movePlayer, stopPlayer, crossedFinishline, updateCounter, printCounter, throwBallFromPlayer, collectStar, getWinners, printTime,updateBall} from './utils.js';
 
 var player;

@@ -1,5 +1,3 @@
-//TODO: Move basic functions here??
-//var balls;
 var counter = 0;
 var timedEvent;
 var movementDirection;
