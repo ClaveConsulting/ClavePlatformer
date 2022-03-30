@@ -1,4 +1,4 @@
-import {deadlyTileHit, movePlayer, stopPlayer, crossedFinishline, updateCounter, printCounter, throwBallFromPlayer, collectStar, getWinners, printTime,updateBall} from './utils.js';
+import {deadlyTileHit, movePlayer, stopPlayer, crossedFinishline, updateCounter, printCounter, throwBallFromPlayer, collectStar, getWinners, printTime,updateBall, playerIntersect, playerStandingOnMapLayer} from './utils.js';
 
 var player;
 var stars;
@@ -208,16 +208,15 @@ export default class gameScene  {
                 backgroundColor: "#ffffff"
             }).setScrollFactor(0);
 
-        //  Colliders
+        //  Colliders for ground 
         this.physics.add.collider(finishline, ground);
         this.physics.add.collider(player, ground);
-        
-        platformCollider = this.physics.add.collider(player, platforms);
-        this.physics.add.collider(balls,platforms);
-
         this.physics.add.collider(stars, ground);
         this.physics.add.collider(balls, ground);
 
+        // Colliders for platforms
+        platformCollider = this.physics.add.collider(player, platforms);
+        this.physics.add.collider(balls,platforms);
 
         //  Checks to see if the player overlaps with any of the stars, if he does call the collectStar function
         this.physics.add.overlap(
@@ -327,7 +326,6 @@ export default class gameScene  {
         }
 
         // Movement logic
-
         if (cursors.left.isDown || (pad && pad.left)) {
             direction = 'left';
             movePlayer(player,direction,WALKSPEED,ACCELERATION);
@@ -339,7 +337,6 @@ export default class gameScene  {
         }
 
         // Jumping logic
-
         if (spaceKey.isDown || (pad && pad.B)){
             if (player.body.blocked.down){
                 jumping = true;
@@ -358,22 +355,16 @@ export default class gameScene  {
         }
 
         // Platform logic
-      
-        playerHeadCollideTile = platforms.getTileAtWorldXY(player.x, player.y - 16, true)
-        playerFootCollideTile = platforms.getTileAtWorldXY(player.x, player.y + 15, true)
-        playerUnderFootTile = platforms.getTileAtWorldXY(player.x, player.y + 16, true)
 
-
-        if (player.body.velocity.y < -5 || playerFootCollideTile.index > 0 || playerHeadCollideTile.index > 0){
+        if (player.body.velocity.y < 0 || playerIntersect(player, platforms)){
             platformCollider.active = false;
-        } else if(playerUnderFootTile.index > 0 && (cursors.down.isDown || (pad && pad.down))) {
+        } else if(playerStandingOnMapLayer(player,platforms) && (cursors.down.isDown || (pad && pad.down))) {
             platformCollider.active = false;
         } else {
             platformCollider.active = true;
         }
 
         // Throwing ball logic
-
         if ((Phaser.Input.Keyboard.JustDown(keyboardInputC.C) || (pad && pad.Y)) && !throwing) {
             throwing = true;
             throwBallFromPlayer(BALL_LIFE_SPAN,balls,player,direction);
@@ -384,7 +375,6 @@ export default class gameScene  {
         }
 
         // leaderboard
-        
         if (Phaser.Input.Keyboard.JustDown(keyboardInput.H)) {
             printTime(this,leaderboard);
         }
