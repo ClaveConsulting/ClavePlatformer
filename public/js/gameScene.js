@@ -208,10 +208,13 @@ export default class gameScene  {
                 backgroundColor: "#ffffff"
             }).setScrollFactor(0);
 
-        //  Collide the player and the stars with the ground
+        //  Colliders
         this.physics.add.collider(finishline, ground);
         this.physics.add.collider(player, ground);
+        
         platformCollider = this.physics.add.collider(player, platforms);
+        this.physics.add.collider(balls,platforms);
+
         this.physics.add.collider(stars, ground);
         this.physics.add.collider(balls, ground);
 
