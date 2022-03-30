@@ -1,4 +1,4 @@
-import {deadlyTileHit, movePlayer, stopPlayer, crossedFinishline, updateCounter, printCounter, throwBallFromPlayer, collectStar, getWinners, printTime,updateBall} from './utils.js';
+import {deadlyTileHit, movePlayer, stopPlayer, crossedFinishline, updateCounter, printCounter, throwBallFromPlayer, collectStar, getWinners, printTime,updateBall, playerIntersect, playerStandingOnMapLayer} from './utils.js';
 
 var player;
 var stars;
@@ -27,6 +27,12 @@ var jumping = false;
 var throwing = false;
 var scoreText;
 var leaderboard;
+var platformCollider;
+var falling = false;
+var playerHeadCollideTile;
+var playerFootCollideTile;
+var playerUnderFootTile;
+var platforms;
 
 const WALKSPEED = 500;
 const JUMPSPEED = 600;
@@ -46,7 +52,6 @@ export default class gameScene  {
     // Placeholer preload() function. currently redefined when intheriting from gameScene
     // This is due to map.json import    
     preload() {        
-        console.log(this.mapPath)
         this.load.tilemapTiledJSON('map', this.mapPath);
         this.load.image('tileset', 'assets/common/tileset.png');
         this.load.image('star', 'assets/common/star.png');
@@ -74,10 +79,12 @@ export default class gameScene  {
         var tileset = map.addTilesetImage('tileset', 'tileset');
         var background = map.createLayer('background', tileset, 0, 0);
         var ground = map.createLayer('ground', tileset, 0, 0);
-
+        platforms = map.createLayer('platforms', tileset, 0, 0);
 
         // Before you can use the collide function you need to set what tiles can collide
-        map.setCollisionBetween(1, 10000, true, 'ground');
+        map.setCollisionBetween(1, 10000, true, false,'ground');
+        map.setCollisionBetween(1, 10000, true, false,'platforms');
+
 
         // Add player to the game
         const spawnPoint = map.findObject("spawnpoints", obj => obj.name === "player");
@@ -158,7 +165,6 @@ export default class gameScene  {
 
 
         // Controller inputs
-        // Dualshock 4 BT  
         if (this.input.gamepad.total === 0)
         {
             var text = this.add.text(10, 10, 'Press any button on a connected Gamepad', { font: '16px Courier', fill: '#00ff00' });
@@ -202,12 +208,15 @@ export default class gameScene  {
                 backgroundColor: "#ffffff"
             }).setScrollFactor(0);
 
-        //  Collide the player and the stars with the ground
+        //  Colliders for ground 
         this.physics.add.collider(finishline, ground);
         this.physics.add.collider(player, ground);
         this.physics.add.collider(stars, ground);
         this.physics.add.collider(balls, ground);
 
+        // Colliders for platforms
+        platformCollider = this.physics.add.collider(player, platforms);
+        this.physics.add.collider(balls,platforms);
 
         //  Checks to see if the player overlaps with any of the stars, if he does call the collectStar function
         this.physics.add.overlap(
@@ -223,7 +232,6 @@ export default class gameScene  {
         );
 
         // See if ball overlaps with star
-        //this.physics.add.overlap(balls, stars, collectStar, null, this);
         this.physics.add.overlap(
             balls, 
             stars, 
@@ -308,65 +316,72 @@ export default class gameScene  {
     }
 
     update() {
-
+    
+        // init gamepad
         var pad = this.input.gamepad.pad1;
-
-
+        
+        //gameover
         if (gameOver) {
             return;
         }
 
+        // Movement logic
         if (cursors.left.isDown || (pad && pad.left)) {
             direction = 'left';
             movePlayer(player,direction,WALKSPEED,ACCELERATION);
-        }
-        
-        else if (cursors.right.isDown|| (pad && pad.right)) {
+        } else if (cursors.right.isDown|| (pad && pad.right)) {
             direction = 'right';
             movePlayer(player, direction,WALKSPEED,ACCELERATION);
-        } 
-
-        else {
+        } else {
             stopPlayer(player, direction,ACCELERATION)   
         }
 
-        if ((spaceKey.isDown || (pad && pad.A)) && player.body.blocked.down) {
-            jumping = true;
-
-            player.setVelocityY(-JUMPSPEED);
-        } else if ((spaceKey.isDown || (pad && pad.A)) && doubleJumpAvailable && jumping == false) {
-            doubleJumpAvailable = false;
-            player.setVelocityY(-JUMPSPEED);
-            jumping = true;
-        }
-        
-        if (!spaceKey.isDown && !(pad && pad.A)){
+        // Jumping logic
+        if (spaceKey.isDown || (pad && pad.B)){
+            if (player.body.blocked.down){
+                jumping = true;
+                player.setVelocityY(-JUMPSPEED);
+            } else if (doubleJumpAvailable && jumping == false) {
+                doubleJumpAvailable = false;
+                player.setVelocityY(-JUMPSPEED);
+                jumping = true;
+            }
+        } else if (!spaceKey.isDown && !(pad && pad.B)){
             jumping = false;
         }
-
 
         if (player.body.blocked.down){
             doubleJumpAvailable = true;
         }
 
-        if (Phaser.Input.Keyboard.JustDown(keyboardInput.H)) {
-            printTime(this,leaderboard);
+        // Platform logic
+
+        if (player.body.velocity.y < 0 || playerIntersect(player, platforms)){
+            platformCollider.active = false;
+        } else if(playerStandingOnMapLayer(player,platforms) && (cursors.down.isDown || (pad && pad.down))) {
+            platformCollider.active = false;
+        } else {
+            platformCollider.active = true;
         }
 
-        if ((Phaser.Input.Keyboard.JustDown(keyboardInputC.C) || (pad && pad.B)) && !throwing) {
+        // Throwing ball logic
+        if ((Phaser.Input.Keyboard.JustDown(keyboardInputC.C) || (pad && pad.Y)) && !throwing) {
             throwing = true;
             throwBallFromPlayer(BALL_LIFE_SPAN,balls,player,direction);
         }
 
-        if (!(Phaser.Input.Keyboard.JustDown(keyboardInputC.C) || (pad && pad.B))) {
+        if (!(Phaser.Input.Keyboard.JustDown(keyboardInputC.C) || (pad && pad.Y))) {
             throwing = false;
         }
 
-        if (Phaser.Input.Keyboard.JustDown(keyboardInputQ.Q)) {
-            //clearLeaderboard();
-            getWinners();
+        // leaderboard
+        if (Phaser.Input.Keyboard.JustDown(keyboardInput.H)) {
+            printTime(this,leaderboard);
         }
 
+        if (Phaser.Input.Keyboard.JustDown(keyboardInputQ.Q)) {
+            getWinners();
+        }
 
         //Hiding and unhiding cave overlay
         var i = 0;
@@ -380,7 +395,6 @@ export default class gameScene  {
         }else{
             hiding.alpha = 1;
         }
-0
     }
 }
 

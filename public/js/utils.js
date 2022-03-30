@@ -154,6 +154,42 @@ export function collectStar(object, star, starsCollected, scoreText, counterText
 
 }
 
+export function playerIntersect(player, mapLayer){
+    var playerTopRightCollideTile = mapLayer.getTileAtWorldXY(player.x + player.width/2, player.y - player.height/2, true).index;
+    var playerTopLeftCollideTile = mapLayer.getTileAtWorldXY(player.x -player.width/2, player.y - player.height/2, true).index;
+
+    // -1 compensating for pixel indexing in player
+    var playerBottomRightCollideTile = mapLayer.getTileAtWorldXY(player.x + player.width/2, player.y + player.height/2 -1, true).index;
+    var playerBottomLeftCollideTile = mapLayer.getTileAtWorldXY(player.x -player.width/2, player.y + player.height/2 -1, true).index;
+    
+    if (
+        playerTopRightCollideTile > 0 || 
+        playerTopLeftCollideTile > 0 || 
+        playerBottomRightCollideTile > 0 || 
+        playerBottomLeftCollideTile > 0
+        ){
+        return true;
+    } else {
+        return false;
+    }
+}
+
+export function playerStandingOnMapLayer(player, mapLayer){
+    // +1 for getting pixel outside of player sprite
+    var playerBottomRightCollideTile = mapLayer.getTileAtWorldXY(player.x + player.width/2, player.y + player.height/2 + 1, true).index;
+    var playerBottomLeftCollideTile = mapLayer.getTileAtWorldXY(player.x -player.width/2, player.y + player.height/2 + 1, true).index;
+
+    if (
+        playerBottomRightCollideTile > 0 || 
+        playerBottomLeftCollideTile > 0
+        ){
+        return true;
+    } else {
+        return false;
+    }
+
+}
+
 export const getWinners = () => {
     let timeArrayAssetsShowcase = JSON.parse(localStorage.getItem("timeArrayAssetsShowcase"));
     let random = Phaser.Math.Between(1, timeArrayAssetsShowcase.length - 1);
