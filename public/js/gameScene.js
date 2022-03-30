@@ -29,6 +29,10 @@ var scoreText;
 var leaderboard;
 var platformCollider;
 var falling = false;
+var playerHeadCollideTile;
+var playerFootCollideTile;
+var playerUnderFootTile;
+var platforms;
 
 const WALKSPEED = 500;
 const JUMPSPEED = 600;
@@ -76,13 +80,7 @@ export default class gameScene  {
         var tileset = map.addTilesetImage('tileset', 'tileset');
         var background = map.createLayer('background', tileset, 0, 0);
         var ground = map.createLayer('ground', tileset, 0, 0);
-        var platforms = map.createLayer('platforms', tileset, 0, 0);
-
-
-        console.log(ground);
-        console.log(platforms);
-        
-
+        platforms = map.createLayer('platforms', tileset, 0, 0);
 
         // Before you can use the collide function you need to set what tiles can collide
         map.setCollisionBetween(1, 10000, true, false,'ground');
@@ -319,7 +317,8 @@ export default class gameScene  {
     }
 
     update() {
-
+    
+        // init gamepad
         var pad = this.input.gamepad.pad1;
         
         if (gameOver) {
@@ -340,7 +339,7 @@ export default class gameScene  {
 
         // Jumping logic
 
-        if (spaceKey.isDown || (pad && pad.A)){
+        if (spaceKey.isDown || (pad && pad.B)){
             if (player.body.blocked.down){
                 jumping = true;
                 player.setVelocityY(-JUMPSPEED);
@@ -349,7 +348,7 @@ export default class gameScene  {
                 player.setVelocityY(-JUMPSPEED);
                 jumping = true;
             }
-        } else if (!spaceKey.isDown && !(pad && pad.A)){
+        } else if (!spaceKey.isDown && !(pad && pad.B)){
             jumping = false;
         }
 
@@ -358,36 +357,40 @@ export default class gameScene  {
         }
 
         // Platform logic
+      
+        playerHeadCollideTile = platforms.getTileAtWorldXY(player.x, player.y - 16, true)
+        playerFootCollideTile = platforms.getTileAtWorldXY(player.x, player.y + 15, true)
+        playerUnderFootTile = platforms.getTileAtWorldXY(player.x, player.y + 16, true)
 
-        // TODO add logic for controlled falling through platforms. 
 
-        if (player.body.velocity.y < 0){
+        if (player.body.velocity.y < -5 || playerFootCollideTile.index > 0 || playerHeadCollideTile.index > 0){
+            platformCollider.active = false;
+        } else if(playerUnderFootTile.index > 0 && (cursors.down.isDown || (pad && pad.down))) {
             platformCollider.active = false;
         } else {
             platformCollider.active = true;
         }
 
+        // Throwing ball logic
 
+        if ((Phaser.Input.Keyboard.JustDown(keyboardInputC.C) || (pad && pad.Y)) && !throwing) {
+            throwing = true;
+            throwBallFromPlayer(BALL_LIFE_SPAN,balls,player,direction);
+        }
 
+        if (!(Phaser.Input.Keyboard.JustDown(keyboardInputC.C) || (pad && pad.Y))) {
+            throwing = false;
+        }
+
+        // leaderboard
         
         if (Phaser.Input.Keyboard.JustDown(keyboardInput.H)) {
             printTime(this,leaderboard);
         }
 
-        if ((Phaser.Input.Keyboard.JustDown(keyboardInputC.C) || (pad && pad.B)) && !throwing) {
-            throwing = true;
-            throwBallFromPlayer(BALL_LIFE_SPAN,balls,player,direction);
-        }
-
-        if (!(Phaser.Input.Keyboard.JustDown(keyboardInputC.C) || (pad && pad.B))) {
-            throwing = false;
-        }
-
         if (Phaser.Input.Keyboard.JustDown(keyboardInputQ.Q)) {
-            //clearLeaderboard();
             getWinners();
         }
-
 
         //Hiding and unhiding cave overlay
         var i = 0;
