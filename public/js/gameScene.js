@@ -52,7 +52,6 @@ export default class gameScene  {
     // Placeholer preload() function. currently redefined when intheriting from gameScene
     // This is due to map.json import    
     preload() {        
-        console.log(this.mapPath)
         this.load.tilemapTiledJSON('map', this.mapPath);
         this.load.image('tileset', 'assets/common/tileset.png');
         this.load.image('star', 'assets/common/star.png');
@@ -166,7 +165,6 @@ export default class gameScene  {
 
 
         // Controller inputs
-        // Dualshock 4 BT  
         if (this.input.gamepad.total === 0)
         {
             var text = this.add.text(10, 10, 'Press any button on a connected Gamepad', { font: '16px Courier', fill: '#00ff00' });
@@ -232,7 +230,6 @@ export default class gameScene  {
         );
 
         // See if ball overlaps with star
-        //this.physics.add.overlap(balls, stars, collectStar, null, this);
         this.physics.add.overlap(
             balls, 
             stars, 
@@ -321,6 +318,7 @@ export default class gameScene  {
         // init gamepad
         var pad = this.input.gamepad.pad1;
         
+        //gameover
         if (gameOver) {
             return;
         }
@@ -404,7 +402,6 @@ export default class gameScene  {
         }else{
             hiding.alpha = 1;
         }
-0
     }
 }
 
