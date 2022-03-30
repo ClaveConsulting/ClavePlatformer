@@ -162,7 +162,12 @@ export function playerIntersect(player, mapLayer){
     var playerBottomRightCollideTile = mapLayer.getTileAtWorldXY(player.x + player.width/2, player.y + player.height/2 -1, true).index;
     var playerBottomLeftCollideTile = mapLayer.getTileAtWorldXY(player.x -player.width/2, player.y + player.height/2 -1, true).index;
     
-    if (playerTopRightCollideTile > 0 || playerTopLeftCollideTile > 0 || playerBottomRightCollideTile > 0 || playerBottomLeftCollideTile > 0){
+    if (
+        playerTopRightCollideTile > 0 || 
+        playerTopLeftCollideTile > 0 || 
+        playerBottomRightCollideTile > 0 || 
+        playerBottomLeftCollideTile > 0
+        ){
         return true;
     } else {
         return false;
@@ -174,7 +179,10 @@ export function playerStandingOnMapLayer(player, mapLayer){
     var playerBottomRightCollideTile = mapLayer.getTileAtWorldXY(player.x + player.width/2, player.y + player.height/2 + 1, true).index;
     var playerBottomLeftCollideTile = mapLayer.getTileAtWorldXY(player.x -player.width/2, player.y + player.height/2 + 1, true).index;
 
-    if (playerBottomRightCollideTile > 0 || playerBottomLeftCollideTile > 0){
+    if (
+        playerBottomRightCollideTile > 0 || 
+        playerBottomLeftCollideTile > 0
+        ){
         return true;
     } else {
         return false;
