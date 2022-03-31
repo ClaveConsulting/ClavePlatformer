@@ -52,7 +52,7 @@ export function deadlyTileHit(scene, timedEvent, player, gameOverText, gameOver)
 
     player.setTint(0xff0000);
 
-    player.anims.play('turn');
+    player.anims.stop();
 
     // GAME OVER
     gameOverText = scene.add.text(350, 300, 'GAME OVER', {
@@ -75,7 +75,7 @@ export function crossedFinishline(scene, timedEvent, player, gameOver ,leaderboa
 
     player.setTint(0xff0000);
 
-    player.anims.play('turn');
+    player.anims.stop();
 
     recordTime(starsCollected,counter);
 
