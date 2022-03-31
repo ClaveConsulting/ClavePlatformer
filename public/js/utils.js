@@ -52,7 +52,7 @@ export function deadlyTileHit(scene, timedEvent, player, gameOverText, gameOver)
 
     player.setTint(0xff0000);
 
-    player.anims.play('turn');
+    player.anims.stop();
 
     // GAME OVER
     gameOverText = scene.add.text(350, 300, 'GAME OVER', {
@@ -67,7 +67,7 @@ export function deadlyTileHit(scene, timedEvent, player, gameOverText, gameOver)
     gameOver = true;
 }
 
-export function crossedFinishline(scene, timedEvent, player, gameOver,leaderboard) {
+export function crossedFinishline(scene, timedEvent, player, gameOver ,leaderboard, starsCollected, counter) {
 
     scene.physics.pause();
 
@@ -75,9 +75,9 @@ export function crossedFinishline(scene, timedEvent, player, gameOver,leaderboar
 
     player.setTint(0xff0000);
 
-    player.anims.play('turn');
+    player.anims.stop();
 
-    recordTime();
+    recordTime(starsCollected,counter);
 
     printTime(scene,leaderboard);
 
@@ -206,7 +206,7 @@ export const clearLeaderboard = () => {
     localStorage.setItem("timeArrayAssetsShowcase", JSON.stringify(timeArrayAssetsShowcase));
 };
 
-export const recordTime = () => {
+export const recordTime = (starsCollected, counter) => {
     let timeArrayAssetsShowcase = JSON.parse(localStorage.getItem("timeArrayAssetsShowcase"));
 
     if (timeArrayAssetsShowcase === null || timeArrayAssetsShowcase === undefined) {

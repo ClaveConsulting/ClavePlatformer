@@ -245,7 +245,7 @@ export default class gameScene  {
         );
         
         // Checks to see if player is at finishline
-        this.physics.add.overlap(player, finishline, (player) => crossedFinishline(this,timedEvent,player,gameOver), null, this);
+        this.physics.add.overlap(player, finishline, (player) => crossedFinishline(this,timedEvent,player,gameOver,leaderboard,starsCollected,counter), null, this);
 
         this.physics.add.overlap(player, foreground);
 
