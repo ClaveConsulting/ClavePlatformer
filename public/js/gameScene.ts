@@ -1,4 +1,18 @@
-import {deadlyTileHit, movePlayer, stopPlayer, crossedFinishline, updateCounter, printCounter, throwBallFromPlayer, collectStar, getWinners, printTime,updateBall, playerIntersect, playerStandingOnMapLayer} from './utils.js';
+import {
+    deadlyTileHit,
+    movePlayer,
+    stopPlayer,
+    crossedFinishline,
+    updateCounter,
+    printCounter,
+    throwBallFromPlayer,
+    collectStar,
+    getWinners,
+    printTime,
+    updateBall,
+    playerIntersect,
+    playerStandingOnMapLayer,
+} from './utils.js';
 
 var player;
 var stars;
@@ -42,16 +56,14 @@ const BALL_LIFE_SPAN = 2;
 const MAX_NUMBER_OF_BALLS = 10;
 const { Each } = Phaser.Utils.Array;
 
-
-export default class gameScene  {
-
+export default class gameScene extends Phaser.Scene {
     constructor() {
         this.pad = null;
     }
 
     // Placeholer preload() function. currently redefined when intheriting from gameScene
-    // This is due to map.json import    
-    preload() {        
+    // This is due to map.json import
+    preload() {
         this.load.tilemapTiledJSON('map', this.mapPath);
         this.load.image('tileset', 'assets/common/tileset.png');
         this.load.image('star', 'assets/common/star.png');
@@ -59,22 +71,21 @@ export default class gameScene  {
         this.load.image('sky', 'assets/common/sky.png');
         this.load.spritesheet('dude', 'assets/common/dude-1.png', {
             frameWidth: 16,
-            frameHeight: 32
+            frameHeight: 32,
         });
         this.load.image('finishLine', 'assets/common/finishLine.png', {
             frameHeight: 79,
-            frameWidth: 35
+            frameWidth: 35,
         });
     }
 
     create() {
-
         this.add.image(0, 0, 'sky');
 
         var map = this.make.tilemap({
-            key: "map",
+            key: 'map',
             tileWidth: 32,
-            tileHeight: 32
+            tileHeight: 32,
         });
         var tileset = map.addTilesetImage('tileset', 'tileset');
         var background = map.createLayer('background', tileset, 0, 0);
@@ -82,12 +93,14 @@ export default class gameScene  {
         platforms = map.createLayer('platforms', tileset, 0, 0);
 
         // Before you can use the collide function you need to set what tiles can collide
-        map.setCollisionBetween(1, 10000, true, false,'ground');
-        map.setCollisionBetween(1, 10000, true, false,'platforms');
-
+        map.setCollisionBetween(1, 10000, true, false, 'ground');
+        map.setCollisionBetween(1, 10000, true, false, 'platforms');
 
         // Add player to the game
-        const spawnPoint = map.findObject("spawnpoints", obj => obj.name === "player");
+        const spawnPoint = map.findObject(
+            'spawnpoints',
+            (obj) => obj.name === 'player'
+        );
         player = this.physics.add.sprite(spawnPoint.x, spawnPoint.y, 'dude');
         player.setCollideWorldBounds(true);
         player.onWorldBounds = true;
@@ -97,19 +110,18 @@ export default class gameScene  {
         player.body.setMaxVelocity(MAXSPEED);
         player.setVelocityX(0);
 
-
         // Finding Caves
-        map.getObjectLayer("spawnpoints").objects.forEach((object) =>{
-           if(object.name === "cave"){
-               caves.push(object);
-               insideCave.push(false);
-           }
+        map.getObjectLayer('spawnpoints').objects.forEach((object) => {
+            if (object.name === 'cave') {
+                caves.push(object);
+                insideCave.push(false);
+            }
         });
 
         // Adding stars to the game
         stars = this.physics.add.group();
-        map.getObjectLayer("spawnpoints").objects.forEach((o) => {
-            if(o.name === "star"){
+        map.getObjectLayer('spawnpoints').objects.forEach((o) => {
+            if (o.name === 'star') {
                 var star = stars.create(o.x, o.y, 'star');
                 star.body.moves = false;
                 numberOfStars += 1;
@@ -129,7 +141,12 @@ export default class gameScene  {
             }
         });
 
-        foreground.setTileIndexCallback(deadlyTiles, (player,gameOverText) => deadlyTileHit(this, timedEvent, player, gameOverText, gameOver), this);
+        foreground.setTileIndexCallback(
+            deadlyTiles,
+            (player, gameOverText) =>
+                deadlyTileHit(this, timedEvent, player, gameOverText, gameOver),
+            this
+        );
 
         hiding = map.createLayer('hiding', tileset, 0, 0);
 
@@ -138,20 +155,20 @@ export default class gameScene  {
             key: 'left',
             frames: this.anims.generateFrameNumbers('dude', {
                 start: 4,
-                end: 5
+                end: 5,
             }),
             frameRate: 10,
-            repeat: -1
+            repeat: -1,
         });
 
         this.anims.create({
             key: 'right',
             frames: this.anims.generateFrameNumbers('dude', {
                 start: 2,
-                end: 3
+                end: 3,
             }),
             frameRate: 10,
-            repeat: -1
+            repeat: -1,
         });
 
         //  Input Events
@@ -159,56 +176,68 @@ export default class gameScene  {
         keyboardInput = this.input.keyboard.addKeys('H');
         keyboardInputC = this.input.keyboard.addKeys('C');
         keyboardInputQ = this.input.keyboard.addKeys('Q');
-        spaceKey = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.SPACE);
-
-
-
+        spaceKey = this.input.keyboard.addKey(
+            Phaser.Input.Keyboard.KeyCodes.SPACE
+        );
 
         // Controller inputs
-        if (this.input.gamepad.total === 0)
-        {
-            var text = this.add.text(10, 10, 'Press any button on a connected Gamepad', { font: '16px Courier', fill: '#00ff00' });
-    
-            this.input.gamepad.once('connected', function (pad) {
-    
-                console.log('connected', pad.id);
-    
-                text.destroy();
-    
-            }, this);
+        if (this.input.gamepad.total === 0) {
+            var text = this.add.text(
+                10,
+                10,
+                'Press any button on a connected Gamepad',
+                { font: '16px Courier', fill: '#00ff00' }
+            );
+
+            this.input.gamepad.once(
+                'connected',
+                function (pad) {
+                    console.log('connected', pad.id);
+
+                    text.destroy();
+                },
+                this
+            );
         }
 
-        
         // Balls
         balls = this.physics.add.group({
             name: 'balls',
-            enable: false
+            enable: false,
         });
 
         balls.createMultiple({
             key: 'ball',
             quantity: MAX_NUMBER_OF_BALLS,
             active: false,
-            visible: false
+            visible: false,
         });
 
-
         // Adding finishline at end of the map
-        const finishPoint = map.findObject("spawnpoints", obj => obj.name === "finishline");
-        finishline = this.physics.add.image(finishPoint.x, finishPoint.y, 'finishLine');
+        const finishPoint = map.findObject(
+            'spawnpoints',
+            (obj) => obj.name === 'finishline'
+        );
+        finishline = this.physics.add.image(
+            finishPoint.x,
+            finishPoint.y,
+            'finishLine'
+        );
 
         //  The score
-        scoreText = this.add.text(16, 16, 'Stars collected: ' + starsCollected, {
-                font: "27px monospace",
-                fill: "#000000",
+        scoreText = this.add
+            .text(16, 16, 'Stars collected: ' + starsCollected, {
+                font: '27px monospace',
+                fill: '#000000',
                 padding: {
                     x: 20,
-                    y: 10
+                    y: 10,
                 },
-                backgroundColor: "#ffffff"
-            }).setScrollFactor(0);
+                backgroundColor: '#ffffff',
+            })
+            .setScrollFactor(0);
 
-        //  Colliders for ground 
+        //  Colliders for ground
         this.physics.add.collider(finishline, ground);
         this.physics.add.collider(player, ground);
         this.physics.add.collider(stars, ground);
@@ -216,54 +245,98 @@ export default class gameScene  {
 
         // Colliders for platforms
         platformCollider = this.physics.add.collider(player, platforms);
-        this.physics.add.collider(balls,platforms);
+        this.physics.add.collider(balls, platforms);
 
         //  Checks to see if the player overlaps with any of the stars, if he does call the collectStar function
         this.physics.add.overlap(
-            player, 
-            stars, 
-            (player,star) => {                
-                starsCollected +=1;
-                counter = counter -1;
-                collectStar(player,star, starsCollected, scoreText, counterText, this)
+            player,
+            stars,
+            (player, star) => {
+                starsCollected += 1;
+                counter = counter - 1;
+                collectStar(
+                    player,
+                    star,
+                    starsCollected,
+                    scoreText,
+                    counterText,
+                    this
+                );
             },
-            null, 
+            null,
             this
         );
 
         // See if ball overlaps with star
         this.physics.add.overlap(
-            balls, 
-            stars, 
-            (ball, star) => {                
-                starsCollected +=1;
-                counter = counter -1;
-                collectStar(ball, star, starsCollected, scoreText, counterText, this)
+            balls,
+            stars,
+            (ball, star) => {
+                starsCollected += 1;
+                counter = counter - 1;
+                collectStar(
+                    ball,
+                    star,
+                    starsCollected,
+                    scoreText,
+                    counterText,
+                    this
+                );
             },
-            null, 
+            null,
             this
         );
-        
+
         // Checks to see if player is at finishline
-        this.physics.add.overlap(player, finishline, (player) => crossedFinishline(this,timedEvent,player,gameOver,leaderboard,starsCollected,counter), null, this);
+        this.physics.add.overlap(
+            player,
+            finishline,
+            (player) =>
+                crossedFinishline(
+                    this,
+                    timedEvent,
+                    player,
+                    gameOver,
+                    leaderboard,
+                    starsCollected,
+                    counter
+                ),
+            null,
+            this
+        );
 
         this.physics.add.overlap(player, foreground);
 
         this.cameras.main.startFollow(player, true, 0.3, 0.3);
-        this.cameras.main.setBounds(0, 0, map.widthInPixels, map.heightInPixels);
-        this.physics.world.setBounds(0, 0, map.widthInPixels, map.heightInPixels, true, true, true, true);
+        this.cameras.main.setBounds(
+            0,
+            0,
+            map.widthInPixels,
+            map.heightInPixels
+        );
+        this.physics.world.setBounds(
+            0,
+            0,
+            map.widthInPixels,
+            map.heightInPixels,
+            true,
+            true,
+            true,
+            true
+        );
 
         this.physics.world.on('worldstep', worldStep, this);
 
         // "New "Game" Button
-        button = this.add.text(1000, 16, 'New Game', {
-                font: "27px monospace",
-                fill: "#000000",
+        button = this.add
+            .text(1000, 16, 'New Game', {
+                font: '27px monospace',
+                fill: '#000000',
                 padding: {
                     x: 20,
-                    y: 10
+                    y: 10,
                 },
-                backgroundColor: "#ffffff"
+                backgroundColor: '#ffffff',
             })
             .setScrollFactor(0);
 
@@ -274,52 +347,50 @@ export default class gameScene  {
             numberOfStars = 0;
             starsCollected = 0;
             this.scene.restart();
-
         });
         button.on('pointerover', () => {
-            button.setBackgroundColor("#0f0");
+            button.setBackgroundColor('#0f0');
         });
         button.on('pointerout', () => {
-            button.setBackgroundColor("#fff");
+            button.setBackgroundColor('#fff');
         });
 
         // TIMER
-        counterText = this.add.text(400, 16, 'Time: 0', {
-                font: "27px monospace",
-                fill: "#000000",
+        counterText = this.add
+            .text(400, 16, 'Time: 0', {
+                font: '27px monospace',
+                fill: '#000000',
                 padding: {
                     x: 20,
-                    y: 10
+                    y: 10,
                 },
-                backgroundColor: "#ffffff"
+                backgroundColor: '#ffffff',
             })
             .setScrollFactor(0);
 
         timedEvent = this.time.addEvent({
             delay: 10,
             callback: () => {
-                counter = counter + 0.01
+                counter = counter + 0.01;
             },
             callbackScope: this,
-            loop: true
+            loop: true,
         });
 
         timedEvent2 = this.time.addEvent({
             delay: 100,
             callback: () => {
-                counterText.setText('Time: ' + counter.toFixed(2) + 'S')
+                counterText.setText('Time: ' + counter.toFixed(2) + 'S');
             },
             callbackScope: this,
-            loop: true
+            loop: true,
         });
-
     }
 
     update() {
-    
         // init gamepad
         var pad = this.input.gamepad.pad1;
-        
+
         //gameover
         if (gameOver) {
             return;
@@ -328,17 +399,17 @@ export default class gameScene  {
         // Movement logic
         if (cursors.left.isDown || (pad && pad.left)) {
             direction = 'left';
-            movePlayer(player,direction,WALKSPEED,ACCELERATION);
-        } else if (cursors.right.isDown|| (pad && pad.right)) {
+            movePlayer(player, direction, WALKSPEED, ACCELERATION);
+        } else if (cursors.right.isDown || (pad && pad.right)) {
             direction = 'right';
-            movePlayer(player, direction,WALKSPEED,ACCELERATION);
+            movePlayer(player, direction, WALKSPEED, ACCELERATION);
         } else {
-            stopPlayer(player, direction,ACCELERATION)   
+            stopPlayer(player, direction, ACCELERATION);
         }
 
         // Jumping logic
-        if (spaceKey.isDown || (pad && pad.B)){
-            if (player.body.blocked.down){
+        if (spaceKey.isDown || (pad && pad.B)) {
+            if (player.body.blocked.down) {
                 jumping = true;
                 player.setVelocityY(-JUMPSPEED);
             } else if (doubleJumpAvailable && jumping == false) {
@@ -346,37 +417,49 @@ export default class gameScene  {
                 player.setVelocityY(-JUMPSPEED);
                 jumping = true;
             }
-        } else if (!spaceKey.isDown && !(pad && pad.B)){
+        } else if (!spaceKey.isDown && !(pad && pad.B)) {
             jumping = false;
         }
 
-        if (player.body.blocked.down){
+        if (player.body.blocked.down) {
             doubleJumpAvailable = true;
         }
 
         // Platform logic
 
-        if (player.body.velocity.y < 0 || playerIntersect(player, platforms)){
+        if (player.body.velocity.y < 0 || playerIntersect(player, platforms)) {
             platformCollider.active = false;
-        } else if(playerStandingOnMapLayer(player,platforms) && (cursors.down.isDown || (pad && pad.down))) {
+        } else if (
+            playerStandingOnMapLayer(player, platforms) &&
+            (cursors.down.isDown || (pad && pad.down))
+        ) {
             platformCollider.active = false;
         } else {
             platformCollider.active = true;
         }
 
         // Throwing ball logic
-        if ((Phaser.Input.Keyboard.JustDown(keyboardInputC.C) || (pad && pad.Y)) && !throwing) {
+        if (
+            (Phaser.Input.Keyboard.JustDown(keyboardInputC.C) ||
+                (pad && pad.Y)) &&
+            !throwing
+        ) {
             throwing = true;
-            throwBallFromPlayer(BALL_LIFE_SPAN,balls,player,direction);
+            throwBallFromPlayer(BALL_LIFE_SPAN, balls, player, direction);
         }
 
-        if (!(Phaser.Input.Keyboard.JustDown(keyboardInputC.C) || (pad && pad.Y))) {
+        if (
+            !(
+                Phaser.Input.Keyboard.JustDown(keyboardInputC.C) ||
+                (pad && pad.Y)
+            )
+        ) {
             throwing = false;
         }
 
         // leaderboard
         if (Phaser.Input.Keyboard.JustDown(keyboardInput.H)) {
-            printTime(this,leaderboard);
+            printTime(this, leaderboard);
         }
 
         if (Phaser.Input.Keyboard.JustDown(keyboardInputQ.Q)) {
@@ -386,19 +469,23 @@ export default class gameScene  {
         //Hiding and unhiding cave overlay
         var i = 0;
         caves.forEach((cave) => {
-            if(player.x >= cave.x && player.x <= cave.x + cave.width && player.y >= cave.y && player.y <= cave.y + cave.height){
+            if (
+                player.x >= cave.x &&
+                player.x <= cave.x + cave.width &&
+                player.y >= cave.y &&
+                player.y <= cave.y + cave.height
+            ) {
                 i++;
             }
-        })
-        if(i > 0){
+        });
+        if (i > 0) {
             hiding.alpha = 0;
-        }else{
+        } else {
             hiding.alpha = 1;
         }
     }
 }
 
-
-function worldStep(delta){
-    Each(balls.getChildren(),updateBall,this,[delta]);
+function worldStep(delta) {
+    Each(balls.getChildren(), updateBall, this, [delta]);
 }
