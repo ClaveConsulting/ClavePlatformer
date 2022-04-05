@@ -14,39 +14,39 @@ import {
     playerStandingOnMapLayer,
 } from './utils';
 
-var player;
-var stars;
-var cursors;
+var player: Phaser.Physics.Arcade.Sprite;
+var stars: Phaser.Physics.Arcade.Group;
+var cursors: Phaser.Types.Input.Keyboard.CursorKeys;
 var gameOver = false;
-var keyboardInput;
-var keyboardInputC;
-var keyboardInputQ;
-var spaceKey;
-var balls;
+var keyboardInput: object;
+var keyboardInputC: object;
+var keyboardInputQ: object;
+var spaceKey: object;
+var balls: Phaser.Physics.Arcade.Group;
 var direction = 'right';
-var button;
-var counterText;
+var button: Phaser.GameObjects.Text;
+var counterText: Phaser.GameObjects.Text;
 var counter = 0;
-var timedEvent;
-var timedEvent2;
-var finishline;
+var timedEvent: Phaser.Time.TimerEvent;
+var timedEvent2: Phaser.Time.TimerEvent;
+var finishline: Phaser.Physics.Arcade.Image;
 var numberOfStars = 0;
-var deadlyTiles = [];
+var deadlyTiles: number[] = [];
 var starsCollected = 0;
-var hiding;
-var caves = [];
-var insideCave = [];
+var hiding: Phaser.Tilemaps.TilemapLayer;
+var caves: Phaser.Types.Tilemaps.TiledObject[] = [];
+var insideCave: boolean[] = [];
 var doubleJumpAvailable = true;
 var jumping = false;
 var throwing = false;
-var scoreText;
-var leaderboard;
-var platformCollider;
+var scoreText: Phaser.GameObjects.Text;
+var leaderboard: Phaser.GameObjects.Text;
+var platformCollider: Phaser.Physics.Arcade.Collider;
 var falling = false;
 var playerHeadCollideTile;
 var playerFootCollideTile;
 var playerUnderFootTile;
-var platforms;
+var platforms: Phaser.Tilemaps.TilemapLayer;
 
 const WALKSPEED = 500;
 const JUMPSPEED = 600;
@@ -81,13 +81,12 @@ export class gameScene extends Phaser.Scene {
             'spawnpoints',
             (obj) => obj.name === 'player'
         );
-        player = this.physics.add.sprite(spawnPoint.x, spawnPoint.y, 'dude');
+        player = this.physics.add.sprite(spawnPoint.x!, spawnPoint.y!, 'dude');
         player.setCollideWorldBounds(true);
-        player.onWorldBounds = true;
-        player.setBounce(0.1);
+        player.body;
         player.body.allowGravity;
-        player.body.setGravityY(750);
-        player.body.setMaxVelocity(MAXSPEED);
+        player.setGravityY(750);
+        player.setMaxVelocity(MAXSPEED);
         player.setVelocityX(0);
 
         // Finding Caves
@@ -102,14 +101,15 @@ export class gameScene extends Phaser.Scene {
         stars = this.physics.add.group();
         map.getObjectLayer('spawnpoints').objects.forEach((o) => {
             if (o.name === 'star') {
-                var star = stars.create(o.x, o.y, 'star');
+                var star: Phaser.Physics.Arcade.Sprite = stars.create(o.x, o.y, 'star');
+                // Can't find fix for this error
                 star.body.moves = false;
                 numberOfStars += 1;
             }
         });
 
         stars.children.iterate(function (child) {
-            child.body.setCircle(12);
+            child.setCircle(12);
             //child.setBounceY(Phaser.Math.FloatBetween(0.4, 0.8));
         });
 
@@ -123,7 +123,7 @@ export class gameScene extends Phaser.Scene {
 
         foreground.setTileIndexCallback(
             deadlyTiles,
-            (player, gameOverText) =>
+            (player: Phaser.Physics.Arcade.Sprite, gameOverText:Phaser.GameObjects.Text) =>
                 deadlyTileHit(this, timedEvent, player, gameOverText, gameOver),
             this
         );
@@ -162,19 +162,10 @@ export class gameScene extends Phaser.Scene {
 
         // Controller inputs
         if (this.input.gamepad.total === 0) {
-            var text = this.add.text(
-                10,
-                10,
-                'Press any button on a connected Gamepad',
-                { font: '16px Courier', fill: '#00ff00' }
-            );
-
             this.input.gamepad.once(
                 'connected',
-                function (pad) {
+                function (pad: { id: number; }) {
                     console.log('connected', pad.id);
-
-                    text.destroy();
                 },
                 this
             );
@@ -199,8 +190,8 @@ export class gameScene extends Phaser.Scene {
             (obj) => obj.name === 'finishline'
         );
         finishline = this.physics.add.image(
-            finishPoint.x,
-            finishPoint.y,
+            finishPoint.x!,
+            finishPoint.y!,
             'finishLine'
         );
 
@@ -208,7 +199,7 @@ export class gameScene extends Phaser.Scene {
         scoreText = this.add
             .text(16, 16, 'Stars collected: ' + starsCollected, {
                 font: '27px monospace',
-                fill: '#000000',
+                color: '#000',
                 padding: {
                     x: 20,
                     y: 10,
@@ -243,7 +234,7 @@ export class gameScene extends Phaser.Scene {
                     this
                 );
             },
-            null,
+            null!,
             this
         );
 
@@ -263,7 +254,7 @@ export class gameScene extends Phaser.Scene {
                     this
                 );
             },
-            null,
+            null!,
             this
         );
 
@@ -281,7 +272,7 @@ export class gameScene extends Phaser.Scene {
                     starsCollected,
                     counter
                 ),
-            null,
+            null!,
             this
         );
 
@@ -311,7 +302,7 @@ export class gameScene extends Phaser.Scene {
         button = this.add
             .text(1000, 16, 'New Game', {
                 font: '27px monospace',
-                fill: '#000000',
+                color: '#000000',
                 padding: {
                     x: 20,
                     y: 10,
@@ -339,7 +330,7 @@ export class gameScene extends Phaser.Scene {
         counterText = this.add
             .text(400, 16, 'Time: 0', {
                 font: '27px monospace',
-                fill: '#000000',
+                color: '#000000',
                 padding: {
                     x: 20,
                     y: 10,
@@ -450,10 +441,10 @@ export class gameScene extends Phaser.Scene {
         var i = 0;
         caves.forEach((cave) => {
             if (
-                player.x >= cave.x &&
-                player.x <= cave.x + cave.width &&
-                player.y >= cave.y &&
-                player.y <= cave.y + cave.height
+                player.x >= cave.x! &&
+                player.x <= cave.x! + cave.width! &&
+                player.y >= cave.y! &&
+                player.y <= cave.y! + cave.height!
             ) {
                 i++;
             }
@@ -466,6 +457,6 @@ export class gameScene extends Phaser.Scene {
     }
 }
 
-function worldStep(delta) {
+function worldStep(delta: number) {
     Each(balls.getChildren(), updateBall, this, [delta]);
 }

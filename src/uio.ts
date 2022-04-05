@@ -1,6 +1,6 @@
-import gameScene from './gameScene';
+import {gameScene} from './gameScene';
 
-export default class uio extends gameScene {
+export class uio extends gameScene {
     preload() {
         this.load.tilemapTiledJSON({ key: 'map', url: 'assets/uio/uio.json' });
 

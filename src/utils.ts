@@ -2,7 +2,7 @@ var movementDirection;
 
 export const { Each } = Phaser.Utils.Array;
 
-export function movePlayer(player,direction,speed,acceleration){
+export function movePlayer(player: Phaser.Physics.Arcade.Sprite ,direction: string ,speed: number ,acceleration: number){
 
     if (direction == 'left'){
         movementDirection = -1;
@@ -32,7 +32,7 @@ export function movePlayer(player,direction,speed,acceleration){
     player.anims.play(direction, true);
 }
 
-export function stopPlayer(player,direction,acceleration) {
+export function stopPlayer(player: Phaser.Physics.Arcade.Sprite, direction: string, acceleration: number) {
     if (direction == 'right' && player.body.velocity.x > 0){
         player.setAccelerationX(-2*acceleration);
     } else if (direction == 'left' && player.body.velocity.x < 0){
@@ -44,7 +44,7 @@ export function stopPlayer(player,direction,acceleration) {
     }
 }
 
-export function deadlyTileHit(scene, timedEvent, player, gameOverText, gameOver) {
+export function deadlyTileHit(scene: Phaser.Scene, timedEvent: Phaser.Time.TimerEvent, player: Phaser.Physics.Arcade.Sprite, gameOverText: Phaser.GameObjects.Text, gameOver: boolean) {
 
     scene.physics.pause();
 
@@ -57,7 +57,7 @@ export function deadlyTileHit(scene, timedEvent, player, gameOverText, gameOver)
     // GAME OVER
     gameOverText = scene.add.text(350, 300, 'GAME OVER', {
         font: "36px monospace",
-        fill: "#000000",
+        color: "#000000",
         padding: {
             x: 100,
             y: 50
@@ -67,7 +67,7 @@ export function deadlyTileHit(scene, timedEvent, player, gameOverText, gameOver)
     gameOver = true;
 }
 
-export function crossedFinishline(scene, timedEvent, player, gameOver ,leaderboard, starsCollected, counter) {
+export function crossedFinishline(scene: Phaser.Scene, timedEvent: Phaser.Time.TimerEvent, player: Phaser.Types.Physics.Arcade.GameObjectWithBody , gameOver: boolean ,leaderboard: Phaser.GameObjects.Text, starsCollected: number, counter: number) {
 
     scene.physics.pause();
 
@@ -84,24 +84,24 @@ export function crossedFinishline(scene, timedEvent, player, gameOver ,leaderboa
     gameOver = true;
 }
 
-export function updateCounter() {
+export function updateCounter(counter: number) {
     return counter = counter + 0.01;
 }
 
-export function printCounter(counterText) {
+export function printCounter(counterText: Phaser.GameObjects.Text, counter: number) {
     console.log({})
     counterText.setText('Time: ' + counter.toFixed(2) + 'S');
 }
 
 
-export function updateBall(ball,delta){
+export function updateBall(ball: Phaser.Physics.Arcade.Sprite ,delta: number){
     ball.state -= delta;
     if (ball.state <= 0){
         ball.disableBody(true,true);
     }
 }
 
-export function throwBallFromPlayer(ballLifeSpan, balls, player,direction) {
+export function throwBallFromPlayer(ballLifeSpan: number, balls: Phaser.Physics.Arcade.Group, player: Phaser.Physics.Arcade.Sprite, direction: string) {
     throwBallFromGroup(
       balls,
       player.x,
@@ -111,25 +111,26 @@ export function throwBallFromPlayer(ballLifeSpan, balls, player,direction) {
     );
   }
 
-function throwBallFromGroup(group, x, y, lifespan, direction) {
+function throwBallFromGroup(group: Phaser.Physics.Arcade.Group, x: number, y: number, lifespan: number, direction: string) {
     const ball = group.getFirstDead(false);
-  
+    var vx: number = 0;
+    var vy: number = 0;
     if (ball) {
         if (direction === 'right') {
             
-            var vx = 1000
-            var vy = -200
+            vx = 1000
+            vy = -200
         }
         if (direction === 'left') {
             
-            var vx = -1000
-            var vy = -200
+            vx = -1000
+            vy = -200
         }
         throwBall(ball, x, y, vx, vy, lifespan);
     }
 }
   
-function throwBall(ball, x, y, vx, vy, lifespan) {
+function throwBall(ball: Phaser.Physics.Arcade.Sprite, x: number, y: number, vx: number, vy: number, lifespan: number) {
     ball.enableBody(true, x, y, true, true);
     ball.setVelocity(vx, vy);
     ball.setState(lifespan);
@@ -138,8 +139,8 @@ function throwBall(ball, x, y, vx, vy, lifespan) {
 
 }
 
-export function collectStar(object, star, starsCollected, scoreText, counterText,scene) {
-    star.disableBody(true, true);
+export function collectStar(object: any, star: Phaser.Types.Physics.Arcade.GameObjectWithBody, starsCollected: number, scoreText: Phaser.GameObjects.Text, counterText: Phaser.GameObjects.Text, scene: Phaser.Scene) {
+    star.destroy();
 
     //  Add and update the score
     scoreText.setText('Stars Collected: ' + starsCollected);
@@ -154,7 +155,7 @@ export function collectStar(object, star, starsCollected, scoreText, counterText
 
 }
 
-export function playerIntersect(player, mapLayer){
+export function playerIntersect(player: Phaser.Physics.Arcade.Sprite, mapLayer: Phaser.Tilemaps.TilemapLayer){
     var playerTopRightCollideTile = mapLayer.getTileAtWorldXY(player.x + player.width/2, player.y - player.height/2, true).index;
     var playerTopLeftCollideTile = mapLayer.getTileAtWorldXY(player.x -player.width/2, player.y - player.height/2, true).index;
 
@@ -174,7 +175,7 @@ export function playerIntersect(player, mapLayer){
     }
 }
 
-export function playerStandingOnMapLayer(player, mapLayer){
+export function playerStandingOnMapLayer(player: Phaser.Physics.Arcade.Sprite, mapLayer: Phaser.Tilemaps.TilemapLayer){
     // +1 for getting pixel outside of player sprite
     var playerBottomRightCollideTile = mapLayer.getTileAtWorldXY(player.x + player.width/2, player.y + player.height/2 + 1, true).index;
     var playerBottomLeftCollideTile = mapLayer.getTileAtWorldXY(player.x -player.width/2, player.y + player.height/2 + 1, true).index;
@@ -191,7 +192,7 @@ export function playerStandingOnMapLayer(player, mapLayer){
 }
 
 export const getWinners = () => {
-    let timeArrayAssetsShowcase = JSON.parse(localStorage.getItem("timeArrayAssetsShowcase"));
+    let timeArrayAssetsShowcase = JSON.parse(localStorage.getItem("timeArrayAssetsShowcase")!);
     let random = Phaser.Math.Between(1, timeArrayAssetsShowcase.length - 1);
 
     console.log("BEST TIME WINNER:");
@@ -201,13 +202,13 @@ export const getWinners = () => {
 }
 
 export const clearLeaderboard = () => {
-    let timeArrayAssetsShowcase = JSON.parse(localStorage.getItem("timeArrayAssetsShowcase"));
+    let timeArrayAssetsShowcase = JSON.parse(localStorage.getItem("timeArrayAssetsShowcase")!);
     timeArrayAssetsShowcase = [];
     localStorage.setItem("timeArrayAssetsShowcase", JSON.stringify(timeArrayAssetsShowcase));
 };
 
-export const recordTime = (starsCollected, counter) => {
-    let timeArrayAssetsShowcase = JSON.parse(localStorage.getItem("timeArrayAssetsShowcase"));
+export const recordTime = (starsCollected: number, counter: number) => {
+    let timeArrayAssetsShowcase = JSON.parse(localStorage.getItem("timeArrayAssetsShowcase")!);
 
     if (timeArrayAssetsShowcase === null || timeArrayAssetsShowcase === undefined) {
         timeArrayAssetsShowcase = [];
@@ -224,7 +225,7 @@ export const recordTime = (starsCollected, counter) => {
     };
 
 
-    let previousAttempt = timeArrayAssetsShowcase.filter(object => (object.playerPhone == gameRecord.playerPhone));
+    let previousAttempt = timeArrayAssetsShowcase.filter((object) => (object.playerPhone == gameRecord.playerPhone));
     if (previousAttempt.length > 0){
         // Returns -1 if gameRecord have a lower score than previousAttempt
         if(compareGameRecordsTime(gameRecord, previousAttempt[0]) < 0){
@@ -239,9 +240,9 @@ export const recordTime = (starsCollected, counter) => {
     localStorage.setItem("timeArrayAssetsShowcase", JSON.stringify(timeArrayAssetsShowcase));
 };
 
-export const printTime = (context,leaderboard) => {
+export const printTime = (context: Phaser.Scene, leaderboard: Phaser.GameObjects.Text) => {
     //context er 'this' i parent
-    let timeArrayAssetsShowcase = JSON.parse(localStorage.getItem("timeArrayAssetsShowcase"));
+    let timeArrayAssetsShowcase = JSON.parse(localStorage.getItem("timeArrayAssetsShowcase")!);
 
     if (timeArrayAssetsShowcase === null || timeArrayAssetsShowcase === undefined) {
         timeArrayAssetsShowcase = [];
@@ -249,8 +250,7 @@ export const printTime = (context,leaderboard) => {
 
     leaderboard = context.add.text(400, 200, 'Leaderboard', {
             fontSize: '70px',
-            fontStyle: 'bold',
-            fill: '#000'
+            fontStyle: 'bold'
         }).setScrollFactor(0);
     let yPos = 300;
 
@@ -262,13 +262,13 @@ export const printTime = (context,leaderboard) => {
         leaderboard = context.add.text(350, yPos, gameRecord.player + ': ', {
                 fontSize: '45px',
                 fontStyle: 'bold',
-                fill: '#000'
+                color: '#000'
             })
             .setScrollFactor(0);
         leaderboard = context.add.text(900, yPos, gameRecord.playerTime , {
                 fontSize: '45px',
                 fontStyle: 'bold',
-                fill: '#000'
+                color: '#000'
             })
             .setScrollFactor(0);
         yPos += 40;
