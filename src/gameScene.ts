@@ -16,10 +16,10 @@ let player: Phaser.Physics.Arcade.Sprite;
 let stars: Phaser.Physics.Arcade.Group;
 let cursors: Phaser.Types.Input.Keyboard.CursorKeys;
 let gameOver = false;
-let keyboardInput: object;
-let keyboardInputC: object;
-let keyboardInputQ: object;
-let spaceKey: object;
+let keyboardInputH: Phaser.Input.Keyboard.Key;
+let keyboardInputC: Phaser.Input.Keyboard.Key;
+let keyboardInputQ: Phaser.Input.Keyboard.Key;
+let spaceKey: Phaser.Input.Keyboard.Key;
 let balls: Phaser.Physics.Arcade.Group;
 let direction = "right";
 let button: Phaser.GameObjects.Text;
@@ -96,18 +96,14 @@ export class gameScene extends Phaser.Scene {
 
         // Adding stars to the game
         stars = this.physics.add.group();
-        map.getObjectLayer("spawnpoints").objects.forEach((o) => {
-            if (o.name === "star") {
-                const star: Phaser.Physics.Arcade.Sprite = stars.create(o.x, o.y, "star");
+        map.getObjectLayer('spawnpoints').objects.forEach((o) => {
+            if (o.name === 'star') {
+                const star: Phaser.Types.Physics.Arcade.SpriteWithDynamicBody =
+                    stars.create(o.x, o.y, 'star');
                 // Can't find fix for this error
                 star.body.moves = false;
                 numberOfStars += 1;
             }
-        });
-
-        stars.children.iterate(function(child) {
-            child.setCircle(12);
-            // child.setBounceY(Phaser.Math.FloatBetween(0.4, 0.8));
         });
 
         // Setting deadly tiles
@@ -150,9 +146,9 @@ export class gameScene extends Phaser.Scene {
 
         //  Input Events
         cursors = this.input.keyboard.createCursorKeys();
-        keyboardInput = this.input.keyboard.addKeys("H");
-        keyboardInputC = this.input.keyboard.addKeys("C");
-        keyboardInputQ = this.input.keyboard.addKeys("Q");
+        keyboardInputH = this.input.keyboard.addKey("H");
+        keyboardInputC = this.input.keyboard.addKey("C");
+        keyboardInputQ = this.input.keyboard.addKey("Q");
         spaceKey = this.input.keyboard.addKey(
             Phaser.Input.Keyboard.KeyCodes.SPACE,
         );
@@ -408,7 +404,7 @@ export class gameScene extends Phaser.Scene {
 
         // Throwing ball logic
         if (
-            (Phaser.Input.Keyboard.JustDown(keyboardInputC.C) ||
+            (Phaser.Input.Keyboard.JustDown(keyboardInputC) ||
                 (pad && pad.Y)) &&
             !throwing
         ) {
@@ -418,7 +414,7 @@ export class gameScene extends Phaser.Scene {
 
         if (
             !(
-                Phaser.Input.Keyboard.JustDown(keyboardInputC.C) ||
+                Phaser.Input.Keyboard.JustDown(keyboardInputC) ||
                 (pad && pad.Y)
             )
         ) {
@@ -426,11 +422,11 @@ export class gameScene extends Phaser.Scene {
         }
 
         // leaderboard
-        if (Phaser.Input.Keyboard.JustDown(keyboardInput.H)) {
+        if (Phaser.Input.Keyboard.JustDown(keyboardInputH)) {
             printTime(this, leaderboard);
         }
 
-        if (Phaser.Input.Keyboard.JustDown(keyboardInputQ.Q)) {
+        if (Phaser.Input.Keyboard.JustDown(keyboardInputQ)) {
             getWinners();
         }
 
