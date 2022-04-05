@@ -147,7 +147,8 @@ export class gameScene extends Phaser.Scene {
         //  Input Events
         cursors = this.input.keyboard.createCursorKeys();
         keyboardInputH = this.input.keyboard.addKey("H");
-        keyboardInputC = this.input.keyboard.addKey("C");
+        keyboardInputC = this.input.keyboard.addKey("C")
+        keyboardInputC.emitOnRepeat = false;
         keyboardInputQ = this.input.keyboard.addKey("Q");
         spaceKey = this.input.keyboard.addKey(
             Phaser.Input.Keyboard.KeyCodes.SPACE,
@@ -255,7 +256,7 @@ export class gameScene extends Phaser.Scene {
         this.physics.add.overlap(
             player,
             finishline,
-            (player) =>
+            (player: Phaser.Physics.Arcade.Sprite) =>
                 crossedFinishline(
                     this,
                     timedEvent,
@@ -404,17 +405,16 @@ export class gameScene extends Phaser.Scene {
 
         // Throwing ball logic
         if (
-            (Phaser.Input.Keyboard.JustDown(keyboardInputC) ||
+            (keyboardInputC.isDown ||
                 (pad && pad.Y)) &&
             !throwing
         ) {
             throwing = true;
             throwBallFromPlayer(BALL_LIFE_SPAN, balls, player, direction);
         }
-
         if (
             !(
-                Phaser.Input.Keyboard.JustDown(keyboardInputC) ||
+                keyboardInputC.isDown ||
                 (pad && pad.Y)
             )
         ) {
@@ -422,11 +422,11 @@ export class gameScene extends Phaser.Scene {
         }
 
         // leaderboard
-        if (Phaser.Input.Keyboard.JustDown(keyboardInputH)) {
+        if (keyboardInputH.isDown) {
             printTime(this, leaderboard);
         }
 
-        if (Phaser.Input.Keyboard.JustDown(keyboardInputQ)) {
+        if (keyboardInputQ.isDown) {
             getWinners();
         }
 

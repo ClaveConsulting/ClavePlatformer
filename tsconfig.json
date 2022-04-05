@@ -10,7 +10,7 @@
         "removeComments": true,
         "preserveConstEnums": true,
         "lib": [
-            "es5",
+            "ESNext",
             "dom",
             "scripthost"
         ],
