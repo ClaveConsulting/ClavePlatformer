@@ -1,8 +1,11 @@
-import gameScene from './gameScene.js';
+import { gameScene } from './gameScene';
 
-export default class uio extends gameScene {
+export class ntnu extends gameScene {
     preload() {
-        this.load.tilemapTiledJSON({ key: 'map', url: 'assets/uio/uio.json' });
+        this.load.tilemapTiledJSON({
+            key: 'map',
+            url: 'assets/ntnu/ntnu.json',
+        });
 
         this.load.image({ key: 'tileset', url: 'assets/common/tileset.png' });
         this.load.image({ key: 'star', url: 'assets/common/star.png' });

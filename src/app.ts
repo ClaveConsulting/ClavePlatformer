@@ -1,6 +1,5 @@
 import Phaser from 'phaser';
-import { RunGame } from './rungame';
-import ntnu from '../public/js/ntnu';
+import { ntnu } from './ntnu'
 
 const initWidth = window.innerWidth;
 const initHeight = window.innerHeight;

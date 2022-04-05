@@ -286,11 +286,3 @@ export const compareGameRecordsTime = (a, b) => {
     }
     return 0
 };
-
-
-export function dump() {
-
-    console.log(pad1._axes[0]);
-    console.log(pad1._rawPad.axes[0]);
-
-}

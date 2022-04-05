@@ -12,7 +12,7 @@ import {
     updateBall,
     playerIntersect,
     playerStandingOnMapLayer,
-} from './utils.js';
+} from './utils';
 
 var player;
 var stars;
@@ -56,28 +56,8 @@ const BALL_LIFE_SPAN = 2;
 const MAX_NUMBER_OF_BALLS = 10;
 const { Each } = Phaser.Utils.Array;
 
-export default class gameScene extends Phaser.Scene {
-    constructor() {
-        this.pad = null;
-    }
+export class gameScene extends Phaser.Scene {
 
-    // Placeholer preload() function. currently redefined when intheriting from gameScene
-    // This is due to map.json import
-    preload() {
-        this.load.tilemapTiledJSON('map', this.mapPath);
-        this.load.image('tileset', 'assets/common/tileset.png');
-        this.load.image('star', 'assets/common/star.png');
-        this.load.image('ball', 'assets/common/ball.png');
-        this.load.image('sky', 'assets/common/sky.png');
-        this.load.spritesheet('dude', 'assets/common/dude-1.png', {
-            frameWidth: 16,
-            frameHeight: 32,
-        });
-        this.load.image('finishLine', 'assets/common/finishLine.png', {
-            frameHeight: 79,
-            frameWidth: 35,
-        });
-    }
 
     create() {
         this.add.image(0, 0, 'sky');
