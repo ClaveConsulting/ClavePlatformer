@@ -1,52 +1,50 @@
 import {
-    deadlyTileHit,
-    movePlayer,
-    stopPlayer,
-    crossedFinishline,
-    updateCounter,
-    printCounter,
-    throwBallFromPlayer,
     collectStar,
+    crossedFinishline,
+    deadlyTileHit,
     getWinners,
-    printTime,
-    updateBall,
+    movePlayer,
     playerIntersect,
     playerStandingOnMapLayer,
-} from './utils';
+    printTime,
+    stopPlayer,
+    throwBallFromPlayer,
+    updateBall,
+} from "./utils";
 
-var player: Phaser.Physics.Arcade.Sprite;
-var stars: Phaser.Physics.Arcade.Group;
-var cursors: Phaser.Types.Input.Keyboard.CursorKeys;
-var gameOver = false;
-var keyboardInput: object;
-var keyboardInputC: object;
-var keyboardInputQ: object;
-var spaceKey: object;
-var balls: Phaser.Physics.Arcade.Group;
-var direction = 'right';
-var button: Phaser.GameObjects.Text;
-var counterText: Phaser.GameObjects.Text;
-var counter = 0;
-var timedEvent: Phaser.Time.TimerEvent;
-var timedEvent2: Phaser.Time.TimerEvent;
-var finishline: Phaser.Physics.Arcade.Image;
-var numberOfStars = 0;
-var deadlyTiles: number[] = [];
-var starsCollected = 0;
-var hiding: Phaser.Tilemaps.TilemapLayer;
-var caves: Phaser.Types.Tilemaps.TiledObject[] = [];
-var insideCave: boolean[] = [];
-var doubleJumpAvailable = true;
-var jumping = false;
-var throwing = false;
-var scoreText: Phaser.GameObjects.Text;
-var leaderboard: Phaser.GameObjects.Text;
-var platformCollider: Phaser.Physics.Arcade.Collider;
-var falling = false;
-var playerHeadCollideTile;
-var playerFootCollideTile;
-var playerUnderFootTile;
-var platforms: Phaser.Tilemaps.TilemapLayer;
+let player: Phaser.Physics.Arcade.Sprite;
+let stars: Phaser.Physics.Arcade.Group;
+let cursors: Phaser.Types.Input.Keyboard.CursorKeys;
+let gameOver = false;
+let keyboardInput: object;
+let keyboardInputC: object;
+let keyboardInputQ: object;
+let spaceKey: object;
+let balls: Phaser.Physics.Arcade.Group;
+let direction = "right";
+let button: Phaser.GameObjects.Text;
+let counterText: Phaser.GameObjects.Text;
+let counter = 0;
+let timedEvent: Phaser.Time.TimerEvent;
+let timedEvent2: Phaser.Time.TimerEvent;
+let finishline: Phaser.Physics.Arcade.Image;
+let numberOfStars = 0;
+const deadlyTiles: number[] = [];
+let starsCollected = 0;
+let hiding: Phaser.Tilemaps.TilemapLayer;
+const caves: Phaser.Types.Tilemaps.TiledObject[] = [];
+const insideCave: boolean[] = [];
+let doubleJumpAvailable = true;
+let jumping = false;
+let throwing = false;
+let scoreText: Phaser.GameObjects.Text;
+let leaderboard: Phaser.GameObjects.Text;
+let platformCollider: Phaser.Physics.Arcade.Collider;
+const falling = false;
+let playerHeadCollideTile;
+let playerFootCollideTile;
+let playerUnderFootTile;
+let platforms: Phaser.Tilemaps.TilemapLayer;
 
 const WALKSPEED = 500;
 const JUMPSPEED = 600;
@@ -58,30 +56,29 @@ const { Each } = Phaser.Utils.Array;
 
 export class gameScene extends Phaser.Scene {
 
+    public create() {
+        this.add.image(0, 0, "sky");
 
-    create() {
-        this.add.image(0, 0, 'sky');
-
-        var map = this.make.tilemap({
-            key: 'map',
+        const map = this.make.tilemap({
+            key: "map",
             tileWidth: 32,
             tileHeight: 32,
         });
-        var tileset = map.addTilesetImage('tileset', 'tileset');
-        var background = map.createLayer('background', tileset, 0, 0);
-        var ground = map.createLayer('ground', tileset, 0, 0);
-        platforms = map.createLayer('platforms', tileset, 0, 0);
+        const tileset = map.addTilesetImage("tileset", "tileset");
+        const background = map.createLayer("background", tileset, 0, 0);
+        const ground = map.createLayer("ground", tileset, 0, 0);
+        platforms = map.createLayer("platforms", tileset, 0, 0);
 
         // Before you can use the collide function you need to set what tiles can collide
-        map.setCollisionBetween(1, 10000, true, false, 'ground');
-        map.setCollisionBetween(1, 10000, true, false, 'platforms');
+        map.setCollisionBetween(1, 10000, true, false, "ground");
+        map.setCollisionBetween(1, 10000, true, false, "platforms");
 
         // Add player to the game
         const spawnPoint = map.findObject(
-            'spawnpoints',
-            (obj) => obj.name === 'player'
+            "spawnpoints",
+            (obj) => obj.name === "player",
         );
-        player = this.physics.add.sprite(spawnPoint.x!, spawnPoint.y!, 'dude');
+        player = this.physics.add.sprite(spawnPoint.x!, spawnPoint.y!, "dude");
         player.setCollideWorldBounds(true);
         player.body;
         player.body.allowGravity;
@@ -90,8 +87,8 @@ export class gameScene extends Phaser.Scene {
         player.setVelocityX(0);
 
         // Finding Caves
-        map.getObjectLayer('spawnpoints').objects.forEach((object) => {
-            if (object.name === 'cave') {
+        map.getObjectLayer("spawnpoints").objects.forEach((object) => {
+            if (object.name === "cave") {
                 caves.push(object);
                 insideCave.push(false);
             }
@@ -99,22 +96,22 @@ export class gameScene extends Phaser.Scene {
 
         // Adding stars to the game
         stars = this.physics.add.group();
-        map.getObjectLayer('spawnpoints').objects.forEach((o) => {
-            if (o.name === 'star') {
-                var star: Phaser.Physics.Arcade.Sprite = stars.create(o.x, o.y, 'star');
+        map.getObjectLayer("spawnpoints").objects.forEach((o) => {
+            if (o.name === "star") {
+                const star: Phaser.Physics.Arcade.Sprite = stars.create(o.x, o.y, "star");
                 // Can't find fix for this error
                 star.body.moves = false;
                 numberOfStars += 1;
             }
         });
 
-        stars.children.iterate(function (child) {
+        stars.children.iterate(function(child) {
             child.setCircle(12);
-            //child.setBounceY(Phaser.Math.FloatBetween(0.4, 0.8));
+            // child.setBounceY(Phaser.Math.FloatBetween(0.4, 0.8));
         });
 
         // Setting deadly tiles
-        var foreground = map.createLayer('foreground', tileset, 0, 0);
+        const foreground = map.createLayer("foreground", tileset, 0, 0);
         foreground.forEachTile((tile) => {
             if (tile.properties.deadly === true) {
                 deadlyTiles.push(tile.index);
@@ -123,17 +120,17 @@ export class gameScene extends Phaser.Scene {
 
         foreground.setTileIndexCallback(
             deadlyTiles,
-            (player: Phaser.Physics.Arcade.Sprite, gameOverText:Phaser.GameObjects.Text) =>
+            (player: Phaser.Physics.Arcade.Sprite, gameOverText: Phaser.GameObjects.Text) =>
                 deadlyTileHit(this, timedEvent, player, gameOverText, gameOver),
-            this
+            this,
         );
 
-        hiding = map.createLayer('hiding', tileset, 0, 0);
+        hiding = map.createLayer("hiding", tileset, 0, 0);
 
         // Player animations
         this.anims.create({
-            key: 'left',
-            frames: this.anims.generateFrameNumbers('dude', {
+            key: "left",
+            frames: this.anims.generateFrameNumbers("dude", {
                 start: 4,
                 end: 5,
             }),
@@ -142,8 +139,8 @@ export class gameScene extends Phaser.Scene {
         });
 
         this.anims.create({
-            key: 'right',
-            frames: this.anims.generateFrameNumbers('dude', {
+            key: "right",
+            frames: this.anims.generateFrameNumbers("dude", {
                 start: 2,
                 end: 3,
             }),
@@ -153,32 +150,32 @@ export class gameScene extends Phaser.Scene {
 
         //  Input Events
         cursors = this.input.keyboard.createCursorKeys();
-        keyboardInput = this.input.keyboard.addKeys('H');
-        keyboardInputC = this.input.keyboard.addKeys('C');
-        keyboardInputQ = this.input.keyboard.addKeys('Q');
+        keyboardInput = this.input.keyboard.addKeys("H");
+        keyboardInputC = this.input.keyboard.addKeys("C");
+        keyboardInputQ = this.input.keyboard.addKeys("Q");
         spaceKey = this.input.keyboard.addKey(
-            Phaser.Input.Keyboard.KeyCodes.SPACE
+            Phaser.Input.Keyboard.KeyCodes.SPACE,
         );
 
         // Controller inputs
         if (this.input.gamepad.total === 0) {
             this.input.gamepad.once(
-                'connected',
-                function (pad: { id: number; }) {
-                    console.log('connected', pad.id);
+                "connected",
+                function(pad: { id: number; }) {
+                    console.log("connected", pad.id);
                 },
-                this
+                this,
             );
         }
 
         // Balls
         balls = this.physics.add.group({
-            name: 'balls',
+            name: "balls",
             enable: false,
         });
 
         balls.createMultiple({
-            key: 'ball',
+            key: "ball",
             quantity: MAX_NUMBER_OF_BALLS,
             active: false,
             visible: false,
@@ -186,25 +183,25 @@ export class gameScene extends Phaser.Scene {
 
         // Adding finishline at end of the map
         const finishPoint = map.findObject(
-            'spawnpoints',
-            (obj) => obj.name === 'finishline'
+            "spawnpoints",
+            (obj) => obj.name === "finishline",
         );
         finishline = this.physics.add.image(
             finishPoint.x!,
             finishPoint.y!,
-            'finishLine'
+            "finishLine",
         );
 
         //  The score
         scoreText = this.add
-            .text(16, 16, 'Stars collected: ' + starsCollected, {
-                font: '27px monospace',
-                color: '#000',
+            .text(16, 16, "Stars collected: " + starsCollected, {
+                font: "27px monospace",
+                color: "#000",
                 padding: {
                     x: 20,
                     y: 10,
                 },
-                backgroundColor: '#ffffff',
+                backgroundColor: "#ffffff",
             })
             .setScrollFactor(0);
 
@@ -231,11 +228,11 @@ export class gameScene extends Phaser.Scene {
                     starsCollected,
                     scoreText,
                     counterText,
-                    this
+                    this,
                 );
             },
             null!,
-            this
+            this,
         );
 
         // See if ball overlaps with star
@@ -251,11 +248,11 @@ export class gameScene extends Phaser.Scene {
                     starsCollected,
                     scoreText,
                     counterText,
-                    this
+                    this,
                 );
             },
             null!,
-            this
+            this,
         );
 
         // Checks to see if player is at finishline
@@ -270,10 +267,10 @@ export class gameScene extends Phaser.Scene {
                     gameOver,
                     leaderboard,
                     starsCollected,
-                    counter
+                    counter,
                 ),
             null!,
-            this
+            this,
         );
 
         this.physics.add.overlap(player, foreground);
@@ -283,7 +280,7 @@ export class gameScene extends Phaser.Scene {
             0,
             0,
             map.widthInPixels,
-            map.heightInPixels
+            map.heightInPixels,
         );
         this.physics.world.setBounds(
             0,
@@ -293,49 +290,49 @@ export class gameScene extends Phaser.Scene {
             true,
             true,
             true,
-            true
+            true,
         );
 
-        this.physics.world.on('worldstep', worldStep, this);
+        this.physics.world.on("worldstep", worldStep, this);
 
         // "New "Game" Button
         button = this.add
-            .text(1000, 16, 'New Game', {
-                font: '27px monospace',
-                color: '#000000',
+            .text(1000, 16, "New Game", {
+                font: "27px monospace",
+                color: "#000000",
                 padding: {
                     x: 20,
                     y: 10,
                 },
-                backgroundColor: '#ffffff',
+                backgroundColor: "#ffffff",
             })
             .setScrollFactor(0);
 
         button.setInteractive();
-        button.on('pointerdown', () => {
+        button.on("pointerdown", () => {
             gameOver = false;
             counter = 0;
             numberOfStars = 0;
             starsCollected = 0;
             this.scene.restart();
         });
-        button.on('pointerover', () => {
-            button.setBackgroundColor('#0f0');
+        button.on("pointerover", () => {
+            button.setBackgroundColor("#0f0");
         });
-        button.on('pointerout', () => {
-            button.setBackgroundColor('#fff');
+        button.on("pointerout", () => {
+            button.setBackgroundColor("#fff");
         });
 
         // TIMER
         counterText = this.add
-            .text(400, 16, 'Time: 0', {
-                font: '27px monospace',
-                color: '#000000',
+            .text(400, 16, "Time: 0", {
+                font: "27px monospace",
+                color: "#000000",
                 padding: {
                     x: 20,
                     y: 10,
                 },
-                backgroundColor: '#ffffff',
+                backgroundColor: "#ffffff",
             })
             .setScrollFactor(0);
 
@@ -351,28 +348,28 @@ export class gameScene extends Phaser.Scene {
         timedEvent2 = this.time.addEvent({
             delay: 100,
             callback: () => {
-                counterText.setText('Time: ' + counter.toFixed(2) + 'S');
+                counterText.setText("Time: " + counter.toFixed(2) + "S");
             },
             callbackScope: this,
             loop: true,
         });
     }
 
-    update() {
+    public update() {
         // init gamepad
-        var pad = this.input.gamepad.pad1;
+        const pad = this.input.gamepad.pad1;
 
-        //gameover
+        // gameover
         if (gameOver) {
             return;
         }
 
         // Movement logic
         if (cursors.left.isDown || (pad && pad.left)) {
-            direction = 'left';
+            direction = "left";
             movePlayer(player, direction, WALKSPEED, ACCELERATION);
         } else if (cursors.right.isDown || (pad && pad.right)) {
-            direction = 'right';
+            direction = "right";
             movePlayer(player, direction, WALKSPEED, ACCELERATION);
         } else {
             stopPlayer(player, direction, ACCELERATION);
@@ -437,8 +434,8 @@ export class gameScene extends Phaser.Scene {
             getWinners();
         }
 
-        //Hiding and unhiding cave overlay
-        var i = 0;
+        // Hiding and unhiding cave overlay
+        let i = 0;
         caves.forEach((cave) => {
             if (
                 player.x >= cave.x! &&

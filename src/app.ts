@@ -1,5 +1,5 @@
-import Phaser from 'phaser';
-import { ntnu } from './ntnu'
+import Phaser from "phaser";
+import { ntnu } from "./ntnu";
 
 const initWidth = window.innerWidth;
 const initHeight = window.innerHeight;
@@ -13,7 +13,7 @@ window.onload = () => {
         scene: ntnu,
         render: { pixelArt: true, antialias: false },
         physics: {
-            default: 'arcade',
+            default: "arcade",
             arcade: {
                 gravity: {
                     x: 0,
@@ -26,15 +26,15 @@ window.onload = () => {
         },
     });
     resizeGame();
-    window.addEventListener('resize', resizeGame);
+    window.addEventListener("resize", resizeGame);
 };
 
 function resizeGame() {
-    const canvas: HTMLCanvasElement | null = document.querySelector('canvas');
+    const canvas: HTMLCanvasElement | null = document.querySelector("canvas");
     if (canvas !== null) {
         const windowWidth: number = window.innerWidth;
         const windowHeight: number = window.innerHeight;
-        canvas.style.width = windowWidth + 'px';
-        canvas.style.height = windowHeight + 'px';
+        canvas.style.width = windowWidth + "px";
+        canvas.style.height = windowHeight + "px";
     }
 }
