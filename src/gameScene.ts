@@ -32,18 +32,19 @@ let timedEvent: Phaser.Time.TimerEvent;
 let timedEvent2: Phaser.Time.TimerEvent;
 let finishline: Phaser.Physics.Arcade.Image;
 let numberOfStars = 0;
-const deadlyTiles: number[] = [];
 let starsCollected = 0;
 let hiding: Phaser.Tilemaps.TilemapLayer;
-const caves: Phaser.Types.Tilemaps.TiledObject[] = [];
-const insideCave: boolean[] = [];
 let doubleJumpAvailable = true;
 let jumping = false;
 let throwing = false;
 let scoreText: Phaser.GameObjects.Text;
 let platformCollider: Phaser.Physics.Arcade.Collider;
-const falling = false;
 let platforms: Phaser.Tilemaps.TilemapLayer;
+
+const insideCave: boolean[] = [];
+const caves: Phaser.Types.Tilemaps.TiledObject[] = [];
+const deadlyTiles: number[] = [];
+const { Each } = Phaser.Utils.Array;
 
 const WALKSPEED = 500;
 const JUMPSPEED = 600;
@@ -51,7 +52,6 @@ const MAXSPEED = 800;
 const ACCELERATION = 1800;
 const BALL_LIFE_SPAN = 2;
 const MAX_NUMBER_OF_BALLS = 10;
-const { Each } = Phaser.Utils.Array;
 
 export class GameScene extends Phaser.Scene {
 
@@ -129,7 +129,7 @@ export class GameScene extends Phaser.Scene {
                 end: 5,
                 start: 4,
             }),
-            key: "left",
+            key: Direction.Left,
             repeat: -1,
         });
 
@@ -139,7 +139,7 @@ export class GameScene extends Phaser.Scene {
                 end: 3,
                 start: 2,
             }),
-            key: "right",
+            key: Direction.Right,
             repeat: -1,
         });
 
@@ -217,7 +217,7 @@ export class GameScene extends Phaser.Scene {
         this.physics.add.overlap(
             player,
             stars,
-            (star) => {
+            (_, star) => {
                 starsCollected += 1;
                 counter = counter - 1;
                 collectStar(
@@ -236,7 +236,7 @@ export class GameScene extends Phaser.Scene {
         this.physics.add.overlap(
             balls,
             stars,
-            (ball, star) => {
+            (_, star) => {
                 starsCollected += 1;
                 counter = counter - 1;
                 collectStar(
