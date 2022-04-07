@@ -1,14 +1,16 @@
+import { Direction } from "./models/direction";
+
 let movementDirection;
 
 export const { Each } = Phaser.Utils.Array;
 
 export function movePlayer(
     player: Phaser.Physics.Arcade.Sprite,
-    direction: string,
+    direction: Direction,
     speed: number,
-    acceleration: number
+    acceleration: number,
 ) {
-    if (direction == 'left') {
+    if (direction === Direction.Left) {
         movementDirection = -1;
     } else {
         movementDirection = 1;
@@ -31,12 +33,12 @@ export function movePlayer(
 
 export function stopPlayer(
     player: Phaser.Physics.Arcade.Sprite,
-    direction: string,
-    acceleration: number
+    direction: Direction,
+    acceleration: number,
 ) {
-    if (direction == 'right' && player.body.velocity.x > 0) {
+    if (direction === Direction.Right && player.body.velocity.x > 0) {
         player.setAccelerationX(-2 * acceleration);
-    } else if (direction == 'left' && player.body.velocity.x < 0) {
+    } else if (direction === Direction.Left && player.body.velocity.x < 0) {
         player.setAccelerationX(2 * acceleration);
     } else {
         player.setAccelerationX(0);
@@ -50,7 +52,6 @@ export function deadlyTileHit(
     timedEvent: Phaser.Time.TimerEvent,
     player: Phaser.Physics.Arcade.Sprite,
     gameOverText: Phaser.GameObjects.Text,
-    gameOver: boolean
 ) {
     scene.physics.pause();
 
@@ -62,41 +63,33 @@ export function deadlyTileHit(
 
     // GAME OVER
     gameOverText = scene.add
-        .text(350, 300, 'GAME OVER', {
-            font: '36px monospace',
-            color: '#000000',
+        .text(350, 300, "GAME OVER", {
+            backgroundColor: "#f00",
+            color: "#000",
+            font: "36px monospace",
             padding: {
                 x: 100,
                 y: 50,
             },
-            backgroundColor: '#f00',
         })
         .setScrollFactor(0);
-    gameOver = true;
 }
 
 export function crossedFinishline(
     scene: Phaser.Scene,
     timedEvent: Phaser.Time.TimerEvent,
     player: Phaser.Physics.Arcade.Sprite,
-    gameOver: boolean,
-    leaderboard: Phaser.GameObjects.Text,
     starsCollected: number,
-    counter: number
+    counter: number,
 ) {
     scene.physics.pause();
-
     timedEvent.destroy();
 
     player.setTint(0xff0000);
-
     player.anims.stop();
 
     recordTime(starsCollected, counter);
-
-    printTime(scene, leaderboard);
-
-    gameOver = true;
+    printTime(scene);
 }
 
 export function updateCounter(counter: number) {
@@ -105,10 +98,9 @@ export function updateCounter(counter: number) {
 
 export function printCounter(
     counterText: Phaser.GameObjects.Text,
-    counter: number
+    counter: number,
 ) {
-    console.log({});
-    counterText.setText('Time: ' + counter.toFixed(2) + 'S');
+    counterText.setText("Time: " + counter.toFixed(2) + "S");
 }
 
 export function updateBall(ball: Phaser.Physics.Arcade.Sprite, delta: number) {
@@ -122,7 +114,7 @@ export function throwBallFromPlayer(
     ballLifeSpan: number,
     balls: Phaser.Physics.Arcade.Group,
     player: Phaser.Physics.Arcade.Sprite,
-    direction: string
+    direction: Direction,
 ) {
     throwBallFromGroup(balls, player.x, player.y, ballLifeSpan, direction);
 }
@@ -132,21 +124,21 @@ function throwBallFromGroup(
     x: number,
     y: number,
     lifespan: number,
-    direction: string
+    direction: Direction,
 ) {
     const ball = group.getFirstDead(false);
-    let vx: number = 0;
-    let vy: number = 0;
+    let velocityX: number = 0;
+    let velocityY: number = 0;
     if (ball) {
-        if (direction === 'right') {
-            vx = 1000;
-            vy = -200;
+        if (direction === Direction.Right) {
+            velocityX = 1000;
+            velocityY = -200;
         }
-        if (direction === 'left') {
-            vx = -1000;
-            vy = -200;
+        if (direction === Direction.Left) {
+            velocityX = -1000;
+            velocityY = -200;
         }
-        throwBall(ball, x, y, vx, vy, lifespan);
+        throwBall(ball, x, y, velocityX, velocityY, lifespan);
     }
 }
 
@@ -154,64 +146,63 @@ function throwBall(
     ball: Phaser.Physics.Arcade.Sprite,
     x: number,
     y: number,
-    vx: number,
-    vy: number,
-    lifespan: number
+    velocityX: number,
+    velocityY: number,
+    lifespan: number,
 ) {
     ball.enableBody(true, x, y, true, true);
-    ball.setVelocity(vx, vy);
+    ball.setVelocity(velocityX, velocityY);
     ball.setState(lifespan);
     ball.setBounceX(0.5);
     ball.setBounceY(0.5);
 }
 
 export function collectStar(
-    object: any,
     star: Phaser.Types.Physics.Arcade.GameObjectWithBody,
     starsCollected: number,
     scoreText: Phaser.GameObjects.Text,
     counterText: Phaser.GameObjects.Text,
-    scene: Phaser.Scene
+    scene: Phaser.Scene,
 ) {
     star.destroy();
 
     //  Add and update the score
-    scoreText.setText('Stars Collected: ' + starsCollected);
-    counterText.setBackgroundColor('#FFBE2E');
+    scoreText.setText("Stars Collected: " + starsCollected);
+    counterText.setBackgroundColor("#FFBE2E");
     scene.time.addEvent({
-        delay: 500,
         callback: () => {
-            counterText.setBackgroundColor('#fff');
+            counterText.setBackgroundColor("#fff");
         },
         callbackScope: scene,
+        delay: 500,
     });
 }
 
 export function playerIntersect(
     player: Phaser.Physics.Arcade.Sprite,
-    mapLayer: Phaser.Tilemaps.TilemapLayer
+    mapLayer: Phaser.Tilemaps.TilemapLayer,
 ) {
-    let playerTopRightCollideTile = mapLayer.getTileAtWorldXY(
+    const playerTopRightCollideTile = mapLayer.getTileAtWorldXY(
         player.x + player.width / 2,
         player.y - player.height / 2,
-        true
+        true,
     ).index;
-    let playerTopLeftCollideTile = mapLayer.getTileAtWorldXY(
+    const playerTopLeftCollideTile = mapLayer.getTileAtWorldXY(
         player.x - player.width / 2,
         player.y - player.height / 2,
-        true
+        true,
     ).index;
 
     // -1 compensating for pixel indexing in player
-    let playerBottomRightCollideTile = mapLayer.getTileAtWorldXY(
+    const playerBottomRightCollideTile = mapLayer.getTileAtWorldXY(
         player.x + player.width / 2,
         player.y + player.height / 2 - 1,
-        true
+        true,
     ).index;
-    let playerBottomLeftCollideTile = mapLayer.getTileAtWorldXY(
+    const playerBottomLeftCollideTile = mapLayer.getTileAtWorldXY(
         player.x - player.width / 2,
         player.y + player.height / 2 - 1,
-        true
+        true,
     ).index;
 
     if (
@@ -228,18 +219,18 @@ export function playerIntersect(
 
 export function playerStandingOnMapLayer(
     player: Phaser.Physics.Arcade.Sprite,
-    mapLayer: Phaser.Tilemaps.TilemapLayer
+    mapLayer: Phaser.Tilemaps.TilemapLayer,
 ) {
     // +1 for getting pixel outside of player sprite
-    let playerBottomRightCollideTile = mapLayer.getTileAtWorldXY(
+    const playerBottomRightCollideTile = mapLayer.getTileAtWorldXY(
         player.x + player.width / 2,
         player.y + player.height / 2 + 1,
-        true
+        true,
     ).index;
-    let playerBottomLeftCollideTile = mapLayer.getTileAtWorldXY(
+    const playerBottomLeftCollideTile = mapLayer.getTileAtWorldXY(
         player.x - player.width / 2,
         player.y + player.height / 2 + 1,
-        true
+        true,
     ).index;
 
     if (playerBottomRightCollideTile > 0 || playerBottomLeftCollideTile > 0) {
@@ -250,26 +241,21 @@ export function playerStandingOnMapLayer(
 }
 
 export const getWinners = () => {
-    const timeArrayAssetsShowcase = JSON.parse(
-        localStorage.getItem('timeArrayAssetsShowcase')!
-    );
+    const timeArrayAssetsShowcase = getRecordTimeLocalStorage();
     const random = Phaser.Math.Between(1, timeArrayAssetsShowcase.length - 1);
 
-    console.log('BEST TIME WINNER:');
+    // tslint:disable-next-line: no-console
+    console.log("BEST TIME WINNER:");
+    // tslint:disable-next-line: no-console
     console.log(timeArrayAssetsShowcase[0]);
-    console.log('RANDOM WINNER:');
+    // tslint:disable-next-line: no-console
+    console.log("RANDOM WINNER:");
+    // tslint:disable-next-line: no-console
     console.log(timeArrayAssetsShowcase[random]);
 };
 
 export const clearLeaderboard = () => {
-    let timeArrayAssetsShowcase = JSON.parse(
-        localStorage.getItem('timeArrayAssetsShowcase')!
-    );
-    timeArrayAssetsShowcase = [];
-    localStorage.setItem(
-        'timeArrayAssetsShowcase',
-        JSON.stringify(timeArrayAssetsShowcase)
-    );
+    setRecordTimeLocalStorage([]);
 };
 
 interface IGameRecord {
@@ -279,11 +265,11 @@ interface IGameRecord {
     phone?: string;
 }
 
-const TIME_ARRAY_ASSETS_SHOWCASE = 'timeArrayAssetsShowcase';
+const TIME_ARRAY_ASSETS_SHOWCASE = "timeArrayAssetsShowcase";
 
 const getRecordTimeLocalStorage = () => {
     const rawTimeArrayAssetsShowcase = localStorage.getItem(
-        TIME_ARRAY_ASSETS_SHOWCASE
+        TIME_ARRAY_ASSETS_SHOWCASE,
     );
     return rawTimeArrayAssetsShowcase
         ? (JSON.parse(rawTimeArrayAssetsShowcase) as IGameRecord[])
@@ -297,18 +283,18 @@ const setRecordTimeLocalStorage = (value: IGameRecord[]) => {
 export const recordTime = (starsCollected: number, counter: number) => {
     const timeArrayAssetsShowcase = getRecordTimeLocalStorage();
 
-    const name = prompt('Bra jobba! Skriv inn fullt navn:') ?? undefined;
-    const phone = prompt('Og telefonnummer:') ?? undefined;
+    const name = prompt("Bra jobba! Skriv inn fullt navn:") ?? undefined;
+    const phone = prompt("Og telefonnummer:") ?? undefined;
 
     const gameRecord: IGameRecord = {
         name,
+        phone,
         starsCollected,
         time: counter.toFixed(2),
-        phone,
     };
 
     const previousAttempts = timeArrayAssetsShowcase.filter((previousAttempt) =>
-    !!previousAttempt.phone ? previousAttempt.phone == gameRecord.phone : []
+    !!previousAttempt.phone ? previousAttempt.phone === gameRecord.phone : false,
     );
 
     if (previousAttempts.length > 0) {
@@ -316,7 +302,7 @@ export const recordTime = (starsCollected: number, counter: number) => {
         if (compareGameRecordsTime(gameRecord, previousAttempts[0]) < 0) {
             timeArrayAssetsShowcase[
                 timeArrayAssetsShowcase.findIndex(
-                    (object:IGameRecord) => object == previousAttempts[0]
+                    (object) => object === previousAttempts[0],
                 )
             ] = gameRecord;
         }
@@ -329,16 +315,15 @@ export const recordTime = (starsCollected: number, counter: number) => {
 };
 
 export const printTime = (
-    context: Phaser.Scene,
-    leaderboard: Phaser.GameObjects.Text
+    scene: Phaser.Scene,
 ) => {
     // context er 'this' i parent
     let timeArrayAssetsShowcase = getRecordTimeLocalStorage();
 
-    leaderboard = context.add
-        .text(400, 200, 'Leaderboard', {
-            fontSize: '70px',
-            fontStyle: 'bold',
+    scene.add
+        .text(400, 200, "Leaderboard", {
+            fontSize: "70px",
+            fontStyle: "bold",
         })
         .setScrollFactor(0);
     let yPos = 300;
@@ -347,19 +332,19 @@ export const printTime = (
         timeArrayAssetsShowcase = timeArrayAssetsShowcase.slice(0, 14);
     }
 
-    timeArrayAssetsShowcase.forEach(function (gameRecord) {
-        leaderboard = context.add
-            .text(350, yPos, gameRecord.name ?? "--" + ': ', {
-                fontSize: '45px',
-                fontStyle: 'bold',
-                color: '#000',
+    timeArrayAssetsShowcase.forEach((gameRecord) => {
+        scene.add
+            .text(350, yPos, gameRecord.name ?? "--" + ": ", {
+                color: "#000",
+                fontSize: "45px",
+                fontStyle: "bold",
             })
             .setScrollFactor(0);
-        leaderboard = context.add
-            .text(900, yPos, gameRecord.time, {
-                fontSize: '45px',
-                fontStyle: 'bold',
-                color: '#000',
+        scene.add
+        .text(900, yPos, gameRecord.time, {
+                color: "#000",
+                fontSize: "45px",
+                fontStyle: "bold",
             })
             .setScrollFactor(0);
         yPos += 40;

@@ -1,5 +1,5 @@
 import Phaser from "phaser";
-import { ntnu } from "./ntnu";
+import { Ntnu } from "./ntnu";
 
 const initWidth = window.innerWidth;
 const initHeight = window.innerHeight;
@@ -7,23 +7,23 @@ const initHeight = window.innerHeight;
 window.onload = () => {
     window.focus();
     const game: Phaser.Game = new Phaser.Game({
-        type: Phaser.AUTO,
-        width: initWidth,
         height: initHeight,
-        scene: ntnu,
-        render: { pixelArt: true, antialias: false },
+        input: {
+            gamepad: true,
+        },
         physics: {
-            default: "arcade",
             arcade: {
                 gravity: {
                     x: 0,
                     y: 700,
                 },
             },
+            default: "arcade",
         },
-        input: {
-            gamepad: true,
-        },
+        render: { pixelArt: true, antialias: false },
+        scene: Ntnu,
+        type: Phaser.AUTO,
+        width: initWidth,
     });
     resizeGame();
     window.addEventListener("resize", resizeGame);

@@ -1,4 +1,6 @@
+import { Direction } from "./models/direction";
 import {
+    clearLeaderboard,
     collectStar,
     crossedFinishline,
     deadlyTileHit,
@@ -19,9 +21,10 @@ let gameOver = false;
 let keyboardInputH: Phaser.Input.Keyboard.Key;
 let keyboardInputC: Phaser.Input.Keyboard.Key;
 let keyboardInputQ: Phaser.Input.Keyboard.Key;
+let keyboardInputW: Phaser.Input.Keyboard.Key;
 let spaceKey: Phaser.Input.Keyboard.Key;
 let balls: Phaser.Physics.Arcade.Group;
-let direction = "right";
+let direction = Direction.Right;
 let button: Phaser.GameObjects.Text;
 let counterText: Phaser.GameObjects.Text;
 let counter = 0;
@@ -38,12 +41,8 @@ let doubleJumpAvailable = true;
 let jumping = false;
 let throwing = false;
 let scoreText: Phaser.GameObjects.Text;
-let leaderboard: Phaser.GameObjects.Text;
 let platformCollider: Phaser.Physics.Arcade.Collider;
 const falling = false;
-let playerHeadCollideTile;
-let playerFootCollideTile;
-let playerUnderFootTile;
 let platforms: Phaser.Tilemaps.TilemapLayer;
 
 const WALKSPEED = 500;
@@ -54,15 +53,15 @@ const BALL_LIFE_SPAN = 2;
 const MAX_NUMBER_OF_BALLS = 10;
 const { Each } = Phaser.Utils.Array;
 
-export class gameScene extends Phaser.Scene {
+export class GameScene extends Phaser.Scene {
 
     public create() {
         this.add.image(0, 0, "sky");
 
         const map = this.make.tilemap({
             key: "map",
-            tileWidth: 32,
             tileHeight: 32,
+            tileWidth: 32,
         });
         const tileset = map.addTilesetImage("tileset", "tileset");
         const background = map.createLayer("background", tileset, 0, 0);
@@ -80,8 +79,6 @@ export class gameScene extends Phaser.Scene {
         );
         player = this.physics.add.sprite(spawnPoint.x!, spawnPoint.y!, "dude");
         player.setCollideWorldBounds(true);
-        player.body;
-        player.body.allowGravity;
         player.setGravityY(750);
         player.setMaxVelocity(MAXSPEED);
         player.setVelocityX(0);
@@ -96,10 +93,10 @@ export class gameScene extends Phaser.Scene {
 
         // Adding stars to the game
         stars = this.physics.add.group();
-        map.getObjectLayer('spawnpoints').objects.forEach((o) => {
-            if (o.name === 'star') {
+        map.getObjectLayer("spawnpoints").objects.forEach((o) => {
+            if (o.name === "star") {
                 const star: Phaser.Types.Physics.Arcade.SpriteWithDynamicBody =
-                    stars.create(o.x, o.y, 'star');
+                    stars.create(o.x, o.y, "star");
                 // Can't find fix for this error
                 star.body.moves = false;
                 numberOfStars += 1;
@@ -116,8 +113,10 @@ export class gameScene extends Phaser.Scene {
 
         foreground.setTileIndexCallback(
             deadlyTiles,
-            (player: Phaser.Physics.Arcade.Sprite, gameOverText: Phaser.GameObjects.Text) =>
-                deadlyTileHit(this, timedEvent, player, gameOverText, gameOver),
+            (gameOverText: Phaser.GameObjects.Text) => {
+                deadlyTileHit(this, timedEvent, player, gameOverText);
+                gameOver = true;
+            },
             this,
         );
 
@@ -125,31 +124,32 @@ export class gameScene extends Phaser.Scene {
 
         // Player animations
         this.anims.create({
-            key: "left",
-            frames: this.anims.generateFrameNumbers("dude", {
-                start: 4,
-                end: 5,
-            }),
             frameRate: 10,
+            frames: this.anims.generateFrameNumbers("dude", {
+                end: 5,
+                start: 4,
+            }),
+            key: "left",
             repeat: -1,
         });
 
         this.anims.create({
-            key: "right",
-            frames: this.anims.generateFrameNumbers("dude", {
-                start: 2,
-                end: 3,
-            }),
             frameRate: 10,
+            frames: this.anims.generateFrameNumbers("dude", {
+                end: 3,
+                start: 2,
+            }),
+            key: "right",
             repeat: -1,
         });
 
         //  Input Events
         cursors = this.input.keyboard.createCursorKeys();
         keyboardInputH = this.input.keyboard.addKey("H");
-        keyboardInputC = this.input.keyboard.addKey("C")
+        keyboardInputC = this.input.keyboard.addKey("C");
         keyboardInputC.emitOnRepeat = false;
         keyboardInputQ = this.input.keyboard.addKey("Q");
+        keyboardInputW = this.input.keyboard.addKey("W");
         spaceKey = this.input.keyboard.addKey(
             Phaser.Input.Keyboard.KeyCodes.SPACE,
         );
@@ -158,7 +158,8 @@ export class gameScene extends Phaser.Scene {
         if (this.input.gamepad.total === 0) {
             this.input.gamepad.once(
                 "connected",
-                function(pad: { id: number; }) {
+                (pad: { id: number; }) => {
+                    // tslint:disable-next-line: no-console
                     console.log("connected", pad.id);
                 },
                 this,
@@ -167,14 +168,14 @@ export class gameScene extends Phaser.Scene {
 
         // Balls
         balls = this.physics.add.group({
-            name: "balls",
             enable: false,
+            name: "balls",
         });
 
         balls.createMultiple({
+            active: false,
             key: "ball",
             quantity: MAX_NUMBER_OF_BALLS,
-            active: false,
             visible: false,
         });
 
@@ -192,13 +193,13 @@ export class gameScene extends Phaser.Scene {
         //  The score
         scoreText = this.add
             .text(16, 16, "Stars collected: " + starsCollected, {
-                font: "27px monospace",
+                backgroundColor: "#fff",
                 color: "#000",
+                font: "27px monospace",
                 padding: {
                     x: 20,
                     y: 10,
                 },
-                backgroundColor: "#ffffff",
             })
             .setScrollFactor(0);
 
@@ -216,11 +217,10 @@ export class gameScene extends Phaser.Scene {
         this.physics.add.overlap(
             player,
             stars,
-            (player, star) => {
+            (star) => {
                 starsCollected += 1;
                 counter = counter - 1;
                 collectStar(
-                    player,
                     star,
                     starsCollected,
                     scoreText,
@@ -240,7 +240,6 @@ export class gameScene extends Phaser.Scene {
                 starsCollected += 1;
                 counter = counter - 1;
                 collectStar(
-                    ball,
                     star,
                     starsCollected,
                     scoreText,
@@ -256,16 +255,17 @@ export class gameScene extends Phaser.Scene {
         this.physics.add.overlap(
             player,
             finishline,
-            (player: Phaser.Physics.Arcade.Sprite) =>
+            () => {
                 crossedFinishline(
                     this,
                     timedEvent,
                     player,
-                    gameOver,
-                    leaderboard,
                     starsCollected,
                     counter,
-                ),
+                );
+                gameOver = true;
+            }
+                ,
             null!,
             this,
         );
@@ -295,13 +295,13 @@ export class gameScene extends Phaser.Scene {
         // "New "Game" Button
         button = this.add
             .text(1000, 16, "New Game", {
-                font: "27px monospace",
+                backgroundColor: "#ffffff",
                 color: "#000000",
+                font: "27px monospace",
                 padding: {
                     x: 20,
                     y: 10,
                 },
-                backgroundColor: "#ffffff",
             })
             .setScrollFactor(0);
 
@@ -323,31 +323,31 @@ export class gameScene extends Phaser.Scene {
         // TIMER
         counterText = this.add
             .text(400, 16, "Time: 0", {
-                font: "27px monospace",
+                backgroundColor: "#ffffff",
                 color: "#000000",
+                font: "27px monospace",
                 padding: {
                     x: 20,
                     y: 10,
                 },
-                backgroundColor: "#ffffff",
             })
             .setScrollFactor(0);
 
         timedEvent = this.time.addEvent({
-            delay: 10,
             callback: () => {
                 counter = counter + 0.01;
             },
             callbackScope: this,
+            delay: 10,
             loop: true,
         });
 
         timedEvent2 = this.time.addEvent({
-            delay: 100,
             callback: () => {
                 counterText.setText("Time: " + counter.toFixed(2) + "S");
             },
             callbackScope: this,
+            delay: 100,
             loop: true,
         });
     }
@@ -363,10 +363,10 @@ export class gameScene extends Phaser.Scene {
 
         // Movement logic
         if (cursors.left.isDown || (pad && pad.left)) {
-            direction = "left";
+            direction = Direction.Left;
             movePlayer(player, direction, WALKSPEED, ACCELERATION);
         } else if (cursors.right.isDown || (pad && pad.right)) {
-            direction = "right";
+            direction = Direction.Right;
             movePlayer(player, direction, WALKSPEED, ACCELERATION);
         } else {
             stopPlayer(player, direction, ACCELERATION);
@@ -377,7 +377,7 @@ export class gameScene extends Phaser.Scene {
             if (player.body.blocked.down) {
                 jumping = true;
                 player.setVelocityY(-JUMPSPEED);
-            } else if (doubleJumpAvailable && jumping == false) {
+            } else if (doubleJumpAvailable && jumping === false) {
                 doubleJumpAvailable = false;
                 player.setVelocityY(-JUMPSPEED);
                 jumping = true;
@@ -423,11 +423,15 @@ export class gameScene extends Phaser.Scene {
 
         // leaderboard
         if (keyboardInputH.isDown) {
-            printTime(this, leaderboard);
+            printTime(this);
         }
 
         if (keyboardInputQ.isDown) {
             getWinners();
+        }
+
+        if (keyboardInputW.isDown) {
+            clearLeaderboard();
         }
 
         // Hiding and unhiding cave overlay
