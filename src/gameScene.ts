@@ -1,11 +1,13 @@
 import { Direction } from "./models/direction";
 import {
+    BUTTON_STYLE,
     clearLeaderboard,
     collectStar,
     crossedFinishline,
     deadlyTileHit,
     getWinners,
     movePlayer,
+    newButton,
     playerIntersect,
     playerStandingOnMapLayer,
     printTime,
@@ -18,14 +20,15 @@ let player: Phaser.Physics.Arcade.Sprite;
 let stars: Phaser.Physics.Arcade.Group;
 let cursors: Phaser.Types.Input.Keyboard.CursorKeys;
 let gameOver = false;
+
 let keyboardInputH: Phaser.Input.Keyboard.Key;
 let keyboardInputC: Phaser.Input.Keyboard.Key;
 let keyboardInputQ: Phaser.Input.Keyboard.Key;
 let keyboardInputW: Phaser.Input.Keyboard.Key;
 let spaceKey: Phaser.Input.Keyboard.Key;
+
 let balls: Phaser.Physics.Arcade.Group;
 let direction = Direction.Right;
-let button: Phaser.GameObjects.Text;
 let counterText: Phaser.GameObjects.Text;
 let counter = 0;
 let timedEvent: Phaser.Time.TimerEvent;
@@ -46,6 +49,9 @@ const caves: Phaser.Types.Tilemaps.TiledObject[] = [];
 const deadlyTiles: number[] = [];
 const { Each } = Phaser.Utils.Array;
 
+const windowWidth = window.innerWidth;
+const windowHeight = window.innerHeight;
+
 const WALKSPEED = 500;
 const JUMPSPEED = 600;
 const MAXSPEED = 800;
@@ -55,7 +61,16 @@ const MAX_NUMBER_OF_BALLS = 10;
 
 export class GameScene extends Phaser.Scene {
 
+    constructor(config: Phaser.Types.Scenes.SettingsConfig) {
+        super(config);
+    }
+
     public create() {
+
+        counter = 0;
+        starsCollected = 0;
+        numberOfStars = 0;
+
         this.add.image(0, 0, "sky");
 
         const map = this.make.tilemap({
@@ -113,9 +128,10 @@ export class GameScene extends Phaser.Scene {
 
         foreground.setTileIndexCallback(
             deadlyTiles,
-            (gameOverText: Phaser.GameObjects.Text) => {
-                deadlyTileHit(this, timedEvent, player, gameOverText);
-                gameOver = true;
+            () => {
+                deadlyTileHit(this, timedEvent, player);
+                this.scene.pause();
+                this.scene.launch("death");
             },
             this,
         );
@@ -292,33 +308,19 @@ export class GameScene extends Phaser.Scene {
 
         this.physics.world.on("worldstep", worldStep, this);
 
-        // "New "Game" Button
-        button = this.add
-            .text(1000, 16, "New Game", {
-                backgroundColor: "#ffffff",
-                color: "#000000",
-                font: "27px monospace",
-                padding: {
-                    x: 20,
-                    y: 10,
-                },
-            })
-            .setScrollFactor(0);
-
-        button.setInteractive();
-        button.on("pointerdown", () => {
+        // Menu Button
+        newButton(
+            this,
+            "Menu",
+            () => {
             gameOver = false;
-            counter = 0;
-            numberOfStars = 0;
-            starsCollected = 0;
-            this.scene.restart();
-        });
-        button.on("pointerover", () => {
-            button.setBackgroundColor("#0f0");
-        });
-        button.on("pointerout", () => {
-            button.setBackgroundColor("#fff");
-        });
+            this.scene.pause();
+            this.scene.launch("pause");
+            },
+            windowWidth - 110,
+            scoreText.y + scoreText.height / 2,
+            BUTTON_STYLE,
+            );
 
         // TIMER
         counterText = this.add
@@ -355,11 +357,6 @@ export class GameScene extends Phaser.Scene {
     public update() {
         // init gamepad
         const pad = this.input.gamepad.pad1;
-
-        // gameover
-        if (gameOver) {
-            return;
-        }
 
         // Movement logic
         if (cursors.left.isDown || (pad && pad.left)) {

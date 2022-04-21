@@ -1,4 +1,5 @@
 import { Direction } from "./models/direction";
+import { IPlayerInfo } from "./models/playerInfo";
 
 let movementDirection;
 
@@ -51,7 +52,6 @@ export function deadlyTileHit(
     scene: Phaser.Scene,
     timedEvent: Phaser.Time.TimerEvent,
     player: Phaser.Physics.Arcade.Sprite,
-    gameOverText: Phaser.GameObjects.Text,
 ) {
     scene.physics.pause();
 
@@ -62,17 +62,8 @@ export function deadlyTileHit(
     player.anims.stop();
 
     // GAME OVER
-    gameOverText = scene.add
-        .text(350, 300, "GAME OVER", {
-            backgroundColor: "#f00",
-            color: "#000",
-            font: "36px monospace",
-            padding: {
-                x: 100,
-                y: 50,
-            },
-        })
-        .setScrollFactor(0);
+    scene.scene.pause();
+    scene.scene.launch("death");
 }
 
 export function crossedFinishline(
@@ -88,8 +79,8 @@ export function crossedFinishline(
     player.setTint(0xff0000);
     player.anims.stop();
 
-    recordTime(starsCollected, counter);
-    printTime(scene);
+    scene.scene.pause();
+    scene.scene.launch("finish", {time: counter, stars: starsCollected});
 }
 
 export function updateCounter(counter: number) {
@@ -280,11 +271,8 @@ const setRecordTimeLocalStorage = (value: IGameRecord[]) => {
     localStorage.setItem(TIME_ARRAY_ASSETS_SHOWCASE, JSON.stringify(value));
 };
 
-export const recordTime = (starsCollected: number, counter: number) => {
+export const recordTime = (starsCollected: number, counter: number, name: string, phone: string) => {
     const timeArrayAssetsShowcase = getRecordTimeLocalStorage();
-
-    const name = prompt("Bra jobba! Skriv inn fullt navn:") ?? undefined;
-    const phone = prompt("Og telefonnummer:") ?? undefined;
 
     const gameRecord: IGameRecord = {
         name,
@@ -322,14 +310,15 @@ export const printTime = (
 
     scene.add
         .text(400, 200, "Leaderboard", {
+            color: "rgb(0,255,0)",
             fontSize: "70px",
             fontStyle: "bold",
         })
         .setScrollFactor(0);
     let yPos = 300;
 
-    if (timeArrayAssetsShowcase.length > 15) {
-        timeArrayAssetsShowcase = timeArrayAssetsShowcase.slice(0, 14);
+    if (timeArrayAssetsShowcase.length > 10) {
+        timeArrayAssetsShowcase = timeArrayAssetsShowcase.slice(0, 9);
     }
 
     timeArrayAssetsShowcase.forEach((gameRecord) => {
@@ -359,4 +348,58 @@ export const compareGameRecordsTime = (a: IGameRecord, b: IGameRecord) => {
         return 1;
     }
     return 0;
+};
+
+export function newButton(
+    scene: Phaser.Scene,
+    buttonText: string,
+    func: () => void,
+    posX: number,
+    posY: number,
+    buttonStyle: Phaser.Types.GameObjects.Text.TextStyle,
+    ) {
+
+    const button = scene.add.text(posX, posY, buttonText, buttonStyle).setScrollFactor(0);
+    button.setX(button.x - button.width / 2);
+    button.setY(button.y - button.height / 2);
+    button.setInteractive();
+    button.on("pointerdown", func);
+
+    button.on("pointerover", () => {
+        button.setBackgroundColor("#0f0");
+    });
+    button.on("pointerout", () => {
+        button.setBackgroundColor("#fff");
+    });
+    return button;
+}
+
+export const BUTTON_STYLE = {
+    backgroundColor: "#ffffff",
+    fill: "#000000",
+    font: "27px monospace",
+    padding: {
+        x: 20,
+        y: 10,
+    },
+};
+
+export const GAME_OVER_TEXT_STYLE = {
+    backgroundColor: "#ff0000",
+    fill: "#000000",
+    font: "64px monospace",
+    padding: {
+        x: 20,
+        y: 10,
+    },
+};
+
+export const FINISH_TEXT_STYLE = {
+    backgroundColor: "#00ff00",
+    fill: "#000000",
+    font: "64px monospace",
+    padding: {
+        x: 20,
+        y: 10,
+    },
 };
