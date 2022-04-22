@@ -40,6 +40,7 @@ let hiding: Phaser.Tilemaps.TilemapLayer;
 let doubleJumpAvailable = true;
 let jumping = false;
 let throwing = false;
+let pausing = false;
 let scoreText: Phaser.GameObjects.Text;
 let platformCollider: Phaser.Physics.Arcade.Collider;
 let platforms: Phaser.Tilemaps.TilemapLayer;
@@ -418,17 +419,18 @@ export class GameScene extends Phaser.Scene {
             throwing = false;
         }
 
-        // leaderboard
-        if (keyboardInputH.isDown) {
-            printTime(this);
+        // Pause on start button
+        if (pad && pad.isButtonDown(9) && !pausing) {
+            this.scene.pause();
+            this.scene.launch("pause");
+            pausing = true;
+        }
+        if (pad && !pad.isButtonDown(9) && pausing) {
+            pausing = false;
         }
 
         if (keyboardInputQ.isDown) {
             getWinners();
-        }
-
-        if (keyboardInputW.isDown) {
-            clearLeaderboard();
         }
 
         // Hiding and unhiding cave overlay
