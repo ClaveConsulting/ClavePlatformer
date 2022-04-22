@@ -38,6 +38,8 @@ export class FinishScene extends Phaser.Scene {
 
         finishText.setX(finishText.x - finishText.width / 2);
 
+        submitted = false;
+
         // User input form
         nameField = new InputField(this,
             windowWidth / 2,

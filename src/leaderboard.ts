@@ -11,7 +11,7 @@ export class LeaderboardScene extends Phaser.Scene {
     }
 
     public create() {
-        this.cameras.main.setBackgroundColor("rgba(255, 255, 255, 0.5)");
+        this.cameras.main.setBackgroundColor("rgba(120, 120, 120, 0.5)");
 
         // Print Leaderboard
         printTime(this);
