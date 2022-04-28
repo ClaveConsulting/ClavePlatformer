@@ -11,10 +11,6 @@ export class PauseScene extends Phaser.Scene {
         super(config);
     }
 
-    public preload() {
-        this.load.image("arrow", "assets/common/claveDude.png");
-    }
-
     public create() {
         this.cameras.main.setBackgroundColor("rgba(120, 120, 120, 0.5)");
 
