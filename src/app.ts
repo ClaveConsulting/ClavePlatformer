@@ -6,8 +6,8 @@ import { Ntnu } from "./ntnu";
 import { PauseScene } from "./pauseScene";
 import { Uio } from "./uio";
 
-const initWidth = window.innerWidth - 15;
-const initHeight = window.innerHeight - 10;
+const initWidth = window.innerWidth;
+const initHeight = window.innerHeight;
 
 window.onload = () => {
     window.focus();
