@@ -28,7 +28,7 @@ export class FinishScene extends Phaser.Scene {
 
     public create() {
         this.cameras.main.setBackgroundColor("rgba(0, 255, 0, 0.5)");
-        // GAME OVER text
+        // Finish text
         const finishText = this.add.text(
             windowWidth / 2,
             100,
