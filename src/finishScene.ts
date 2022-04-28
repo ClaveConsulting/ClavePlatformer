@@ -6,8 +6,8 @@ const windowHeight = window.innerHeight;
 const windowWidth = window.innerWidth;
 const BUTTON_SIDE_OFFSET = 100;
 const playerInfo: IPlayerInfo = {
-    playerName: "",
-    playerPhone: "",
+    name: "",
+    phone: "",
 };
 let nameField: InputField;
 let phoneField: InputField;
@@ -64,11 +64,11 @@ export class FinishScene extends Phaser.Scene {
 
         submitButton = newButton(this, "Submit",
         () => {
-            playerInfo.playerName = nameField.getValue();
-            playerInfo.playerPhone = phoneField.getValue();
+            playerInfo.name = nameField.getValue();
+            playerInfo.phone = phoneField.getValue();
             nameField.clear();
             phoneField.clear();
-            recordTime(this.stars, this.timer, playerInfo.playerName, playerInfo.playerPhone);
+            recordTime(this.stars, this.timer, playerInfo.name, playerInfo.phone);
             submitted = true;
         },
         windowWidth / 2, windowHeight / 2 , BUTTON_STYLE);

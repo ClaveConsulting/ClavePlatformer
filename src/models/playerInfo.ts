@@ -1,4 +1,4 @@
 export interface IPlayerInfo {
-    playerName: string;
-    playerPhone: string;
+    name: string;
+    phone: string;
 }
