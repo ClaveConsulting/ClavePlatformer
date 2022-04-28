@@ -1,5 +1,10 @@
 import Phaser from "phaser";
+import { DeathScene } from "./deathScene";
+import { FinishScene } from "./finishScene";
+import { LeaderboardScene } from "./leaderboard";
 import { Ntnu } from "./ntnu";
+import { PauseScene } from "./pauseScene";
+import { Uio } from "./uio";
 
 const initWidth = window.innerWidth;
 const initHeight = window.innerHeight;
@@ -7,6 +12,9 @@ const initHeight = window.innerHeight;
 window.onload = () => {
     window.focus();
     const game: Phaser.Game = new Phaser.Game({
+        dom: {
+            createContainer: true,
+        },
         height: initHeight,
         input: {
             gamepad: true,
@@ -21,7 +29,13 @@ window.onload = () => {
             default: "arcade",
         },
         render: { pixelArt: true, antialias: false },
-        scene: Ntnu,
+        scene: [
+            new Uio({key: "game"}),
+            new PauseScene({key: "pause"}),
+            new DeathScene({key: "death"}),
+            new FinishScene({key: "finish"}),
+            new LeaderboardScene({key: "leaderboard"}),
+        ],
         type: Phaser.AUTO,
         width: initWidth,
     });
