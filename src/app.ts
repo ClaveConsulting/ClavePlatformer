@@ -4,6 +4,7 @@ import { FinishScene } from "./finishScene";
 import { LeaderboardScene } from "./leaderboard";
 import { Ntnu } from "./ntnu";
 import { PauseScene } from "./pauseScene";
+import { Uio } from "./uio";
 
 const initWidth = window.innerWidth - 15;
 const initHeight = window.innerHeight - 10;
@@ -29,7 +30,7 @@ window.onload = () => {
         },
         render: { pixelArt: true, antialias: false },
         scene: [
-            new Ntnu({key: "ntnu"}),
+            new Uio({key: "game"}),
             new PauseScene({key: "pause"}),
             new DeathScene({key: "death"}),
             new FinishScene({key: "finish"}),

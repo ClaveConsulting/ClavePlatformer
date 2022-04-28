@@ -31,7 +31,7 @@ export class DeathScene extends Phaser.Scene {
         newButton(this, "New Game",
         () => {
             this.scene.pause();
-            this.scene.launch("ntnu");
+            this.scene.launch("game");
             this.scene.setVisible(false);
         },
         windowWidth / 2, windowHeight / 2 + BUTTON_SIDE_OFFSET, BUTTON_STYLE);

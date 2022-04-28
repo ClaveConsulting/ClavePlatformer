@@ -18,7 +18,7 @@ export class PauseScene extends Phaser.Scene {
         newButton(this, "Continue",
         () => {
             this.scene.pause();
-            this.scene.resume("ntnu");
+            this.scene.resume("game");
             this.scene.setVisible(false);
         },
         windowWidth / 2 - BUTTON_SIDE_OFFSET, windowHeight / 2, BUTTON_STYLE);
@@ -27,7 +27,7 @@ export class PauseScene extends Phaser.Scene {
         newButton(this, "New Game",
         () => {
             this.scene.pause();
-            this.scene.launch("ntnu");
+            this.scene.launch("game");
             this.scene.setVisible(false);
         },
         windowWidth / 2 + BUTTON_SIDE_OFFSET, windowHeight / 2, BUTTON_STYLE);
@@ -47,12 +47,12 @@ export class PauseScene extends Phaser.Scene {
 
         if (pad && pad.isButtonDown(9) && !playing) {
             this.scene.pause();
-            this.scene.resume("ntnu");
+            this.scene.resume("game");
             this.scene.setVisible(false);
             playing = true;
         } else if (pad && pad.isButtonDown(8) && !playing) {
             this.scene.pause();
-            this.scene.launch("ntnu");
+            this.scene.launch("game");
             this.scene.setVisible(false);
             playing = true;
         }
