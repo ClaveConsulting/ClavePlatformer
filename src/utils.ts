@@ -403,3 +403,38 @@ export const FINISH_TEXT_STYLE = {
         y: 10,
     },
 };
+
+export const INFO_TEXT_STYLE = {
+    backgroundColor: "rgba(0,0,0,0)",
+    fill: "#ffffff",
+    font: "15px monospace",
+    padding: {
+        x: 20,
+        y: 10,
+    },
+};
+
+export const PAUSE_TEXT_STYLE = {
+    backgroundColor: "rgba(0,0,0,0)",
+    fill: "#ffffff",
+    font: "64px monospace",
+    padding: {
+        x: 20,
+        y: 10,
+    },
+};
+
+export const BUTTON_SPACING = 75;
+
+export const INDICATOR_OFFSET = 20;
+
+const TRIANGLE_SCALE = 20;
+
+export const TRIANGLE = {
+    x1: 1 * TRIANGLE_SCALE,
+    x2: -1 * TRIANGLE_SCALE,
+    x3: -1 * TRIANGLE_SCALE,
+    y1: 0 * TRIANGLE_SCALE,
+    y2: -1 * TRIANGLE_SCALE,
+    y3: 1 * TRIANGLE_SCALE,
+};
