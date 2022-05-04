@@ -11,10 +11,6 @@ export class DeathScene extends Phaser.Scene {
         super(config);
     }
 
-    public preload() {
-        this.load.image("arrow", "assets/common/claveDude.png");
-    }
-
     public create() {
         this.cameras.main.setBackgroundColor("rgba(255, 0, 0, 0.5)");
 
