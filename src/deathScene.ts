@@ -1,4 +1,4 @@
-import { BUTTON_SPACING, BUTTON_STYLE, GAME_OVER_TEXT_STYLE, INFO_TEXT_STYLE, newButton, PAUSE_TEXT_STYLE } from "./utils";
+import { BUTTON_STYLE, newButton, PAUSE_TEXT_STYLE } from "./utils";
 
 const windowHeight = window.innerHeight;
 const windowWidth = window.innerWidth;
