@@ -1,8 +1,9 @@
-import { BUTTON_STYLE, GAME_OVER_TEXT_STYLE, newButton } from "./utils";
+import { BUTTON_STYLE, newButton, PAUSE_TEXT_STYLE } from "./utils";
 
 const windowHeight = window.innerHeight;
 const windowWidth = window.innerWidth;
-const BUTTON_SIDE_OFFSET = 100;
+
+let playing = false;
 
 export class DeathScene extends Phaser.Scene {
 
@@ -17,15 +18,14 @@ export class DeathScene extends Phaser.Scene {
     public create() {
         this.cameras.main.setBackgroundColor("rgba(255, 0, 0, 0.5)");
 
-        // GAME OVER text
-        const gameOverText = this.add.text(
-            windowWidth / 2,
-            windowHeight / 2 - BUTTON_SIDE_OFFSET,
-            "GAME OVER",
-            GAME_OVER_TEXT_STYLE,
-            );
+        // Death menu frame
+        const deathMenuFrame = this.add.rectangle(windowWidth / 2, windowHeight / 2 - 50, 350, 200, 0xe66a63);
 
-        gameOverText.setX(gameOverText.x - gameOverText.width / 2);
+        deathMenuFrame.setStrokeStyle(10, 0xffffff);
+
+        // Game over text
+        const deathText = this.add.text(windowWidth / 2, windowHeight / 2 - 150, "GAME OVER", PAUSE_TEXT_STYLE);
+        deathText.setX(deathText.x - deathText.width / 2);
 
         // New game button
         newButton(this, "New Game",
@@ -34,7 +34,42 @@ export class DeathScene extends Phaser.Scene {
             this.scene.launch("game");
             this.scene.setVisible(false);
         },
-        windowWidth / 2, windowHeight / 2 + BUTTON_SIDE_OFFSET, BUTTON_STYLE);
+        windowWidth / 2,
+        windowHeight / 2 - 40,
+        BUTTON_STYLE,
+        );
+
+        // Gamepad hints
+        const hintText = this.add.text(
+            deathMenuFrame.x ,
+            deathMenuFrame.y + deathMenuFrame.height / 2 - 50 ,
+            "Push SELECT to restart" ,
+            {
+                backgroundColor: "rgba(0,0,0,0)",
+                color: "#ffffff",
+                font: "25px monospace",
+                padding: {
+                    x: 20,
+                    y: 10,
+                },
+            },
+            );
+        hintText.setX(hintText.x - hintText.width / 2);
+    }
+
+    public update() {
+        const pad = this.input.gamepad.pad1;
+
+        if (pad && pad.isButtonDown(8) && !playing) {
+            this.scene.pause();
+            this.scene.launch("game");
+            this.scene.setVisible(false);
+            playing = true;
+        }
+
+        if (pad && !pad.isButtonDown(8)) {
+            playing = false;
+        }
     }
 
 }

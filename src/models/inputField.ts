@@ -1,3 +1,5 @@
+import { INDICATOR_OFFSET, TRIANGLE } from "../utils";
+
 export class InputField {
     private parent: Phaser.Scene;
     private X: number;
@@ -8,6 +10,7 @@ export class InputField {
     private nameText: Phaser.GameObjects.Text;
     private textEntry: Phaser.GameObjects.Text;
     private active: boolean;
+    private indicatorLeft: Phaser.GameObjects.Triangle;
 
     constructor(
         parent: Phaser.Scene,
@@ -28,7 +31,7 @@ export class InputField {
         this.textEntry = parent.add.text(this.X, this.Y, "", this.style).setScrollFactor(0);
 
         this.textEntry.setBackgroundColor("#555");
-        this.textEntry.setFixedSize(this.nameText.width + 100, this.nameText.height);
+        this.textEntry.setFixedSize(this.nameText.width + 50, this.nameText.height);
         this.nameText.setBackgroundColor("#555");
 
         parent.input.keyboard.on("keydown", (event: { keyCode: number; key: string; }) => {
@@ -41,6 +44,31 @@ export class InputField {
                     this.value = this.textEntry.text;
                 }
             }
+        });
+
+        // Indicator Triangle
+        this.indicatorLeft = parent.add.triangle(
+            0,
+            0,
+            TRIANGLE.x1,
+            TRIANGLE.y1,
+            TRIANGLE.x2,
+            TRIANGLE.y2,
+            TRIANGLE.x3,
+            TRIANGLE.y3,
+            0xffffff,
+            );
+        this.indicatorLeft.setAngle(0);
+        this.indicatorLeft.setX(this.nameText.x - INDICATOR_OFFSET);
+        this.indicatorLeft.setY(this.nameText.y + this.nameText.height / 2 + this.indicatorLeft.height / 2);
+        this.indicatorLeft.setVisible(false);
+
+        this.parent.tweens.add({
+            ease: "Sine.easeInOut",
+            repeat: -1,
+            scaleX: 0.5,
+            targets: this.indicatorLeft,
+            yoyo: true,
         });
     }
 
@@ -57,12 +85,14 @@ export class InputField {
         this.active = true;
         this.textEntry.setBackgroundColor("#fff");
         this.nameText.setBackgroundColor("#fff");
+        this.indicatorLeft.setVisible(true);
     }
 
     public deactivate() {
         this.active = false;
         this.textEntry.setBackgroundColor("#555");
         this.nameText.setBackgroundColor("#555");
+        this.indicatorLeft.setVisible(false);
     }
 
     public switchActive() {

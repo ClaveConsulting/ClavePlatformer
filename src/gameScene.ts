@@ -1,7 +1,6 @@
 import { Direction } from "./models/direction";
 import {
     BUTTON_STYLE,
-    clearLeaderboard,
     collectStar,
     crossedFinishline,
     deadlyTileHit,
@@ -10,7 +9,6 @@ import {
     newButton,
     playerIntersect,
     playerStandingOnMapLayer,
-    printTime,
     stopPlayer,
     throwBallFromPlayer,
     updateBall,
