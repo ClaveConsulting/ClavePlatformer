@@ -44,7 +44,7 @@ export class PauseScene extends Phaser.Scene {
         newButton(this, "Leaderboard",
         () => {
             this.scene.pause();
-            this.scene.launch("leaderboard");
+            this.scene.launch("leaderboard", {fromMenu: true});
             this.scene.setVisible(false);
         },
         windowWidth / 2, windowHeight / 2 + BUTTON_SPACING, BUTTON_STYLE);

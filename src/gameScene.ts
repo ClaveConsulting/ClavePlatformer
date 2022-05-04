@@ -354,7 +354,7 @@ export class GameScene extends Phaser.Scene {
         });
 
         // launch leaderboard overlap
-        this.scene.launch("leaderboard", {fromMenu: true});
+        this.scene.launch("leaderboard", {fromMenu: false});
         this.scene.pause();
         pausing = true;
     }

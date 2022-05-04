@@ -21,12 +21,13 @@ export class LeaderboardScene extends Phaser.Scene {
         this.cameras.main.setBackgroundColor("rgba(120, 120, 120, 0.5)");
         leaderboard = new Leaderboard(this, windowWidth / 2, windowHeight / 2);
 
-        if (this.fromMenu) {
+        if (!this.fromMenu) {
             const startText = this.add.text(
                 leaderboard.frame.x ,
                 leaderboard.frame.y + leaderboard.frame.height / 2 - 150,
-                "Push START to begin",
+                "Push START to begin\nOR\nPress SPACEBAR to begin",
                 {
+                    align: "center",
                     backgroundColor: "rgba(0,0,0,0)",
                     color: "#ffffff",
                     font: "40px monospace",
@@ -47,10 +48,13 @@ export class LeaderboardScene extends Phaser.Scene {
     }
 
     public update() {
+        const spaceKey = this.input.keyboard.addKey(
+            Phaser.Input.Keyboard.KeyCodes.SPACE,
+        );
         const pad = this.input.gamepad.pad1;
         leaderboard.refresh();
 
-        if (this.fromMenu && pad && pad.isButtonDown(9)) {
+        if (!this.fromMenu && ((pad && pad.isButtonDown(9)) || spaceKey.isDown)) {
             this.scene.resume("game");
             this.scene.setVisible(false);
             this.scene.pause();
