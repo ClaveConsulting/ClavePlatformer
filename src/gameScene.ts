@@ -136,6 +136,7 @@ export class GameScene extends Phaser.Scene {
         );
 
         hiding = map.createLayer("hiding", tileset, 0, 0);
+        hiding.setDepth(10);
 
         // Player animations
         this.anims.create({
