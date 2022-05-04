@@ -1,4 +1,4 @@
-import { INDICATOR_OFFSET, TRIANGLE } from "../utils";
+import { INDICATOR_OFFSET, PI, TRIANGLE } from "../utils";
 
 export class InputField {
     private parent: Phaser.Scene;
