@@ -1,5 +1,4 @@
 import { Direction } from "./models/direction";
-import { IPlayerInfo } from "./models/playerInfo";
 
 let movementDirection;
 

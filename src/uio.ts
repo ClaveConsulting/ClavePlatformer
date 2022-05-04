@@ -1,4 +1,4 @@
-import {GameScene} from "./gameScene";
+import { GameScene } from "./gameScene";
 
 export class Uio extends GameScene {
     public preload() {
