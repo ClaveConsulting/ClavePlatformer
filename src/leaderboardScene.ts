@@ -29,7 +29,7 @@ export class LeaderboardScene extends Phaser.Scene {
             const startText = this.add.text(
                 leaderboard.frame.x ,
                 leaderboard.frame.y + leaderboard.frame.height / 2 - 150,
-                "Push START to begin\nOR\nPress SPACEBAR to begin",
+                "Push SELECT to begin\nOR\nPress SPACEBAR to begin",
                 {
                     align: "center",
                     backgroundColor: "rgba(0,0,0,0)",
@@ -55,7 +55,7 @@ export class LeaderboardScene extends Phaser.Scene {
         const pad = this.input.gamepad.pad1;
         leaderboard.refresh();
 
-        if (!this.fromMenu && ((pad && pad.isButtonDown(9)) || spaceKey.isDown)) {
+        if (!this.fromMenu && ((pad && pad.isButtonDown(8)) || spaceKey.isDown)) {
             this.scene.resume("game");
             this.scene.setVisible(false);
             this.scene.pause();
