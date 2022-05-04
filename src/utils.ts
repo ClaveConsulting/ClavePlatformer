@@ -173,7 +173,7 @@ export function playerIntersect(
     mapLayer: Phaser.Tilemaps.TilemapLayer,
 ) {
     const playerTopRightCollideTile = mapLayer.getTileAtWorldXY(
-        player.x + player.width / 2,
+        player.x + player.width / 2 - 1,
         player.y - player.height / 2,
         true,
     ).index;
@@ -185,7 +185,7 @@ export function playerIntersect(
 
     // -1 compensating for pixel indexing in player
     const playerBottomRightCollideTile = mapLayer.getTileAtWorldXY(
-        player.x + player.width / 2,
+        player.x + player.width / 2 - 1,
         player.y + player.height / 2 - 1,
         true,
     ).index;
@@ -213,12 +213,12 @@ export function playerStandingOnMapLayer(
 ) {
     // +1 for getting pixel outside of player sprite
     const playerBottomRightCollideTile = mapLayer.getTileAtWorldXY(
-        player.x + player.width / 2,
+        player.x + player.width / 2 - 1,
         player.y + player.height / 2 + 1,
         true,
     ).index;
     const playerBottomLeftCollideTile = mapLayer.getTileAtWorldXY(
-        player.x - player.width / 2,
+        player.x - player.width / 2 - 1,
         player.y + player.height / 2 + 1,
         true,
     ).index;
