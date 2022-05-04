@@ -218,7 +218,7 @@ export function playerStandingOnMapLayer(
         true,
     ).index;
     const playerBottomLeftCollideTile = mapLayer.getTileAtWorldXY(
-        player.x - player.width / 2 - 1,
+        player.x - player.width / 2 ,
         player.y + player.height / 2 + 1,
         true,
     ).index;
