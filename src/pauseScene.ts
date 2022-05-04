@@ -1,7 +1,8 @@
-import { BUTTON_SPACING, BUTTON_STYLE, INFO_TEXT_STYLE, newButton, PAUSE_TEXT_STYLE } from "./utils";
+import { BUTTON_STYLE, newButton } from "./utils";
 
 const windowHeight = window.innerHeight;
 const windowWidth = window.innerWidth;
+const BUTTON_SIDE_OFFSET = 100;
 let playing = false;
 
 export class PauseScene extends Phaser.Scene {
@@ -13,15 +14,6 @@ export class PauseScene extends Phaser.Scene {
     public create() {
         this.cameras.main.setBackgroundColor("rgba(120, 120, 120, 0.5)");
 
-        // Pause menu frame
-        const pauseMenuFrame = this.add.rectangle(windowWidth / 2, windowHeight / 2 - 50, 250, 400, 0xb1bd9b);
-
-        pauseMenuFrame.setStrokeStyle(10, 0xffffff);
-
-        // Pause text
-        const pauseText = this.add.text(windowWidth / 2, windowHeight / 2 - 200, "PAUSE", PAUSE_TEXT_STYLE);
-        pauseText.setX(pauseText.x - pauseText.width / 2);
-
         // Play button
         newButton(this, "Continue",
         () => {
@@ -29,7 +21,7 @@ export class PauseScene extends Phaser.Scene {
             this.scene.resume("game");
             this.scene.setVisible(false);
         },
-        windowWidth / 2 , windowHeight / 2 - BUTTON_SPACING, BUTTON_STYLE);
+        windowWidth / 2 - BUTTON_SIDE_OFFSET, windowHeight / 2, BUTTON_STYLE);
 
         // New game button
         newButton(this, "New Game",
@@ -38,25 +30,16 @@ export class PauseScene extends Phaser.Scene {
             this.scene.launch("game");
             this.scene.setVisible(false);
         },
-        windowWidth / 2, windowHeight / 2 , BUTTON_STYLE);
+        windowWidth / 2 + BUTTON_SIDE_OFFSET, windowHeight / 2, BUTTON_STYLE);
 
         // show leaderboard button
-        newButton(this, "Leaderboard",
+        newButton(this, "Show Leaderboard",
         () => {
             this.scene.pause();
             this.scene.launch("leaderboard");
             this.scene.setVisible(false);
         },
-        windowWidth / 2, windowHeight / 2 + BUTTON_SPACING, BUTTON_STYLE);
-
-        // Gamepad hints
-        const hintText = this.add.text(
-            pauseMenuFrame.x ,
-            pauseMenuFrame.y + pauseMenuFrame.height / 2 - 50 ,
-            "Push SELECT to restart\nPush START to continue",
-            INFO_TEXT_STYLE,
-            );
-        hintText.setX(hintText.x - hintText.width / 2);
+        windowWidth / 2, windowHeight / 2 + BUTTON_SIDE_OFFSET, BUTTON_STYLE);
     }
 
     public update() {
