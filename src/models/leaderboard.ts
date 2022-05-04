@@ -1,4 +1,4 @@
-import { getRecordTimeLocalStorage } from "../utils";
+import { getRecordTimeLocalStorage, LEADERBOARD_STYLE } from "../utils";
 
 export class Leaderboard {
     public frame: Phaser.GameObjects.Rectangle;
@@ -56,25 +56,13 @@ export class Leaderboard {
         let index = 0;
         timeArrayAssetsShowcase.forEach((gameRecord) => {
             this.ranks.push(this.parent.add
-                .text(this.frame.getBottomLeft().x + 30, yPos, String(index + 1 + "."), {
-                    color: "#000",
-                    fontSize: "32px",
-                    fontStyle: "bold",
-                })
+                .text(this.frame.getBottomLeft().x + 30, yPos, String(index + 1 + "."), LEADERBOARD_STYLE)
                 .setScrollFactor(0));
             this.names.push(this.parent.add
-                .text(this.frame.getBottomLeft().x + 90, yPos, gameRecord.name ?? "--" + ": ", {
-                    color: "#000",
-                    fontSize: "32px",
-                    fontStyle: "bold",
-                })
+                .text(this.frame.getBottomLeft().x + 90, yPos, gameRecord.name ?? "--" + ": ", LEADERBOARD_STYLE)
                 .setScrollFactor(0));
             this.times.push(this.parent.add
-                    .text(this.frame.getBottomRight().x - 135, yPos, gameRecord.time, {
-                        color: "#000",
-                        fontSize: "32px",
-                        fontStyle: "bold",
-                    })
+                    .text(this.frame.getBottomRight().x - 135, yPos, gameRecord.time, LEADERBOARD_STYLE)
                     .setScrollFactor(0));
             yPos += 45;
             index ++;

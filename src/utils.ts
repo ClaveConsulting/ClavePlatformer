@@ -399,3 +399,9 @@ export const TRIANGLE = {
     y2: -1 * TRIANGLE_SCALE,
     y3: 1 * TRIANGLE_SCALE,
 };
+
+export const LEADERBOARD_STYLE = {
+    color: "#000",
+    fontSize: "32px",
+    fontStyle: "bold",
+};
