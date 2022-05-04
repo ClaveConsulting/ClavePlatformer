@@ -11,6 +11,7 @@ export class InputField {
     private textEntry: Phaser.GameObjects.Text;
     private active: boolean;
     private indicatorLeft: Phaser.GameObjects.Triangle;
+    private indicatorRight: Phaser.GameObjects.Triangle;
 
     constructor(
         parent: Phaser.Scene,
@@ -64,6 +65,7 @@ export class InputField {
         this.indicatorLeft.setVisible(false);
 
         this.parent.tweens.add({
+
             ease: "Sine.easeInOut",
             repeat: -1,
             scaleX: 0.5,
@@ -93,6 +95,7 @@ export class InputField {
         this.textEntry.setBackgroundColor("#555");
         this.nameText.setBackgroundColor("#555");
         this.indicatorLeft.setVisible(false);
+
     }
 
     public switchActive() {
