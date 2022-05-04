@@ -352,6 +352,11 @@ export class GameScene extends Phaser.Scene {
             delay: 100,
             loop: true,
         });
+
+        // launch leaderboard overlap
+        this.scene.launch("leaderboard", {fromMenu: true});
+        this.scene.pause();
+        pausing = true;
     }
 
     public update() {
