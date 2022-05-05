@@ -11,10 +11,6 @@ export class DeathScene extends Phaser.Scene {
         super(config);
     }
 
-    public preload() {
-        this.load.image("arrow", "assets/common/claveDude.png");
-    }
-
     public create() {
         this.cameras.main.setBackgroundColor("rgba(255, 0, 0, 0.5)");
 
@@ -31,7 +27,7 @@ export class DeathScene extends Phaser.Scene {
         newButton(this, "New Game",
         () => {
             this.scene.pause();
-            this.scene.launch("game");
+            this.scene.launch("leaderboard", { fromMenu: false });
             this.scene.setVisible(false);
         },
         windowWidth / 2,
@@ -62,7 +58,7 @@ export class DeathScene extends Phaser.Scene {
 
         if (pad && pad.isButtonDown(8) && !playing) {
             this.scene.pause();
-            this.scene.launch("game");
+            this.scene.launch("leaderboard", { fromMenu: false });
             this.scene.setVisible(false);
             playing = true;
         }

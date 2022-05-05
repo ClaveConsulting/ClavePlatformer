@@ -257,7 +257,7 @@ interface IGameRecord {
 
 const TIME_ARRAY_ASSETS_SHOWCASE = "timeArrayAssetsShowcase";
 
-const getRecordTimeLocalStorage = () => {
+export const getRecordTimeLocalStorage = () => {
     const rawTimeArrayAssetsShowcase = localStorage.getItem(
         TIME_ARRAY_ASSETS_SHOWCASE,
     );
@@ -299,44 +299,6 @@ export const recordTime = (starsCollected: number, counter: number, name: string
 
     timeArrayAssetsShowcase.sort(compareGameRecordsTime);
     setRecordTimeLocalStorage(timeArrayAssetsShowcase);
-};
-
-export const printTime = (
-    scene: Phaser.Scene,
-) => {
-    // context er 'this' i parent
-    let timeArrayAssetsShowcase = getRecordTimeLocalStorage();
-
-    scene.add
-        .text(400, 200, "Leaderboard", {
-            color: "rgb(0,255,0)",
-            fontSize: "70px",
-            fontStyle: "bold",
-        })
-        .setScrollFactor(0);
-    let yPos = 300;
-
-    if (timeArrayAssetsShowcase.length > 10) {
-        timeArrayAssetsShowcase = timeArrayAssetsShowcase.slice(0, 9);
-    }
-
-    timeArrayAssetsShowcase.forEach((gameRecord) => {
-        scene.add
-            .text(350, yPos, gameRecord.name ?? "--" + ": ", {
-                color: "#000",
-                fontSize: "45px",
-                fontStyle: "bold",
-            })
-            .setScrollFactor(0);
-        scene.add
-        .text(900, yPos, gameRecord.time, {
-                color: "#000",
-                fontSize: "45px",
-                fontStyle: "bold",
-            })
-            .setScrollFactor(0);
-        yPos += 40;
-    });
 };
 
 export const compareGameRecordsTime = (a: IGameRecord, b: IGameRecord) => {
@@ -436,4 +398,10 @@ export const TRIANGLE = {
     y1: 0 * TRIANGLE_SCALE,
     y2: -1 * TRIANGLE_SCALE,
     y3: 1 * TRIANGLE_SCALE,
+};
+
+export const LEADERBOARD_STYLE = {
+    color: "#000",
+    fontSize: "32px",
+    fontStyle: "bold",
 };

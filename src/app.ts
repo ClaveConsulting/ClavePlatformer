@@ -1,7 +1,7 @@
 import Phaser from "phaser";
 import { DeathScene } from "./deathScene";
 import { FinishScene } from "./finishScene";
-import { LeaderboardScene } from "./leaderboard";
+import { LeaderboardScene } from "./leaderboardScene";
 import { Ntnu } from "./ntnu";
 import { PauseScene } from "./pauseScene";
 import { Uio } from "./uio";

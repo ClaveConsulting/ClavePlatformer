@@ -59,9 +59,14 @@ const BALL_LIFE_SPAN = 2;
 const MAX_NUMBER_OF_BALLS = 10;
 
 export class GameScene extends Phaser.Scene {
+    private fromLeaderboard: boolean = false;
 
     constructor(config: Phaser.Types.Scenes.SettingsConfig) {
         super(config);
+    }
+
+    public init(data: { fromLeaderboard: boolean; }) {
+        this.fromLeaderboard = data.fromLeaderboard;
     }
 
     public create() {
@@ -352,6 +357,11 @@ export class GameScene extends Phaser.Scene {
             delay: 100,
             loop: true,
         });
+
+        if (!this.fromLeaderboard) {
+            this.scene.pause();
+            this.scene.launch("leaderboard", {fromMenu: false});
+        }
     }
 
     public update() {
