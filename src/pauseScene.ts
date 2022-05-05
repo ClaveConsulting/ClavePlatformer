@@ -69,7 +69,7 @@ export class PauseScene extends Phaser.Scene {
             playing = true;
         } else if (pad && pad.isButtonDown(8) && !playing) {
             this.scene.pause();
-            this.scene.launch("leaderboard", { fromMenu: true });
+            this.scene.launch("leaderboard", { fromMenu: false });
             this.scene.setVisible(false);
             playing = true;
         }
