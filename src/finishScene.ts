@@ -111,7 +111,7 @@ export class FinishScene extends Phaser.Scene {
         newButton(this, "New Game",
         () => {
             this.scene.pause();
-            this.scene.launch("game");
+            this.scene.launch("leaderboard", { fromMenu: false });
             this.scene.setVisible(false);
         },
         windowWidth / 2, windowHeight / 2 + BUTTON_SIDE_OFFSET, BUTTON_STYLE);
@@ -122,7 +122,7 @@ export class FinishScene extends Phaser.Scene {
 
         if (pad && pad.isButtonDown(8) && !playing) {
             this.scene.pause();
-            this.scene.launch("game");
+            this.scene.launch("leaderboard", { fromMenu: false });
             this.scene.setVisible(false);
             playing = true;
         }

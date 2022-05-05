@@ -56,7 +56,7 @@ export class LeaderboardScene extends Phaser.Scene {
         leaderboard.refresh();
 
         if (!this.fromMenu && ((pad && pad.isButtonDown(8)) || spaceKey.isDown)) {
-            this.scene.resume("game");
+            this.scene.launch("game", {fromLeaderboard: true});
             this.scene.setVisible(false);
             this.scene.pause();
         }
