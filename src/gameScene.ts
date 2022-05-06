@@ -240,7 +240,7 @@ export class GameScene extends Phaser.Scene {
             stars,
             (_, star) => {
                 starsCollected += 1;
-                counter = counter - 1;
+                counter = counter - 0.5;
                 collectStar(
                     star,
                     starsCollected,
