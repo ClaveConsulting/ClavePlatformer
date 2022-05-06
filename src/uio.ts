@@ -4,7 +4,7 @@ export class Uio extends GameScene {
     public preload() {
         this.load.tilemapTiledJSON({
             key: "map",
-            url: "assets/uio/uio.json",
+            url: "assets/uio/uioLessStars.json",
         });
 
         this.load.image({ key: "tileset", url: "assets/common/tileset.png" });
