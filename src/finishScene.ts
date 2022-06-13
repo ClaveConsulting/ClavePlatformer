@@ -28,7 +28,7 @@ export class FinishScene extends Phaser.Scene {
     }
 
     public create() {
-        this.cameras.main.setBackgroundColor("rgba(0, 255, 0, 0.5)");
+        this.cameras.main.setBackgroundColor("rgba(120, 120, 120, 0.5)");
 
         // Finish menu frame
         const finishMenuFrame = this.add.rectangle(windowWidth / 2, windowHeight / 2 - 15, 650, 575, 0xb1bd9b);
