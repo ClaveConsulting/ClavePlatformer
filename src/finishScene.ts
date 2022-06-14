@@ -1,4 +1,4 @@
-import { InputField } from "./models/inputField";
+import { NumberField, TextField } from "./models/inputField";
 import { IPlayerInfo } from "./models/playerInfo";
 import { BUTTON_STYLE, newButton, PAUSE_TEXT_STYLE, recordTime } from "./utils";
 
@@ -10,8 +10,8 @@ const playerInfo: IPlayerInfo = {
     phone: "",
     time: "",
 };
-let nameField: InputField;
-let phoneField: InputField;
+let nameField: TextField;
+let phoneField: NumberField;
 let submitted = false;
 let submitButton: Phaser.GameObjects.Text;
 let playing = false;
@@ -44,7 +44,7 @@ export class FinishScene extends Phaser.Scene {
         submitted = false;
 
         // User input form
-        nameField = new InputField(this,
+        nameField = new TextField(this,
             finishMenuFrame.getBottomLeft().x + 50,
             windowHeight / 2 - 2 * BUTTON_SIDE_OFFSET,
             finishMenuFrame.width - 100,
@@ -67,7 +67,7 @@ export class FinishScene extends Phaser.Scene {
             );
         inputHintText.setX(inputHintText.x - inputHintText.width / 2);
 
-        phoneField = new InputField(this,
+        phoneField = new NumberField(this,
             finishMenuFrame.getBottomLeft().x + 50,
             windowHeight / 2 - BUTTON_SIDE_OFFSET,
             finishMenuFrame.width - 100,
