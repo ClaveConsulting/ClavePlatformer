@@ -87,17 +87,16 @@ export class Leaderboard {
             });
 
             if (this.currentPlayer && this.writtenCurrentPlayer == false){
-                this.parent.add.text(this.frame.getBottomLeft().x + 30, yPos-20, " . ", LEADERBOARD_STYLE);
-                this.parent.add.text(this.frame.getBottomLeft().x + 30, yPos-10, " . ", LEADERBOARD_STYLE);
-                this.parent.add.text(this.frame.getBottomLeft().x + 30, yPos, " . ", LEADERBOARD_STYLE);
-                this.parent.add
-                    .text(this.frame.getBottomLeft().x + 30, yPos + 45, String(currentPlayerRank + "."), LEADERBOARD_STYLE)
-                    .setScrollFactor(0);
+                this.parent.add.text(this.frame.getBottomLeft().x + 30, yPos-15, " ... ", LEADERBOARD_STYLE);
+
+                this.ranks.push(this.parent.add
+                    .text(this.frame.getBottomLeft().x + 30, yPos + 25, String(currentPlayerRank + "."), LEADERBOARD_STYLE)
+                    .setScrollFactor(0));
                 this.names.push(this.parent.add
-                    .text(this.frame.getBottomLeft().x + 90, yPos + 45, this.currentPlayer.name ?? "--" + ": ", LEADERBOARD_HIGHLIGHT_STYLE)
+                    .text(this.frame.getBottomLeft().x + 90, yPos + 25, this.currentPlayer.name ?? "--" + ": ", LEADERBOARD_HIGHLIGHT_STYLE)
                     .setScrollFactor(0));
                 this.times.push(this.parent.add
-                        .text(this.frame.getBottomRight().x - 135, yPos + 45, this.currentPlayer.time, LEADERBOARD_HIGHLIGHT_STYLE)
+                        .text(this.frame.getBottomRight().x - 135, yPos + 25, this.currentPlayer.time, LEADERBOARD_HIGHLIGHT_STYLE)
                         .setScrollFactor(0));
             }
         }
