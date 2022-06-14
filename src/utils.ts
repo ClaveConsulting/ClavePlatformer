@@ -335,8 +335,13 @@ export function newButton(
     return button;
 }
 
+export const GREEN = "#00ff00";
+export const WHITE = "#ffffff";
+export const RED = "#ff0000";
+export const BLACK = "#000";
+
 export const BUTTON_STYLE = {
-    backgroundColor: "#ffffff",
+    backgroundColor: WHITE,
     fill: "#000000",
     font: "27px monospace",
     padding: {
@@ -346,7 +351,7 @@ export const BUTTON_STYLE = {
 };
 
 export const GAME_OVER_TEXT_STYLE = {
-    backgroundColor: "#ff0000",
+    backgroundColor: RED,
     fill: "#000000",
     font: "64px monospace",
     padding: {
@@ -356,7 +361,7 @@ export const GAME_OVER_TEXT_STYLE = {
 };
 
 export const FINISH_TEXT_STYLE = {
-    backgroundColor: "#00ff00",
+    backgroundColor: GREEN,
     fill: "#000000",
     font: "64px monospace",
     padding: {
@@ -367,7 +372,7 @@ export const FINISH_TEXT_STYLE = {
 
 export const INFO_TEXT_STYLE = {
     backgroundColor: "rgba(0,0,0,0)",
-    fill: "#ffffff",
+    fill: WHITE,
     font: "15px monospace",
     padding: {
         x: 20,
@@ -377,7 +382,7 @@ export const INFO_TEXT_STYLE = {
 
 export const PAUSE_TEXT_STYLE = {
     backgroundColor: "rgba(0,0,0,0)",
-    fill: "#ffffff",
+    fill: WHITE,
     font: "64px monospace",
     padding: {
         x: 20,
@@ -387,9 +392,9 @@ export const PAUSE_TEXT_STYLE = {
 
 export const BUTTON_SPACING = 75;
 
-export const INDICATOR_OFFSET = 20;
+export const INDICATOR_OFFSET = 8;
 
-const TRIANGLE_SCALE = 20;
+const TRIANGLE_SCALE = 12;
 
 export const TRIANGLE = {
     x1: 1 * TRIANGLE_SCALE,
@@ -401,13 +406,13 @@ export const TRIANGLE = {
 };
 
 export const LEADERBOARD_STYLE = {
-    color: "#000",
+    color: BLACK,
     fontSize: "32px",
     fontStyle: "bold",
 };
 
 export const LEADERBOARD_HIGHLIGHT_STYLE = {
-    color: "#0f0",
+    color: GREEN,
     fontSize: "32px",
     fontStyle: "bold",
 };
