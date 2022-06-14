@@ -80,6 +80,7 @@ export class FinishScene extends Phaser.Scene {
             }
         });
 
+        // Submit Button
         submitButton = newButton(this, "Submit",
         () => {
             playerInfo.name = nameField.getValue();
@@ -89,6 +90,10 @@ export class FinishScene extends Phaser.Scene {
             phoneField.clear();
             recordTime(this.stars, this.timer, playerInfo.name, playerInfo.phone);
             submitted = true;
+            this.scene.pause();
+            this.scene.launch("leaderboard", { fromMenu: false ,currentPlayer: playerInfo});
+            this.scene.setVisible(false);
+
         },
         windowWidth / 2, windowHeight / 2 , BUTTON_STYLE);
 
