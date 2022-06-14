@@ -16,6 +16,7 @@ export class InputField {
         parent: Phaser.Scene,
         posX: number,
         posY: number,
+        width: number,
         fieldNameText: string,
         style: Phaser.Types.GameObjects.Text.TextStyle) {
         this.parent = parent;
@@ -24,14 +25,13 @@ export class InputField {
         this.name = fieldNameText;
         this.style = style;
         this.active = false;
-
+        
         this.nameText = parent.add.text(this.X, this.Y, this.name, this.style).setScrollFactor(0);
-        this.nameText.setX(this.nameText.x - this.nameText.width);
 
         this.textEntry = parent.add.text(this.X, this.Y, "", this.style).setScrollFactor(0);
-
+        this.textEntry.setX(this.nameText.x + this.nameText.width);
         this.textEntry.setBackgroundColor("#555");
-        this.textEntry.setFixedSize(this.nameText.width + 50, this.nameText.height);
+        this.textEntry.setFixedSize(width - this.nameText.width, this.nameText.height);
         this.nameText.setBackgroundColor("#555");
 
         parent.input.keyboard.on("keydown", (event: { keyCode: number; key: string; }) => {

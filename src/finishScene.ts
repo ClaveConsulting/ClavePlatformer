@@ -45,8 +45,9 @@ export class FinishScene extends Phaser.Scene {
 
         // User input form
         nameField = new InputField(this,
-            windowWidth / 2,
+            finishMenuFrame.getBottomLeft().x + 50,
             windowHeight / 2 - 2 * BUTTON_SIDE_OFFSET,
+            finishMenuFrame.width - 100,
             "Name/Nickname:",
             BUTTON_STYLE);
 
@@ -67,8 +68,9 @@ export class FinishScene extends Phaser.Scene {
         inputHintText.setX(inputHintText.x - inputHintText.width / 2);
 
         phoneField = new InputField(this,
-            windowWidth / 2,
+            finishMenuFrame.getBottomLeft().x + 50,
             windowHeight / 2 - BUTTON_SIDE_OFFSET,
+            finishMenuFrame.width - 100,
             "Phone number:",
             BUTTON_STYLE);
 
