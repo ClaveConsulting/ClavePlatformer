@@ -19,6 +19,7 @@ let playing = false;
 export class FinishScene extends Phaser.Scene {
     private stars: number;
     private timer: number;
+    private tabKey: Phaser.Input.Keyboard.Key;
 
     constructor(config: Phaser.Types.Scenes.SettingsConfig) {
         super(config);
@@ -52,7 +53,7 @@ export class FinishScene extends Phaser.Scene {
         const inputHintText = this.add.text(
             finishMenuFrame.x ,
             finishMenuFrame.y + finishMenuFrame.height / 2 - 425 ,
-            "Press ENTER to switch between fields",
+            "Press TAB to switch between fields",
             {
                 backgroundColor: "rgba(0,0,0,0)",
                 color: "#ffffff",
@@ -73,11 +74,11 @@ export class FinishScene extends Phaser.Scene {
 
         nameField.activate();
 
-        this.input.keyboard.on("keydown", (event: { keyCode: number; key: string; }) => {
-            if (event.keyCode === 13) {
-                nameField.switchActive();
-                phoneField.switchActive();
-            }
+        this.tabKey = this.input.keyboard.addKey('TAB', true);
+        
+        this.input.keyboard.on("keydown-TAB", () => {
+            nameField.switchActive();
+            phoneField.switchActive();
         });
 
         // Submit Button
