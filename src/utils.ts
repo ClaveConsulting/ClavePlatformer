@@ -405,3 +405,9 @@ export const LEADERBOARD_STYLE = {
     fontSize: "32px",
     fontStyle: "bold",
 };
+
+export const LEADERBOARD_HIGHLIGHT_STYLE = {
+    color: "#0f0",
+    fontSize: "32px",
+    fontStyle: "bold",
+};

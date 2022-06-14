@@ -1,4 +1,5 @@
 import { Leaderboard } from "./models/leaderboard";
+import { IPlayerInfo } from "./models/playerInfo";
 import { BUTTON_STYLE, newButton } from "./utils";
 
 const windowHeight = window.innerHeight;
@@ -9,13 +10,15 @@ let spaceKey: Phaser.Input.Keyboard.Key;
 
 export class LeaderboardScene extends Phaser.Scene {
     private fromMenu: boolean = true;
+    private currentPlayer?:IPlayerInfo
 
     constructor(config: Phaser.Types.Scenes.SettingsConfig) {
         super(config);
     }
 
-    public init(data: { fromMenu: boolean; }) {
+    public init(data: { fromMenu: boolean; currentPlayer: IPlayerInfo}) {
         this.fromMenu = data.fromMenu;
+        this.currentPlayer = data.currentPlayer;
     }
 
     public create() {
@@ -23,7 +26,7 @@ export class LeaderboardScene extends Phaser.Scene {
             Phaser.Input.Keyboard.KeyCodes.SPACE,
         );
         this.cameras.main.setBackgroundColor("rgba(120, 120, 120, 0.5)");
-        leaderboard = new Leaderboard(this, windowWidth / 2, windowHeight / 2);
+        leaderboard = new Leaderboard(this, windowWidth / 2, windowHeight / 2, this.currentPlayer);
 
         if (!this.fromMenu) {
             const startText = this.add.text(

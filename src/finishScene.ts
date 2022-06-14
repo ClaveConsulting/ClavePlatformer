@@ -8,6 +8,7 @@ const BUTTON_SIDE_OFFSET = 100;
 const playerInfo: IPlayerInfo = {
     name: "",
     phone: "",
+    time: "",
 };
 let nameField: InputField;
 let phoneField: InputField;
@@ -83,6 +84,7 @@ export class FinishScene extends Phaser.Scene {
         () => {
             playerInfo.name = nameField.getValue();
             playerInfo.phone = phoneField.getValue();
+            playerInfo.time = String(this.timer.toFixed(2));
             nameField.clear();
             phoneField.clear();
             recordTime(this.stars, this.timer, playerInfo.name, playerInfo.phone);
@@ -111,7 +113,7 @@ export class FinishScene extends Phaser.Scene {
         newButton(this, "New Game",
         () => {
             this.scene.pause();
-            this.scene.launch("leaderboard", { fromMenu: false });
+            this.scene.launch("leaderboard", { fromMenu: false ,currentPlayer: playerInfo});
             this.scene.setVisible(false);
         },
         windowWidth / 2, windowHeight / 2 + BUTTON_SIDE_OFFSET, BUTTON_STYLE);
