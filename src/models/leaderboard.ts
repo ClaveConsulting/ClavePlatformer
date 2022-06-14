@@ -66,7 +66,7 @@ export class Leaderboard {
             this.ranks.push(this.parent.add
                 .text(this.frame.getBottomLeft().x + 30, yPos, String(index + 1 + "."), LEADERBOARD_STYLE)
                 .setScrollFactor(0));
-            if (this.currentPlayer?.phone == gameRecord.phone && this.currentPlayer?.name != ""){
+            if (this.currentPlayer?.phone == gameRecord.phone && this.currentPlayer){
                 this.names.push(this.parent.add
                     .text(this.frame.getBottomLeft().x + 90, yPos, gameRecord.name ?? "--" + ": ", LEADERBOARD_HIGHLIGHT_STYLE)
                     .setScrollFactor(0));
@@ -86,7 +86,7 @@ export class Leaderboard {
             index ++;
             });
 
-            if (this.currentPlayer && this.writtenCurrentPlayer == false){
+            if (typeof this.currentPlayer !== "undefined" && this.writtenCurrentPlayer == false){
                 this.parent.add.text(this.frame.getBottomLeft().x + 30, yPos-15, " ... ", LEADERBOARD_STYLE);
 
                 this.ranks.push(this.parent.add
