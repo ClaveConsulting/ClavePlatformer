@@ -341,6 +341,7 @@ export const RED = "#ff0000";
 export const BLACK = "#000";
 export const YELLOW = "#FFBE2E";
 export const TRANSPARENT = "rgba(0,0,0,0)";
+export const GREY = "#555";
 
 export const BUTTON_STYLE = {
     backgroundColor: WHITE,
