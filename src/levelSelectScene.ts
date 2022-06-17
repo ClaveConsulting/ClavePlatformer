@@ -22,7 +22,7 @@ export class LevelSelectScene extends Phaser.Scene {
 
         const levelSelectMenuFrame = this.add.rectangle(windowWidth / 2, windowHeight / 2 , windowWidth - 200, windowHeight -200 , 0xb1bd9b);
 
-        levelSelectMenuFrame.setStrokeStyle(10);
+        levelSelectMenuFrame.setStrokeStyle(10,0xffffff);
 
         // Select level text
         const levelSelectText = this.add.text(windowWidth / 2, levelSelectMenuFrame.getTopCenter().y + 50, "SELECT LEVEL");

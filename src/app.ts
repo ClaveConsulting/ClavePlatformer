@@ -31,9 +31,9 @@ window.onload = () => {
         },
         render: { pixelArt: true, antialias: false },
         scene: [
-            //new LevelSelectScene({key:"levelSelect"}),
+            new LevelSelectScene({key:"levelSelect"}),
             new Uio({key: "uio"}),
-            //new Ntnu({key: "ntnu"}),
+            new Ntnu({key: "ntnu"}),
             new PauseScene({key: "pause"}),
             new DeathScene({key: "death"}),
             new FinishScene({key: "finish"}),
