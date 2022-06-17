@@ -34,7 +34,7 @@ export class LevelSelectScene extends Phaser.Scene {
             this.scene.setVisible(false);
             sessionStorage.setItem("LEVEL_SELECT","ntnu")
         });
-        
+
         const uioImage = this.add.image(0 , levelSelectMenuFrame.getCenter().y, "uio");
         uioImage.setScale(IMAGESCALE);
         uioImage.setX(levelSelectMenuFrame.getCenter().x + uioImage.width/4 + 50);
@@ -45,6 +45,10 @@ export class LevelSelectScene extends Phaser.Scene {
             this.scene.setVisible(false);
             sessionStorage.setItem("LEVEL_SELECT","uio")
         });
+
+        this.input.gamepad.on("down",(x:Phaser.Input.Keyboard.Key)=>{
+            console.log(x)
+        })
 
     }
 

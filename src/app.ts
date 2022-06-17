@@ -2,6 +2,7 @@ import Phaser from "phaser";
 import { DeathScene } from "./deathScene";
 import { FinishScene } from "./finishScene";
 import { LeaderboardScene } from "./leaderboardScene";
+import { LevelSelectScene } from "./levelSelectScene";
 import { Ntnu } from "./ntnu";
 import { PauseScene } from "./pauseScene";
 import { Uio } from "./uio";
@@ -30,7 +31,9 @@ window.onload = () => {
         },
         render: { pixelArt: true, antialias: false },
         scene: [
-            new Uio({key: "game"}),
+            new LevelSelectScene({key:"levelSelect"}),
+            new Uio({key: "uio"}),
+            new Ntnu({key: "ntnu"}),
             new PauseScene({key: "pause"}),
             new DeathScene({key: "death"}),
             new FinishScene({key: "finish"}),
