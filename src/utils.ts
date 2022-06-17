@@ -158,10 +158,10 @@ export function collectStar(
 
     //  Add and update the score
     scoreText.setText("Stars Collected: " + starsCollected);
-    counterText.setBackgroundColor("#FFBE2E");
+    counterText.setBackgroundColor(YELLOW);
     scene.time.addEvent({
         callback: () => {
-            counterText.setBackgroundColor("#fff");
+            counterText.setBackgroundColor(WHITE);
         },
         callbackScope: scene,
         delay: 500,
@@ -327,10 +327,10 @@ export function newButton(
     button.on("pointerdown", func);
 
     button.on("pointerover", () => {
-        button.setBackgroundColor("#0f0");
+        button.setBackgroundColor(GREEN);
     });
     button.on("pointerout", () => {
-        button.setBackgroundColor("#fff");
+        button.setBackgroundColor(WHITE);
     });
     return button;
 }
@@ -339,10 +339,12 @@ export const GREEN = "#00ff00";
 export const WHITE = "#ffffff";
 export const RED = "#ff0000";
 export const BLACK = "#000";
+export const YELLOW = "#FFBE2E";
+export const TRANSPARENT = "rgba(0,0,0,0)";
 
 export const BUTTON_STYLE = {
     backgroundColor: WHITE,
-    fill: "#000000",
+    fill: BLACK,
     font: "27px monospace",
     padding: {
         x: 20,
@@ -352,7 +354,7 @@ export const BUTTON_STYLE = {
 
 export const GAME_OVER_TEXT_STYLE = {
     backgroundColor: RED,
-    fill: "#000000",
+    fill: BLACK,
     font: "64px monospace",
     padding: {
         x: 20,
@@ -362,7 +364,7 @@ export const GAME_OVER_TEXT_STYLE = {
 
 export const FINISH_TEXT_STYLE = {
     backgroundColor: GREEN,
-    fill: "#000000",
+    fill: BLACK,
     font: "64px monospace",
     padding: {
         x: 20,
@@ -371,7 +373,7 @@ export const FINISH_TEXT_STYLE = {
 };
 
 export const INFO_TEXT_STYLE = {
-    backgroundColor: "rgba(0,0,0,0)",
+    backgroundColor: TRANSPARENT,
     fill: WHITE,
     font: "15px monospace",
     padding: {
@@ -381,7 +383,7 @@ export const INFO_TEXT_STYLE = {
 };
 
 export const PAUSE_TEXT_STYLE = {
-    backgroundColor: "rgba(0,0,0,0)",
+    backgroundColor: TRANSPARENT,
     fill: WHITE,
     font: "64px monospace",
     padding: {
