@@ -16,9 +16,13 @@ export class LevelSelectScene extends Phaser.Scene {
 
     public create() {
 
+        if (sessionStorage.getItem("LEVEL_SELECT") != null) {
+            this.scene.switch(String(sessionStorage.getItem("LEVEL_SELECT")));
+        }
+
         const levelSelectMenuFrame = this.add.rectangle(windowWidth / 2, windowHeight / 2 , windowWidth - 200, windowHeight -200 , 0xb1bd9b);
 
-        levelSelectMenuFrame.setStrokeStyle(10, 0xffffff);
+        levelSelectMenuFrame.setStrokeStyle(10);
 
         // Select level text
         const levelSelectText = this.add.text(windowWidth / 2, levelSelectMenuFrame.getTopCenter().y + 50, "SELECT LEVEL");
@@ -29,10 +33,9 @@ export class LevelSelectScene extends Phaser.Scene {
         ntnuImage.setX(levelSelectMenuFrame.getCenter().x - ntnuImage.width/4 - 50);
         ntnuImage.setInteractive();
         ntnuImage.on("pointerup",() => {
-            this.scene.launch("ntnu");
-            this.scene.stop();
-            this.scene.setVisible(false);
-            sessionStorage.setItem("LEVEL_SELECT","ntnu")
+            this.scene.launch("ntnu")
+            sessionStorage.setItem("LEVEL_SELECT","ntnu");
+            this.scene.pause()
         });
 
         const uioImage = this.add.image(0 , levelSelectMenuFrame.getCenter().y, "uio");
@@ -41,20 +44,63 @@ export class LevelSelectScene extends Phaser.Scene {
         uioImage.setInteractive();
         uioImage.on("pointerup",() => {
             this.scene.launch("uio");
-            this.scene.stop();
-            this.scene.setVisible(false);
             sessionStorage.setItem("LEVEL_SELECT","uio")
+            this.scene.pause();
         });
 
-        this.input.gamepad.on("down",(x:Phaser.Input.Keyboard.Key)=>{
-            console.log(x)
+
+        const uioActive = this.tweens.add({
+            ease: "linear",
+            repeat: -1,
+            scale: IMAGESCALE + 0.05,
+            targets: uioImage,
+            yoyo: true,
+            duration: 200,
+        }).pause();
+
+        const ntnuActive = this.tweens.add({
+            ease: "linear",
+            repeat: -1,
+            scale: IMAGESCALE + 0.05,
+            targets: ntnuImage,
+            yoyo: true,
+            duration: 200,
+        });
+
+        this.input.gamepad.once("connected", (pad:Phaser.Input.Gamepad.Gamepad) => {
+
+            pad = this.input.gamepad.pad1;
+            pad.on(
+                "down",
+                function (pad:Phaser.Input.Gamepad.Gamepad, index:number, button:Phaser.Input.Gamepad.Button,) {
+                    if (button.index == 14){
+                        uioActive.stop();
+                        uioImage.setScale(IMAGESCALE);
+                        ntnuActive.restart();
+                        
+                    } else if (button.index == 15){
+                        ntnuActive.stop();
+                        ntnuImage.setScale(IMAGESCALE);
+                        uioActive.restart();
+                    }
+                },this)
+            })
+
+        ntnuImage.on("pointerover", () => {
+            uioActive.stop();
+            uioImage.setScale(IMAGESCALE);
+            ntnuActive.restart();
         })
 
-    }
+        uioImage.on("pointerover", () => {
+            ntnuActive.stop();
+            ntnuImage.setScale(IMAGESCALE);
+            uioActive.restart();
+        })
 
+
+    }
     public update() {
         const pad = this.input.gamepad.pad1;
-
     }
-
 }

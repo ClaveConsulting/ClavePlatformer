@@ -358,6 +358,12 @@ export class GameScene extends Phaser.Scene {
             loop: true,
         });
 
+        // if (sessionStorage.getItem("LEVEL_SELECT") == null) {
+        //     this.scene.setVisible(false);
+        //     this.scene.start("levelSelect");
+        //     this.scene.stop();
+        // }
+
         if (!this.fromLeaderboard) {
             this.scene.pause();
             this.scene.launch("leaderboard", {fromMenu: false});
