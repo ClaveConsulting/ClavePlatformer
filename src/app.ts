@@ -5,6 +5,7 @@ import { LeaderboardScene } from "./leaderboardScene";
 import { LevelSelectScene } from "./levelSelectScene";
 import { Ntnu } from "./ntnu";
 import { PauseScene } from "./pauseScene";
+import { TestScene } from "./testScene";
 import { Uio } from "./uio";
 
 const initWidth = window.innerWidth;

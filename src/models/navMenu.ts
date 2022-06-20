@@ -1,5 +1,4 @@
 import { NES_A } from "../buttonMap";
-
 export class NavMenu {
     private elements: MenuItem[];
     private activeIndex: number;
@@ -46,15 +45,29 @@ export class NavMenu {
 export class MenuItem {
     private active:boolean;
     private indicating:boolean;
-    
-    constructor(parent: Phaser.Scene,func:void) {
+    private target: Phaser.GameObjects.Image|Phaser.GameObjects.Text;
+    private parent: Phaser.Scene;
+    constructor(object:Phaser.GameObjects.Image|Phaser.GameObjects.Text,func:()=>void,parent:Phaser.Scene) {
         this.active = false;
-        parent.input.gamepad.on("down",function(pad:Phaser.Input.Gamepad.Gamepad,button:Phaser.Input.Gamepad.Button,index:number) {
-            if (button.index == NES_A){
+        this.target = object;
+        this.parent = parent;
+
+        this.parent.input.gamepad.on("down",function(pad:Phaser.Input.Gamepad.Gamepad,button:Phaser.Input.Gamepad.Button,index:number) {
+            if (button.index == NES_A && this.active){
                 func
             }
         });
-        parent.input.keyboard.on("keydown_ENTER",function(){func},parent)
+
+        parent.input.keyboard.on("keydown_ENTER",() => {
+            if (this.indicating){
+                func
+            }
+        },parent);
+
+        this.target.on("pointerdown",func);
+
+        this.target.on("pointerover",()=>{this.indicate()});
+        this.target.on("pointerout",()=>{this.deindicate()});
     }
     
     public activate(){
@@ -65,24 +78,11 @@ export class MenuItem {
     }
 
     public indicate(){
+        
         this.indicating = true;
     }
 
     public deindicate(){
         this.indicating = false;
     }
-}
-
-export class ImageMenuItem extends MenuItem {
-    private image:Phaser.GameObjects.Image;
-
-    constructor(imageObject:Phaser.GameObjects.Image,func:void,parent:Phaser.Scene) {
-        super(parent,func);
-        this.image = imageObject;
-    }
-}
-
-
-export class TextMenuItem extends MenuItem {
-
 }
