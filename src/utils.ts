@@ -158,10 +158,10 @@ export function collectStar(
 
     //  Add and update the score
     scoreText.setText("Stars Collected: " + starsCollected);
-    counterText.setBackgroundColor("#FFBE2E");
+    counterText.setBackgroundColor(YELLOW);
     scene.time.addEvent({
         callback: () => {
-            counterText.setBackgroundColor("#fff");
+            counterText.setBackgroundColor(WHITE);
         },
         callbackScope: scene,
         delay: 500,
@@ -327,17 +327,25 @@ export function newButton(
     button.on("pointerdown", func);
 
     button.on("pointerover", () => {
-        button.setBackgroundColor("#0f0");
+        button.setBackgroundColor(GREEN);
     });
     button.on("pointerout", () => {
-        button.setBackgroundColor("#fff");
+        button.setBackgroundColor(WHITE);
     });
     return button;
 }
 
+export const GREEN = "#00ff00";
+export const WHITE = "#ffffff";
+export const RED = "#ff0000";
+export const BLACK = "#000";
+export const YELLOW = "#FFBE2E";
+export const TRANSPARENT = "rgba(0,0,0,0)";
+export const GREY = "#555";
+
 export const BUTTON_STYLE = {
-    backgroundColor: "#ffffff",
-    fill: "#000000",
+    backgroundColor: WHITE,
+    fill: BLACK,
     font: "27px monospace",
     padding: {
         x: 20,
@@ -346,8 +354,8 @@ export const BUTTON_STYLE = {
 };
 
 export const GAME_OVER_TEXT_STYLE = {
-    backgroundColor: "#ff0000",
-    fill: "#000000",
+    backgroundColor: RED,
+    fill: BLACK,
     font: "64px monospace",
     padding: {
         x: 20,
@@ -356,8 +364,8 @@ export const GAME_OVER_TEXT_STYLE = {
 };
 
 export const FINISH_TEXT_STYLE = {
-    backgroundColor: "#00ff00",
-    fill: "#000000",
+    backgroundColor: GREEN,
+    fill: BLACK,
     font: "64px monospace",
     padding: {
         x: 20,
@@ -366,8 +374,8 @@ export const FINISH_TEXT_STYLE = {
 };
 
 export const INFO_TEXT_STYLE = {
-    backgroundColor: "rgba(0,0,0,0)",
-    fill: "#ffffff",
+    backgroundColor: TRANSPARENT,
+    fill: WHITE,
     font: "15px monospace",
     padding: {
         x: 20,
@@ -376,8 +384,8 @@ export const INFO_TEXT_STYLE = {
 };
 
 export const PAUSE_TEXT_STYLE = {
-    backgroundColor: "rgba(0,0,0,0)",
-    fill: "#ffffff",
+    backgroundColor: TRANSPARENT,
+    fill: WHITE,
     font: "64px monospace",
     padding: {
         x: 20,
@@ -387,9 +395,9 @@ export const PAUSE_TEXT_STYLE = {
 
 export const BUTTON_SPACING = 75;
 
-export const INDICATOR_OFFSET = 20;
+export const INDICATOR_OFFSET = 8;
 
-const TRIANGLE_SCALE = 20;
+const TRIANGLE_SCALE = 12;
 
 export const TRIANGLE = {
     x1: 1 * TRIANGLE_SCALE,
@@ -401,7 +409,13 @@ export const TRIANGLE = {
 };
 
 export const LEADERBOARD_STYLE = {
-    color: "#000",
+    color: BLACK,
+    fontSize: "32px",
+    fontStyle: "bold",
+};
+
+export const LEADERBOARD_HIGHLIGHT_STYLE = {
+    color: GREEN,
     fontSize: "32px",
     fontStyle: "bold",
 };

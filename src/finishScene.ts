@@ -1,4 +1,4 @@
-import { InputField } from "./models/inputField";
+import { NumberField, TextField } from "./models/inputField";
 import { IPlayerInfo } from "./models/playerInfo";
 import { BUTTON_STYLE, newButton, PAUSE_TEXT_STYLE, recordTime } from "./utils";
 
@@ -8,9 +8,10 @@ const BUTTON_SIDE_OFFSET = 100;
 const playerInfo: IPlayerInfo = {
     name: "",
     phone: "",
+    time: "",
 };
-let nameField: InputField;
-let phoneField: InputField;
+let nameField: TextField;
+let phoneField: NumberField;
 let submitted = false;
 let submitButton: Phaser.GameObjects.Text;
 let playing = false;
@@ -18,6 +19,7 @@ let playing = false;
 export class FinishScene extends Phaser.Scene {
     private stars: number;
     private timer: number;
+    private tabKey: Phaser.Input.Keyboard.Key;
 
     constructor(config: Phaser.Types.Scenes.SettingsConfig) {
         super(config);
@@ -42,16 +44,17 @@ export class FinishScene extends Phaser.Scene {
         submitted = false;
 
         // User input form
-        nameField = new InputField(this,
-            windowWidth / 2,
+        nameField = new TextField(this,
+            finishMenuFrame.getBottomLeft().x + 50,
             windowHeight / 2 - 2 * BUTTON_SIDE_OFFSET,
+            finishMenuFrame.width - 100,
             "Name/Nickname:",
             BUTTON_STYLE);
 
         const inputHintText = this.add.text(
             finishMenuFrame.x ,
             finishMenuFrame.y + finishMenuFrame.height / 2 - 425 ,
-            "Press ENTER to switch between fields",
+            "Press TAB to switch between fields",
             {
                 backgroundColor: "rgba(0,0,0,0)",
                 color: "#ffffff",
@@ -64,29 +67,36 @@ export class FinishScene extends Phaser.Scene {
             );
         inputHintText.setX(inputHintText.x - inputHintText.width / 2);
 
-        phoneField = new InputField(this,
-            windowWidth / 2,
+        phoneField = new NumberField(this,
+            finishMenuFrame.getBottomLeft().x + 50,
             windowHeight / 2 - BUTTON_SIDE_OFFSET,
+            finishMenuFrame.width - 100,
             "Phone number:",
             BUTTON_STYLE);
 
         nameField.activate();
 
-        this.input.keyboard.on("keydown", (event: { keyCode: number; key: string; }) => {
-            if (event.keyCode === 13) {
-                nameField.switchActive();
-                phoneField.switchActive();
-            }
+        this.tabKey = this.input.keyboard.addKey('TAB', true);
+        
+        this.input.keyboard.on("keydown-TAB", () => {
+            nameField.switchActive();
+            phoneField.switchActive();
         });
 
+        // Submit Button
         submitButton = newButton(this, "Submit",
         () => {
             playerInfo.name = nameField.getValue();
             playerInfo.phone = phoneField.getValue();
+            playerInfo.time = String(this.timer.toFixed(2));
             nameField.clear();
             phoneField.clear();
             recordTime(this.stars, this.timer, playerInfo.name, playerInfo.phone);
             submitted = true;
+            this.scene.pause();
+            this.scene.launch("leaderboard", { fromMenu: false ,currentPlayer: playerInfo});
+            this.scene.setVisible(false);
+
         },
         windowWidth / 2, windowHeight / 2 , BUTTON_STYLE);
 
@@ -111,7 +121,7 @@ export class FinishScene extends Phaser.Scene {
         newButton(this, "New Game",
         () => {
             this.scene.pause();
-            this.scene.launch("leaderboard", { fromMenu: false });
+            this.scene.launch("leaderboard", { fromMenu: false ,currentPlayer: playerInfo});
             this.scene.setVisible(false);
         },
         windowWidth / 2, windowHeight / 2 + BUTTON_SIDE_OFFSET, BUTTON_STYLE);

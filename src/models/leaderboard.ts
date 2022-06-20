@@ -1,4 +1,5 @@
-import { getRecordTimeLocalStorage, LEADERBOARD_STYLE } from "../utils";
+import { getRecordTimeLocalStorage, LEADERBOARD_STYLE , LEADERBOARD_HIGHLIGHT_STYLE} from "../utils";
+import { IPlayerInfo } from "./playerInfo";
 
 export class Leaderboard {
     public frame: Phaser.GameObjects.Rectangle;
@@ -9,11 +10,14 @@ export class Leaderboard {
     private names: Phaser.GameObjects.Text[];
     private times: Phaser.GameObjects.Text[];
     private ranks: Phaser.GameObjects.Text[];
+    private currentPlayer?: IPlayerInfo;
+    private writtenCurrentPlayer: boolean;
 
     constructor(
         parent: Phaser.Scene,
         posX: number,
         posY: number,
+        currentPlayer?: IPlayerInfo,
     ) {
         this.parent = parent;
         this.X = posX;
@@ -31,6 +35,8 @@ export class Leaderboard {
         this.names = [];
         this.times = [];
         this.ranks = [];
+        this.currentPlayer = currentPlayer;
+        this.writtenCurrentPlayer = false;
         this.update();
     }
 
@@ -47,6 +53,8 @@ export class Leaderboard {
 
     private update() {
         let timeArrayAssetsShowcase = getRecordTimeLocalStorage();
+        
+        let currentPlayerRank = timeArrayAssetsShowcase.findIndex((x)=>x.phone==this.currentPlayer?.phone) + 1;        
 
         if (timeArrayAssetsShowcase.length > 10) {
             timeArrayAssetsShowcase = timeArrayAssetsShowcase.slice(0, 10);
@@ -58,15 +66,39 @@ export class Leaderboard {
             this.ranks.push(this.parent.add
                 .text(this.frame.getBottomLeft().x + 30, yPos, String(index + 1 + "."), LEADERBOARD_STYLE)
                 .setScrollFactor(0));
-            this.names.push(this.parent.add
-                .text(this.frame.getBottomLeft().x + 90, yPos, gameRecord.name ?? "--" + ": ", LEADERBOARD_STYLE)
-                .setScrollFactor(0));
-            this.times.push(this.parent.add
-                    .text(this.frame.getBottomRight().x - 135, yPos, gameRecord.time, LEADERBOARD_STYLE)
+            if (this.currentPlayer?.phone == gameRecord.phone && this.currentPlayer){
+                this.names.push(this.parent.add
+                    .text(this.frame.getBottomLeft().x + 90, yPos, gameRecord.name ?? "--" + ": ", LEADERBOARD_HIGHLIGHT_STYLE)
                     .setScrollFactor(0));
+                this.times.push(this.parent.add
+                        .text(this.frame.getBottomRight().x - 135, yPos, gameRecord.time, LEADERBOARD_HIGHLIGHT_STYLE)
+                        .setScrollFactor(0));
+                this.writtenCurrentPlayer = true;
+            } else {
+                this.names.push(this.parent.add
+                    .text(this.frame.getBottomLeft().x + 90, yPos, gameRecord.name ?? "--" + ": ", LEADERBOARD_STYLE)
+                    .setScrollFactor(0));
+                this.times.push(this.parent.add
+                        .text(this.frame.getBottomRight().x - 135, yPos, gameRecord.time, LEADERBOARD_STYLE)
+                        .setScrollFactor(0));
+            } 
             yPos += 45;
             index ++;
             });
+
+            if (typeof this.currentPlayer !== "undefined" && this.writtenCurrentPlayer == false){
+                this.parent.add.text(this.frame.getBottomLeft().x + 30, yPos-15, " ... ", LEADERBOARD_STYLE);
+
+                this.ranks.push(this.parent.add
+                    .text(this.frame.getBottomLeft().x + 30, yPos + 25, String(currentPlayerRank + "."), LEADERBOARD_STYLE)
+                    .setScrollFactor(0));
+                this.names.push(this.parent.add
+                    .text(this.frame.getBottomLeft().x + 90, yPos + 25, this.currentPlayer.name ?? "--" + ": ", LEADERBOARD_HIGHLIGHT_STYLE)
+                    .setScrollFactor(0));
+                this.times.push(this.parent.add
+                        .text(this.frame.getBottomRight().x - 135, yPos + 25, this.currentPlayer.time, LEADERBOARD_HIGHLIGHT_STYLE)
+                        .setScrollFactor(0));
+            }
         }
 
     private clear() {
