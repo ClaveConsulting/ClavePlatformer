@@ -253,6 +253,7 @@ interface IGameRecord {
     time: string;
     name?: string;
     phone?: string;
+    map?: string;
 }
 
 const TIME_ARRAY_ASSETS_SHOWCASE = "timeArrayAssetsShowcase";
@@ -270,14 +271,15 @@ const setRecordTimeLocalStorage = (value: IGameRecord[]) => {
     localStorage.setItem(TIME_ARRAY_ASSETS_SHOWCASE, JSON.stringify(value));
 };
 
-export const recordTime = (starsCollected: number, counter: number, name: string, phone: string) => {
+export const recordTime = (starsCollected: number, counter: number, name: string, phone: string, map:string) => {
     const timeArrayAssetsShowcase = getRecordTimeLocalStorage();
 
     const gameRecord: IGameRecord = {
         name,
-        phone,
+        phone, 
         starsCollected,
         time: counter.toFixed(2),
+        map,
     };
 
     const previousAttempts = timeArrayAssetsShowcase.filter((previousAttempt) =>

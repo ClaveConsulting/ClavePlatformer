@@ -91,7 +91,7 @@ export class FinishScene extends Phaser.Scene {
             playerInfo.time = String(this.timer.toFixed(2));
             nameField.clear();
             phoneField.clear();
-            recordTime(this.stars, this.timer, playerInfo.name, playerInfo.phone);
+            recordTime(this.stars, this.timer, playerInfo.name, playerInfo.phone, String(sessionStorage.getItem("LEVEL_SELECT")));
             submitted = true;
             this.scene.pause();
             this.scene.launch("leaderboard", { fromMenu: false ,currentPlayer: playerInfo});
