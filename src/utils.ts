@@ -385,6 +385,12 @@ export const INFO_TEXT_STYLE = {
     },
 };
 
+export const LEVEL_HEADER_STYLE = {
+    backgroundColor: TRANSPARENT,
+    fill: WHITE,
+    font: "40px monospace",
+};
+
 export const PAUSE_TEXT_STYLE = {
     backgroundColor: TRANSPARENT,
     fill: WHITE,

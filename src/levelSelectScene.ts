@@ -1,3 +1,4 @@
+import { LEVEL_HEADER_STYLE } from "./utils";
 
 const windowHeight = window.innerHeight;
 const windowWidth = window.innerWidth;
@@ -25,7 +26,7 @@ export class LevelSelectScene extends Phaser.Scene {
         levelSelectMenuFrame.setStrokeStyle(10,0xffffff);
 
         // Select level text
-        const levelSelectText = this.add.text(windowWidth / 2, levelSelectMenuFrame.getTopCenter().y + 50, "SELECT LEVEL");
+        const levelSelectText = this.add.text(windowWidth / 2, levelSelectMenuFrame.getTopCenter().y + 50, "SELECT LEVEL", LEVEL_HEADER_STYLE);
         levelSelectText.setX(levelSelectText.x - levelSelectText.width / 2);
 
         const ntnuImage = this.add.image(0 , levelSelectMenuFrame.getCenter().y, "ntnu");
@@ -67,6 +68,8 @@ export class LevelSelectScene extends Phaser.Scene {
             duration: 200,
         });
 
+        let active = "ntnu"
+
         this.input.gamepad.once("connected", (pad:Phaser.Input.Gamepad.Gamepad) => {
 
             pad = this.input.gamepad.pad1;
@@ -77,12 +80,19 @@ export class LevelSelectScene extends Phaser.Scene {
                         uioActive.stop();
                         uioImage.setScale(IMAGESCALE);
                         ntnuActive.restart();
+                        active = "ntnu"
                         
                     } else if (button.index == 15){
                         ntnuActive.stop();
                         ntnuImage.setScale(IMAGESCALE);
                         uioActive.restart();
+                        active = "uio";
+                    } else if (button.index == 1){
+                        this.scene.launch(active);
+                        sessionStorage.setItem("LEVEL_SELECT",active)
+                        this.scene.pause();
                     }
+                    console.log(button.index);
                 },this)
             })
 
@@ -90,12 +100,15 @@ export class LevelSelectScene extends Phaser.Scene {
             uioActive.stop();
             uioImage.setScale(IMAGESCALE);
             ntnuActive.restart();
+            active = "ntnu"
         })
 
         uioImage.on("pointerover", () => {
             ntnuActive.stop();
             ntnuImage.setScale(IMAGESCALE);
             uioActive.restart();
+            active = "uio";
+
         })
 
 
