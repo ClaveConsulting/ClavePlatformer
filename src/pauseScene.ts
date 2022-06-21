@@ -1,4 +1,4 @@
-import { BUTTON_SPACING, BUTTON_STYLE, getLevelSelect, INFO_TEXT_STYLE, newButton, PAUSE_TEXT_STYLE } from "./utils";
+import { BUTTON_SPACING, BUTTON_STYLE, getSelectedLevel, INFO_TEXT_STYLE, newButton, PAUSE_TEXT_STYLE } from "./utils";
 
 const windowHeight = window.innerHeight;
 const windowWidth = window.innerWidth;
@@ -25,9 +25,12 @@ export class PauseScene extends Phaser.Scene {
         // Play button
         newButton(this, "Continue",
         () => {
-            this.scene.pause();
-            this.scene.resume(getLevelSelect());
-            this.scene.setVisible(false);
+            const selectedLevel = getSelectedLevel();
+            if (!!selectedLevel){
+                this.scene.pause();
+                this.scene.resume(selectedLevel);
+                this.scene.setVisible(false);
+            }
         },
         windowWidth / 2 , windowHeight / 2 - BUTTON_SPACING, BUTTON_STYLE);
 
@@ -61,10 +64,11 @@ export class PauseScene extends Phaser.Scene {
 
     public update() {
         const pad = this.input.gamepad.pad1;
+        const selectedLevel = getSelectedLevel();
 
-        if (pad && pad.isButtonDown(9) && !playing) {
+        if (pad && pad.isButtonDown(9) && !playing && !!selectedLevel) {
             this.scene.pause();
-            this.scene.resume(getLevelSelect());
+            this.scene.resume(selectedLevel);
             this.scene.setVisible(false);
             playing = true;
         } else if (pad && pad.isButtonDown(8) && !playing) {

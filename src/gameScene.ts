@@ -4,7 +4,7 @@ import {
     collectStar,
     crossedFinishline,
     deadlyTileHit,
-    getLevelSelect,
+    getSelectedLevel,
     getWinners,
     movePlayer,
     newButton,
@@ -347,7 +347,7 @@ export class GameScene extends Phaser.Scene {
             loop: true,
         });
 
-        if (getLevelSelect() === null) {
+        if (getSelectedLevel() === null) {
             this.scene.setVisible(false);
             this.scene.start("levelSelect");
             this.scene.stop();

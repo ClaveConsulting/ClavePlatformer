@@ -1,4 +1,4 @@
-import { getLevelSelect, LEVEL_HEADER_STYLE, PALE_GREEN_NUMBER, WHITE_NUMBER } from "./utils";
+import { getSelectedLevel, LEVEL_HEADER_STYLE, PALE_GREEN_NUMBER, setSelectedLevel, WHITE_NUMBER } from "./utils";
 
 const windowHeight = window.innerHeight;
 const windowWidth = window.innerWidth;
@@ -16,8 +16,9 @@ export class LevelSelectScene extends Phaser.Scene {
     }
 
     public create() {
-        if (getLevelSelect() !== "") {
-            this.scene.switch(getLevelSelect());
+        const selectedLevel = getSelectedLevel();
+        if (selectedLevel !== null) {
+            this.scene.switch(selectedLevel);
         }
 
         const levelSelectMenuFrame = this.add.rectangle(windowWidth / 2, windowHeight / 2 , windowWidth - 200, windowHeight -200 , PALE_GREEN_NUMBER);
@@ -33,7 +34,7 @@ export class LevelSelectScene extends Phaser.Scene {
         ntnuImage.setX(levelSelectMenuFrame.getCenter().x - ntnuImage.width/4 - 50);
         ntnuImage.setInteractive();
         ntnuImage.on("pointerdown",() => {
-            sessionStorage.setItem("LEVEL_SELECT", JSON.stringify("ntnu"));
+            setSelectedLevel("ntnu")
             this.scene.launch("ntnu");
             this.scene.pause()
         });
@@ -43,7 +44,7 @@ export class LevelSelectScene extends Phaser.Scene {
         uioImage.setX(levelSelectMenuFrame.getCenter().x + uioImage.width/4 + 50);
         uioImage.setInteractive();
         uioImage.on("pointerdown",() => {
-            sessionStorage.setItem("LEVEL_SELECT",JSON.stringify("uio"));
+            setSelectedLevel("uio");
             this.scene.launch("uio");
             this.scene.pause();
         });
@@ -88,7 +89,7 @@ export class LevelSelectScene extends Phaser.Scene {
                         active = "uio";
                     } else if (button.index == 1){
                         this.scene.launch(active);
-                        sessionStorage.setItem("LEVEL_SELECT",JSON.stringify(active));
+                        setSelectedLevel(active);
                         this.scene.pause();
                     }
                     console.log(button.index);

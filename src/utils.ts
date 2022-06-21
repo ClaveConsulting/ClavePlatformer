@@ -257,6 +257,7 @@ interface IGameRecord {
 }
 
 const TIME_ARRAY_ASSETS_SHOWCASE = "timeArrayAssetsShowcase";
+const LEVEL_SELECT_STORAGE_KEY = "LEVEL_SELECT";
 
 export const getRecordTimeLocalStorage = () => {
     const rawTimeArrayAssetsShowcase = localStorage.getItem(
@@ -267,9 +268,9 @@ export const getRecordTimeLocalStorage = () => {
         : [];
 };
 
-export const getLevelSelect = () => {
+export const getSelectedLevel = () => {
     const rawLevelSelect = sessionStorage.getItem(
-        "LEVEL_SELECT"
+        LEVEL_SELECT_STORAGE_KEY
     );
     return rawLevelSelect
         ? (JSON.parse(rawLevelSelect) as string)
@@ -279,6 +280,10 @@ export const getLevelSelect = () => {
 const setRecordTimeLocalStorage = (value: IGameRecord[]) => {
     localStorage.setItem(TIME_ARRAY_ASSETS_SHOWCASE, JSON.stringify(value));
 };
+
+export const setSelectedLevel = (value: string) => {
+    sessionStorage.setItem(LEVEL_SELECT_STORAGE_KEY, value)
+}
 
 export const recordTime = (starsCollected: number, counter: number, name: string, phone: string, map:string) => {
     const timeArrayAssetsShowcase = getRecordTimeLocalStorage();
