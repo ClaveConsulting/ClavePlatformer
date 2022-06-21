@@ -1,7 +1,7 @@
 import { NES_Button } from "../buttonMap";
 import { MenuDirection } from "./direction";
 export class NavMenu {
-    private elements: MenuItem[];
+    private elements: MenuImage[]|MenuButton[];
     private activeIndex: number;
     private direction: MenuDirection;
     private parent: Phaser.Scene;
@@ -11,10 +11,10 @@ export class NavMenu {
     private prevKey: number;
     private activeKey: number;
 
-    constructor(menuItems:MenuItem[],direction:MenuDirection, parent:Phaser.Scene) {
+    constructor(menuItems:MenuButton[]|MenuImage[],direction:MenuDirection, parent:Phaser.Scene) {
         this.activeIndex = 0;
         this.elements = menuItems;
-        this.elements.forEach((element)=>{element.deindicate();});
+        this.elements.forEach((element:MenuButton|MenuImage)=>{element.deindicate();});
         this.elements[this.activeIndex].indicate();
         this.direction = direction;
         this.parent = parent;
@@ -70,7 +70,7 @@ export class NavMenu {
     }
     
     public destroy() {
-        this.elements.forEach((element)=>{
+        this.elements.forEach((element:MenuButton|MenuImage)=>{
             element.destroy();
         })
     }
@@ -95,15 +95,16 @@ export class NavMenu {
     }
 }
 
-export class MenuItem {
-    private target: MenuButton;
-    private parent: Phaser.Scene;
+export class MenuButton {
+    private target: Phaser.GameObjects.DOMElement;
     private func: () => void;
+    private boundingBox: Phaser.GameObjects.Rectangle
     constructor(x:number,y:number,text:string,func:()=>void,parent:Phaser.Scene) {
-        this.target = new MenuButton(text,x,y,parent);
-        this.parent = parent;
+        this.target = parent.add.dom(x,y,"button",null,text).setScrollFactor(0).disableInteractive();
+        this.target.setClassName("nes-btn is-normal");
+        this.boundingBox = parent.add.rectangle(x, y, this.target.width, this.target.height).setInteractive();
         this.func = func;
-        this.target.boundingBox.on("pointerdown",func);
+        this.boundingBox.on("pointerdown",func);
     }
     
     public activate(){
@@ -111,40 +112,44 @@ export class MenuItem {
     }
 
     public indicate(){
-        this.target.indicate();     
+        this.target.setClassName("nes-btn is-success");     
     }
 
     public deindicate(){
-        this.target.deindicate();
+        this.target.setClassName("nes-btn is-normal");     
     }
 
     public destroy(){
-        this.target.element.destroy();
+        this.target.destroy();
+        this.boundingBox.destroy();
     }
 }
 
-class MenuButton {
-    public element: Phaser.GameObjects.DOMElement;
-    public boundingBox: Phaser.GameObjects.Rectangle;
+export class MenuImage {
+    private target: Phaser.GameObjects.Image;
+    private func: () => void;
+    private scale:number;
 
-    constructor(text:string, x:number, y:number, parent:Phaser.Scene){
-        this.element = parent.add.dom(x,y,"button",null,text).setScrollFactor(0).disableInteractive();
-        this.element.setClassName("nes-btn is-normal");
-        this.boundingBox = parent.add.rectangle(x,y,this.element.width,this.element.height).setInteractive();
-
-        this.boundingBox.on("pointerover", ()=>{
-            this.element.setClassName("nes-btn is-success");
-        },parent)
-
-        this.boundingBox.on("pointerout", ()=>{
-            this.element.setClassName("nes-btn is-normal");
-        },parent)
-
+    constructor(x:number, y:number, imageReference:string, scale:number, func:()=>void, parent:Phaser.Scene) {
+        this.target = parent.add.image(x,y,imageReference).setInteractive();
+        this.target.setScale(scale);
+        this.func = func;
+        this.target.on("pointerdown",func);
     }
+
+    public activate(){
+        this.func();
+    }
+
     public indicate(){
-        this.element.setClassName("nes-btn is-success");
+        this.target.setScale(this.scale*1.1);     
     }
+
     public deindicate(){
-        this.element.setClassName("nes-btn is-normal");
+        this.target.setScale(this.scale);     
     }
+
+    public destroy(){
+        this.target.destroy();
+    } 
 }

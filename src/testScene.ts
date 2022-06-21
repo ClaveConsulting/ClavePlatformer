@@ -1,5 +1,5 @@
 import { MenuDirection } from "./models/direction";
-import { MenuItem, NavMenu } from "./models/navMenu";
+import { MenuButton, MenuImage, NavMenu } from "./models/navMenu";
 import { BUTTON_SPACING, BUTTON_STYLE, INFO_TEXT_STYLE, newButton, PAUSE_TEXT_STYLE } from "./utils";
 
 
@@ -29,7 +29,7 @@ export class TestScene extends Phaser.Scene {
 
         pauseMenuFrame.setStrokeStyle(10, 0xffffff);
         
-        let item1 = new MenuItem(100,100,"TEST",() => {
+        let item1 = new MenuButton(100,100,"TEST",() => {
             this.scene.pause();
             this.scene.launch("leaderboard", {fromMenu: true});
             this.scene.setVisible(false);
@@ -37,7 +37,7 @@ export class TestScene extends Phaser.Scene {
 
         },this)
 
-        let item2 = new MenuItem(100,170,"TEST",() => {
+        let item2 = new MenuButton(100,170,"TEST",() => {
             this.scene.pause();
             this.scene.launch("leaderboard", {fromMenu: true});
             this.scene.setVisible(false);
@@ -45,7 +45,7 @@ export class TestScene extends Phaser.Scene {
 
         },this)
 
-        let item3 = new MenuItem(100,240,"TEST",() => {
+        let item3 = new MenuButton(100,240,"TEST",() => {
             this.scene.pause();
             this.scene.launch("leaderboard", {fromMenu: true});
             this.scene.setVisible(false);
