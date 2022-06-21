@@ -96,18 +96,14 @@ export class NavMenu {
 }
 
 export class MenuItem {
-    private target: Phaser.GameObjects.Image|Phaser.GameObjects.Text|Phaser.GameObjects.DOMElement;
+    private target: MenuButton;
     private parent: Phaser.Scene;
     private func: () => void;
-    constructor(object:Phaser.GameObjects.Image|Phaser.GameObjects.Text|Phaser.GameObjects.DOMElement,func:()=>void,parent:Phaser.Scene) {
-        this.target = object;
+    constructor(x:number,y:number,text:string,func:()=>void,parent:Phaser.Scene) {
+        this.target = new MenuButton(text,x,y,parent);
         this.parent = parent;
         this.func = func;
-        this.target.setInteractive();
-
-        this.target.on("pointerdown",func);
-        this.target.on("pointerover",()=>{this.indicate()});
-        this.target.on("pointerout",()=>{this.deindicate()});
+        this.target.boundingBox.on("pointerdown",func);
     }
     
     public activate(){
@@ -115,21 +111,40 @@ export class MenuItem {
     }
 
     public indicate(){
-        if (this.target.type == "Text") {
-            
-        } else if (this.target.type == "Image") {
-
-        }
-        
-        
+        this.target.indicate();     
     }
 
     public deindicate(){
-
+        this.target.deindicate();
     }
 
     public destroy(){
-        this.target.destroy();
+        this.target.element.destroy();
     }
 }
 
+class MenuButton {
+    public element: Phaser.GameObjects.DOMElement;
+    public boundingBox: Phaser.GameObjects.Rectangle;
+
+    constructor(text:string, x:number, y:number, parent:Phaser.Scene){
+        this.element = parent.add.dom(x,y,"button",null,text).setScrollFactor(0).disableInteractive();
+        this.element.setClassName("nes-btn is-normal");
+        this.boundingBox = parent.add.rectangle(x,y,this.element.width,this.element.height).setInteractive();
+
+        this.boundingBox.on("pointerover", ()=>{
+            this.element.setClassName("nes-btn is-success");
+        },parent)
+
+        this.boundingBox.on("pointerout", ()=>{
+            this.element.setClassName("nes-btn is-normal");
+        },parent)
+
+    }
+    public indicate(){
+        this.element.setClassName("nes-btn is-success");
+    }
+    public deindicate(){
+        this.element.setClassName("nes-btn is-normal");
+    }
+}
