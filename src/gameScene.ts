@@ -347,7 +347,7 @@ export class GameScene extends Phaser.Scene {
             loop: true,
         });
 
-        if (getLevelSelect() === "") {
+        if (getLevelSelect() === null) {
             this.scene.setVisible(false);
             this.scene.start("levelSelect");
             this.scene.stop();
