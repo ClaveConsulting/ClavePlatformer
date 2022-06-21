@@ -1,4 +1,4 @@
-import { getRecordTimeLocalStorage, LEADERBOARD_STYLE , LEADERBOARD_HIGHLIGHT_STYLE} from "../utils";
+import { getRecordTimeLocalStorage, LEADERBOARD_STYLE , LEADERBOARD_HIGHLIGHT_STYLE, getLevelSelect} from "../utils";
 import { IPlayerInfo } from "./playerInfo";
 
 export class Leaderboard {
@@ -63,7 +63,7 @@ export class Leaderboard {
         let yPos = this.frame.getTopCenter().y + 100;
         let index = 0;
         timeArrayAssetsShowcase.forEach((gameRecord) => {
-            if (gameRecord.map == sessionStorage.getItem("LEVEL_SELECT")){
+            if (gameRecord.map == getLevelSelect()){
                 this.ranks.push(this.parent.add
                     .text(this.frame.getBottomLeft().x + 30, yPos, String(index + 1 + "."), LEADERBOARD_STYLE)
                     .setScrollFactor(0));

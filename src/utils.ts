@@ -267,6 +267,15 @@ export const getRecordTimeLocalStorage = () => {
         : [];
 };
 
+export const getLevelSelect = () => {
+    const rawLevelSelect = sessionStorage.getItem(
+        "LEVEL_SELECT"
+    );
+    return rawLevelSelect
+        ? (JSON.parse(rawLevelSelect) as string)
+        : "";
+}
+
 const setRecordTimeLocalStorage = (value: IGameRecord[]) => {
     localStorage.setItem(TIME_ARRAY_ASSETS_SHOWCASE, JSON.stringify(value));
 };
@@ -339,6 +348,8 @@ export function newButton(
 
 export const GREEN = "#00ff00";
 export const WHITE = "#ffffff";
+export const WHITE_NUMBER = 0xffffff;
+export const PALE_GREEN_NUMBER = 0xb1bd9b;
 export const RED = "#ff0000";
 export const BLACK = "#000";
 export const YELLOW = "#FFBE2E";

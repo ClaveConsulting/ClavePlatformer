@@ -1,6 +1,6 @@
 import { NumberField, TextField } from "./models/inputField";
 import { IPlayerInfo } from "./models/playerInfo";
-import { BUTTON_STYLE, newButton, PAUSE_TEXT_STYLE, recordTime } from "./utils";
+import { BUTTON_STYLE, getLevelSelect, newButton, PAUSE_TEXT_STYLE, recordTime } from "./utils";
 
 const windowHeight = window.innerHeight;
 const windowWidth = window.innerWidth;
@@ -91,7 +91,7 @@ export class FinishScene extends Phaser.Scene {
             playerInfo.time = String(this.timer.toFixed(2));
             nameField.clear();
             phoneField.clear();
-            recordTime(this.stars, this.timer, playerInfo.name, playerInfo.phone, String(sessionStorage.getItem("LEVEL_SELECT")));
+            recordTime(this.stars, this.timer, playerInfo.name, playerInfo.phone, getLevelSelect());
             submitted = true;
             this.scene.pause();
             this.scene.launch("leaderboard", { fromMenu: false ,currentPlayer: playerInfo});

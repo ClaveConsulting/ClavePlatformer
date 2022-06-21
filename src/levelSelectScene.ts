@@ -1,4 +1,4 @@
-import { LEVEL_HEADER_STYLE } from "./utils";
+import { getLevelSelect, LEVEL_HEADER_STYLE, PALE_GREEN_NUMBER, WHITE_NUMBER } from "./utils";
 
 const windowHeight = window.innerHeight;
 const windowWidth = window.innerWidth;
@@ -16,14 +16,13 @@ export class LevelSelectScene extends Phaser.Scene {
     }
 
     public create() {
-
-        if (sessionStorage.getItem("LEVEL_SELECT") != null) {
-            this.scene.switch(String(sessionStorage.getItem("LEVEL_SELECT")));
+        if (getLevelSelect() !== "") {
+            this.scene.switch(getLevelSelect());
         }
 
-        const levelSelectMenuFrame = this.add.rectangle(windowWidth / 2, windowHeight / 2 , windowWidth - 200, windowHeight -200 , 0xb1bd9b);
+        const levelSelectMenuFrame = this.add.rectangle(windowWidth / 2, windowHeight / 2 , windowWidth - 200, windowHeight -200 , PALE_GREEN_NUMBER);
 
-        levelSelectMenuFrame.setStrokeStyle(10,0xffffff);
+        levelSelectMenuFrame.setStrokeStyle(10,WHITE_NUMBER);
 
         // Select level text
         const levelSelectText = this.add.text(windowWidth / 2, levelSelectMenuFrame.getTopCenter().y + 50, "SELECT LEVEL", LEVEL_HEADER_STYLE);
@@ -33,9 +32,9 @@ export class LevelSelectScene extends Phaser.Scene {
         ntnuImage.setScale(IMAGESCALE);
         ntnuImage.setX(levelSelectMenuFrame.getCenter().x - ntnuImage.width/4 - 50);
         ntnuImage.setInteractive();
-        ntnuImage.on("pointerup",() => {
-            this.scene.launch("ntnu")
-            sessionStorage.setItem("LEVEL_SELECT","ntnu");
+        ntnuImage.on("pointerdown",() => {
+            sessionStorage.setItem("LEVEL_SELECT", JSON.stringify("ntnu"));
+            this.scene.launch("ntnu");
             this.scene.pause()
         });
 
@@ -43,9 +42,9 @@ export class LevelSelectScene extends Phaser.Scene {
         uioImage.setScale(IMAGESCALE);
         uioImage.setX(levelSelectMenuFrame.getCenter().x + uioImage.width/4 + 50);
         uioImage.setInteractive();
-        uioImage.on("pointerup",() => {
+        uioImage.on("pointerdown",() => {
+            sessionStorage.setItem("LEVEL_SELECT",JSON.stringify("uio"));
             this.scene.launch("uio");
-            sessionStorage.setItem("LEVEL_SELECT","uio")
             this.scene.pause();
         });
 
@@ -89,7 +88,7 @@ export class LevelSelectScene extends Phaser.Scene {
                         active = "uio";
                     } else if (button.index == 1){
                         this.scene.launch(active);
-                        sessionStorage.setItem("LEVEL_SELECT",active)
+                        sessionStorage.setItem("LEVEL_SELECT",JSON.stringify(active));
                         this.scene.pause();
                     }
                     console.log(button.index);

@@ -1,6 +1,6 @@
 import { Leaderboard } from "./models/leaderboard";
 import { IPlayerInfo } from "./models/playerInfo";
-import { BUTTON_STYLE, newButton } from "./utils";
+import { BUTTON_STYLE, getLevelSelect, newButton } from "./utils";
 
 const windowHeight = window.innerHeight;
 const windowWidth = window.innerWidth;
@@ -59,7 +59,7 @@ export class LeaderboardScene extends Phaser.Scene {
         leaderboard.refresh();
 
         if (!this.fromMenu && ((pad && pad.isButtonDown(9)) || spaceKey.isDown)) {
-            this.scene.launch(String(sessionStorage.getItem("LEVEL_SELECT")) , {fromLeaderboard: true});
+            this.scene.launch(getLevelSelect() , {fromLeaderboard: true});
             this.scene.setVisible(false);
             this.scene.pause();
         }
