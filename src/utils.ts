@@ -273,7 +273,7 @@ export const getLevelSelect = () => {
     );
     return rawLevelSelect
         ? (JSON.parse(rawLevelSelect) as string)
-        : "";
+        : null;
 }
 
 const setRecordTimeLocalStorage = (value: IGameRecord[]) => {
