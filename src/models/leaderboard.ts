@@ -64,7 +64,7 @@ export class Leaderboard {
         let index = 0;
         const selectedLevel = getSelectedLevel();
         timeArrayAssetsShowcase.forEach((gameRecord) => {
-            if (gameRecord.map == selectedLevel && !!selectedLevel){
+            if (!!selectedLevel && gameRecord.map == selectedLevel ){
                 this.ranks.push(this.parent.add
                     .text(this.frame.getBottomLeft().x + 30, yPos, String(index + 1 + "."), LEADERBOARD_STYLE)
                     .setScrollFactor(0));
