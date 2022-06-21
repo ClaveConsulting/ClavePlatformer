@@ -16,7 +16,7 @@ export class TestScene extends Phaser.Scene {
     }
 
     public preload(){
-        this.load.image("test", "assets/common/claveDude.png")
+        this.load.image("test", "assets/common/tileset.png")
         this.load.css("nes-btn","assets/common/nesCss.css")
     }
 
@@ -37,14 +37,14 @@ export class TestScene extends Phaser.Scene {
 
         },this)
 
-        let item2 = new MenuButton(100,170,"TEST",() => {
+        let item2 = new MenuButton(windowWidth/2,windowHeight/2,"TEST0000000",() => {
             this.scene.pause();
             this.scene.launch("leaderboard", {fromMenu: true});
             this.scene.setVisible(false);
             this.menu.destroy()
 
         },this)
-
+        console.log(item2.target.displayWidth)
         let item3 = new MenuButton(100,240,"TEST",() => {
             this.scene.pause();
             this.scene.launch("leaderboard", {fromMenu: true});
@@ -52,8 +52,13 @@ export class TestScene extends Phaser.Scene {
             this.menu.destroy()
 
         },this)
-        
-        this.menu = new NavMenu([item1,item2,item3],MenuDirection.Vertical,this);
+
+        let image1 = new MenuImage(windowWidth/2,windowHeight/2,"test",0.3,() => console.log("image1 Pressed"),this);
+        let image2 = new MenuImage(600,200,"test",0.2,() => console.log("image2 Pressed"),this);
+
+        this.menu = new NavMenu([item1,item2,item3,image2],MenuDirection.Vertical,this);
+
+        let imageMenu = new NavMenu([image1,image2],MenuDirection.Horizontal,this);
     }
 
     public update() {

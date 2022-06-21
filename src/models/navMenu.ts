@@ -1,7 +1,10 @@
 import { NES_Button } from "../buttonMap";
 import { MenuDirection } from "./direction";
+
+//
+const NES_BTN_CLASS_FONT_SIZE = 16;
 export class NavMenu {
-    private elements: MenuImage[]|MenuButton[];
+    private elements: (MenuButton|MenuImage)[];
     private activeIndex: number;
     private direction: MenuDirection;
     private parent: Phaser.Scene;
@@ -11,7 +14,7 @@ export class NavMenu {
     private prevKey: number;
     private activeKey: number;
 
-    constructor(menuItems:MenuButton[]|MenuImage[],direction:MenuDirection, parent:Phaser.Scene) {
+    constructor(menuItems:(MenuButton|MenuImage)[],direction:MenuDirection, parent:Phaser.Scene) {
         this.activeIndex = 0;
         this.elements = menuItems;
         this.elements.forEach((element:MenuButton|MenuImage)=>{element.deindicate();});
@@ -96,15 +99,18 @@ export class NavMenu {
 }
 
 export class MenuButton {
-    private target: Phaser.GameObjects.DOMElement;
+    public target: Phaser.GameObjects.DOMElement;
     private func: () => void;
-    private boundingBox: Phaser.GameObjects.Rectangle
+    public boundingBox: Phaser.GameObjects.Rectangle
+    public type = "button";
     constructor(x:number,y:number,text:string,func:()=>void,parent:Phaser.Scene) {
         this.target = parent.add.dom(x,y,"button",null,text).setScrollFactor(0).disableInteractive();
         this.target.setClassName("nes-btn is-normal");
         this.boundingBox = parent.add.rectangle(x, y, this.target.width, this.target.height).setInteractive();
         this.func = func;
         this.boundingBox.on("pointerdown",func);
+
+        this.target.setX(this.target.x - NES_BTN_CLASS_FONT_SIZE/2)
     }
     
     public activate(){
@@ -129,12 +135,17 @@ export class MenuImage {
     private target: Phaser.GameObjects.Image;
     private func: () => void;
     private scale:number;
+    private frame: Phaser.GameObjects.Rectangle
+    public type = "image";
 
     constructor(x:number, y:number, imageReference:string, scale:number, func:()=>void, parent:Phaser.Scene) {
         this.target = parent.add.image(x,y,imageReference).setInteractive();
         this.target.setScale(scale);
         this.func = func;
         this.target.on("pointerdown",func);
+        this.scale = scale;
+        this.frame = parent.add.rectangle(x,y,this.target.width,this.target.height).setScale(scale);
+        this.frame.setStrokeStyle(10,0xffffff)
     }
 
     public activate(){
@@ -142,11 +153,14 @@ export class MenuImage {
     }
 
     public indicate(){
-        this.target.setScale(this.scale*1.1);     
+        this.target.setScale(this.scale*1.1);
+        this.frame.setScale(this.scale*1.1)
+        this.frame.setStrokeStyle(20,0x00ff00);     
     }
 
     public deindicate(){
-        this.target.setScale(this.scale);     
+        this.target.setScale(this.scale);  
+        this.frame.setStrokeStyle(10,0xffffff)   
     }
 
     public destroy(){
