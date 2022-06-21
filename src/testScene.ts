@@ -28,36 +28,8 @@ export class TestScene extends Phaser.Scene {
         const pauseMenuFrame = this.add.rectangle(windowWidth / 2, windowHeight / 2 - 50, 250, 400, 0xb1bd9b);
 
         pauseMenuFrame.setStrokeStyle(10, 0xffffff);
-
-        // show leaderboard button
-        let a = newButton(this, "PLAY",
-        () => {},
-        windowWidth / 2, windowHeight / 2 - 2 * BUTTON_SPACING, BUTTON_STYLE);
-
-        let b = newButton(this, "LEADERBOARD",
-        () => {},
-        windowWidth / 2, windowHeight / 2 - BUTTON_SPACING, BUTTON_STYLE);
         
-        let c = newButton(this, "CHANGE LEVEL",
-        () => {},
-        windowWidth / 2, windowHeight / 2 + 2 , BUTTON_STYLE);
-        
-        let item1 = new MenuItem(a,() => {
-            this.scene.pause();
-            this.scene.launch("leaderboard", {fromMenu: true});
-            this.scene.setVisible(false);
-            this.menu.destroy()
-
-        },this)
-        
-        let item2 = new MenuItem(b,() => {
-            this.scene.pause();
-            this.scene.launch("leaderboard", {fromMenu: true});
-            this.scene.setVisible(false);
-            this.menu.destroy()
-        },this)
-
-        let item3 = new MenuItem(c,() => {
+        let item1 = new MenuItem(100,100,"TEST",() => {
             this.scene.pause();
             this.scene.launch("leaderboard", {fromMenu: true});
             this.scene.setVisible(false);
@@ -65,13 +37,23 @@ export class TestScene extends Phaser.Scene {
 
         },this)
 
-        let item4 = new MenuItem(this.add.image(windowWidth / 2, windowHeight / 2 + BUTTON_SPACING,"test"),()=>{
-            console.log("test");
+        let item2 = new MenuItem(100,170,"TEST",() => {
+            this.scene.pause();
+            this.scene.launch("leaderboard", {fromMenu: true});
+            this.scene.setVisible(false);
             this.menu.destroy()
 
-        },this);
+        },this)
 
-        this.menu = new NavMenu([item1,item2,item3,item4],MenuDirection.Vertical,this);
+        let item3 = new MenuItem(100,240,"TEST",() => {
+            this.scene.pause();
+            this.scene.launch("leaderboard", {fromMenu: true});
+            this.scene.setVisible(false);
+            this.menu.destroy()
+
+        },this)
+        
+        this.menu = new NavMenu([item1,item2,item3],MenuDirection.Vertical,this);
     }
 
     public update() {
