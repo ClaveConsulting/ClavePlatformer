@@ -333,18 +333,8 @@ export function newButton(
     buttonStyle: Phaser.Types.GameObjects.Text.TextStyle,
     ) {
 
-    const button = scene.add.text(posX, posY, buttonText, buttonStyle).setScrollFactor(0);
-    button.setX(button.x - button.width / 2);
-    button.setY(button.y - button.height / 2);
-    button.setInteractive();
-    button.on("pointerdown", func);
-
-    button.on("pointerover", () => {
-        button.setBackgroundColor(GREEN);
-    });
-    button.on("pointerout", () => {
-        button.setBackgroundColor(WHITE);
-    });
+    const button = scene.add.dom(posX, posY, "button", null, buttonText).setScrollFactor(0);
+    button.setClassName("nes-btn is-normal")
     return button;
 }
 
@@ -361,7 +351,8 @@ export const GREY = "#555";
 export const BUTTON_STYLE = {
     backgroundColor: WHITE,
     fill: BLACK,
-    font: "27px monospace",
+    fontSize: "50px ",
+    fontFamily: "Press Start 2P",
     padding: {
         x: 20,
         y: 10,

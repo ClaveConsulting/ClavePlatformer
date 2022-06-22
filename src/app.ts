@@ -14,8 +14,9 @@ const initHeight = window.innerHeight;
 window.onload = () => {
     window.focus();
     const game: Phaser.Game = new Phaser.Game({
+        parent: "game",
         dom: {
-            createContainer: true,
+            createContainer: true
         },
         height: initHeight,
         input: {

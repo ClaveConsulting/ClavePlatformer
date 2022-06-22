@@ -13,7 +13,7 @@ const playerInfo: IPlayerInfo = {
 let nameField: TextField;
 let phoneField: NumberField;
 let submitted = false;
-let submitButton: Phaser.GameObjects.Text;
+let submitButton: Phaser.GameObjects.DOMElement;
 let playing = false;
 
 export class FinishScene extends Phaser.Scene {

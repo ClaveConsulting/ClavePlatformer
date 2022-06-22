@@ -1,39 +1,92 @@
-import { NES_A } from "../buttonMap";
+import { NES_Button } from "../buttonMap";
+import { MenuDirection } from "./direction";
 export class NavMenu {
     private elements: MenuItem[];
     private activeIndex: number;
-    
-    constructor(menuItems:MenuItem[],) {
+    private direction: MenuDirection;
+    private parent: Phaser.Scene;
+    private nextButton: NES_Button;
+    private prevButton: NES_Button;
+    private nextKey: number;
+    private prevKey: number;
+    private activeKey: number;
+
+    constructor(menuItems:MenuItem[],direction:MenuDirection, parent:Phaser.Scene) {
+        this.activeIndex = 0;
         this.elements = menuItems;
-        this.elements[0].indicate()
+        this.elements.forEach((element)=>{element.deindicate();});
+        this.elements[this.activeIndex].indicate();
+        this.direction = direction;
+        this.parent = parent;
+        
+        this.activeKey = Phaser.Input.Keyboard.KeyCodes.ENTER;
+        if (this.direction == MenuDirection.Vertical) {
+            this.nextButton = NES_Button.DOWN;
+            this.prevButton = NES_Button.UP;
+            this.nextKey = Phaser.Input.Keyboard.KeyCodes.DOWN;
+            this.prevKey = Phaser.Input.Keyboard.KeyCodes.UP;
+        } else if (this.direction == MenuDirection.Horizontal ) {
+            this.nextButton = NES_Button.RIGHT;
+            this.prevButton = NES_Button.LEFT;
+            this.nextKey = Phaser.Input.Keyboard.KeyCodes.RIGHT;
+            this.prevKey = Phaser.Input.Keyboard.KeyCodes.LEFT;
+        }
+
+        parent.input.gamepad.on("down", (pad:Phaser.Input.Gamepad.Gamepad,button:Phaser.Input.Gamepad.Button,index:number)=>{
+            if (button.index == this.nextButton) {
+                this.next();
+            } else if (button.index == this.prevButton) {
+                this.previous();
+            } else if (button.index == NES_Button.A) {
+                this.elements[this.activeIndex].activate();
+            }
+        });
+
+        parent.input.keyboard.on("keydown", (event: { keyCode: number; key: string; }) => {
+            if (event.keyCode === this.nextKey) {
+                this.next()
+            } else if (event.keyCode === this.prevKey) {
+                this.previous();
+            } else if (event.keyCode === this.activeKey) {
+                this.elements[this.activeIndex].activate();
+            }
+        });
     }
 
     public next(){
-        this.elements[this.activeIndex].deactivate();
-        this.getNext().activate();
+        this.elements[this.activeIndex].deindicate();
+        this.getNext().indicate();
     }
 
     private getNext(){
 
-        if (this.activeIndex == this.elements.length){
+        if (this.activeIndex == this.elements.length - 1){
             this.activeIndex = 0;
             return this.elements[this.activeIndex];
         } else {
-            return this.elements[this.activeIndex + 1]
+            this.activeIndex += 1;
+            return this.elements[this.activeIndex]
         }
+    }
+    
+    public destroy() {
+        this.elements.forEach((element)=>{
+            element.destroy();
+        })
     }
 
     public previous(){
-        this.elements[this.activeIndex].deactivate();
-        this.getPrevious().deactivate()
+        this.elements[this.activeIndex].deindicate();
+        this.getPrevious().indicate()
     }
 
     private getPrevious(){
         if (this.activeIndex == 0) {
-            this.activeIndex = this.elements.length;
+            this.activeIndex = this.elements.length - 1;
             return this.elements[this.activeIndex];
         } else {
-            return this.elements[this.activeIndex - 1]
+            this.activeIndex -= 1
+            return this.elements[this.activeIndex]
         }
     }
 
@@ -43,46 +96,40 @@ export class NavMenu {
 }
 
 export class MenuItem {
-    private active:boolean;
-    private indicating:boolean;
-    private target: Phaser.GameObjects.Image|Phaser.GameObjects.Text;
+    private target: Phaser.GameObjects.Image|Phaser.GameObjects.Text|Phaser.GameObjects.DOMElement;
     private parent: Phaser.Scene;
-    constructor(object:Phaser.GameObjects.Image|Phaser.GameObjects.Text,func:()=>void,parent:Phaser.Scene) {
-        this.active = false;
+    private func: () => void;
+    constructor(object:Phaser.GameObjects.Image|Phaser.GameObjects.Text|Phaser.GameObjects.DOMElement,func:()=>void,parent:Phaser.Scene) {
         this.target = object;
         this.parent = parent;
-
-        this.parent.input.gamepad.on("down",function(pad:Phaser.Input.Gamepad.Gamepad,button:Phaser.Input.Gamepad.Button,index:number) {
-            if (button.index == NES_A && this.active){
-                func
-            }
-        });
-
-        parent.input.keyboard.on("keydown_ENTER",() => {
-            if (this.indicating){
-                func
-            }
-        },parent);
+        this.func = func;
+        this.target.setInteractive();
 
         this.target.on("pointerdown",func);
-
         this.target.on("pointerover",()=>{this.indicate()});
         this.target.on("pointerout",()=>{this.deindicate()});
     }
     
     public activate(){
-        this.active = true;
-    }
-    public deactivate(){
-        this.active = false;
+        this.func();
     }
 
     public indicate(){
+        if (this.target.type == "Text") {
+            
+        } else if (this.target.type == "Image") {
+
+        }
         
-        this.indicating = true;
+        
     }
 
     public deindicate(){
-        this.indicating = false;
+
+    }
+
+    public destroy(){
+        this.target.destroy();
     }
 }
+
