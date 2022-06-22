@@ -269,12 +269,9 @@ export const getRecordTimeLocalStorage = () => {
 };
 
 export const getSelectedLevel = () => {
-    const rawLevelSelect = sessionStorage.getItem(
+    return sessionStorage.getItem(
         LEVEL_SELECT_STORAGE_KEY
     );
-    return rawLevelSelect
-        ? (rawLevelSelect) as string
-        : null;
 }
 
 const setRecordTimeLocalStorage = (value: IGameRecord[]) => {
@@ -282,7 +279,7 @@ const setRecordTimeLocalStorage = (value: IGameRecord[]) => {
 };
 
 export const setSelectedLevel = (value: string) => {
-    sessionStorage.setItem(LEVEL_SELECT_STORAGE_KEY, value);
+    sessionStorage.setItem(LEVEL_SELECT_STORAGE_KEY, JSON.stringify(value));
 }
 
 export const recordTime = (starsCollected: number, counter: number, name: string, phone: string, map:string) => {
