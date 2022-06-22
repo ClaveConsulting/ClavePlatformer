@@ -1,10 +1,13 @@
-import { BUTTON_SPACING, BUTTON_STYLE, getSelectedLevel, INFO_TEXT_STYLE, newButton, PAUSE_TEXT_STYLE } from "./utils";
+import { NES_Button } from "./buttonMap";
+import { MenuDirection } from "./models/direction";
+import { MenuButton, NavMenu } from "./models/navMenu";
+import { BUTTON_SPACING, getSelectedLevel, PAUSE_TEXT_STYLE } from "./utils";
 
 const windowHeight = window.innerHeight;
 const windowWidth = window.innerWidth;
-let playing = false;
 
 export class PauseScene extends Phaser.Scene {
+    private pauseMenu:NavMenu;
 
     constructor(config: Phaser.Types.Scenes.SettingsConfig) {
         super(config);
@@ -22,66 +25,38 @@ export class PauseScene extends Phaser.Scene {
         const pauseText = this.add.text(windowWidth / 2, windowHeight / 2 - 200, "PAUSE", PAUSE_TEXT_STYLE);
         pauseText.setX(pauseText.x - pauseText.width / 2);
 
-        // Play button
-        newButton(this, "Continue",
-        () => {
-            const selectedLevel = getSelectedLevel();
-            if (!!selectedLevel){
-                this.scene.pause();
-                this.scene.resume(selectedLevel);
-                this.scene.setVisible(false);
-            }
-        },
-        windowWidth / 2 , windowHeight / 2 - BUTTON_SPACING, BUTTON_STYLE);
+        // Continue Button
+        const continueButton = new MenuButton(windowWidth / 2 , windowHeight / 2 - BUTTON_SPACING, "Continue",
+            () => {
+                const selectedLevel = getSelectedLevel();
+                if (!!selectedLevel){
+                    this.scene.pause();
+                    this.scene.resume(selectedLevel);
+                    this.scene.setVisible(false);
+                    this.pauseMenu.destroy();
+                }
+            }, this, NES_Button.B, 
+            Phaser.Input.Keyboard.KeyCodes.ESC);
 
         // New game button
-        newButton(this, "New Game",
+        const newGameButton = new MenuButton(windowWidth / 2, windowHeight / 2, "New Game",
         () => {
             this.scene.pause();
             this.scene.launch("leaderboard", { fromMenu: false });
             this.scene.setVisible(false);
-        },
-        windowWidth / 2, windowHeight / 2 , BUTTON_STYLE);
+            this.pauseMenu.destroy()
+        }, this);
 
         // show leaderboard button
-        newButton(this, "Leaderboard",
+        const leaderboardButton = new MenuButton(windowWidth / 2, windowHeight / 2 + BUTTON_SPACING, "Leaderboard",
         () => {
             this.scene.pause();
             this.scene.launch("leaderboard", {fromMenu: true});
             this.scene.setVisible(false);
-        },
-        windowWidth / 2, windowHeight / 2 + BUTTON_SPACING, BUTTON_STYLE);
+            this.pauseMenu.destroy()
+        }, this);
 
-        // Gamepad hints
-        const hintText = this.add.text(
-            pauseMenuFrame.x ,
-            pauseMenuFrame.y + pauseMenuFrame.height / 2 - 50 ,
-            "Push SELECT to restart\nPush START to continue",
-            INFO_TEXT_STYLE,
-            );
-        hintText.setX(hintText.x - hintText.width / 2);
-    }
-
-    public update() {
-        const pad = this.input.gamepad.pad1;
-        const selectedLevel = getSelectedLevel();
-
-        if (pad && pad.isButtonDown(9) && !playing && !!selectedLevel) {
-            this.scene.pause();
-            this.scene.resume(selectedLevel);
-            this.scene.setVisible(false);
-            playing = true;
-        } else if (pad && pad.isButtonDown(8) && !playing) {
-            this.scene.pause();
-            this.scene.launch("leaderboard", { fromMenu: false });
-            this.scene.setVisible(false);
-            playing = true;
-        }
-
-        if (pad && !pad.isButtonDown(9) && !pad.isButtonDown(8)) {
-            playing = false;
-        }
-
+        this.pauseMenu = new NavMenu([continueButton,newGameButton,leaderboardButton],MenuDirection.Vertical,this);
     }
 
 }
