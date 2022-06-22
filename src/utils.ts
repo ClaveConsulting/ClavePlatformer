@@ -279,7 +279,7 @@ const setRecordTimeLocalStorage = (value: IGameRecord[]) => {
 };
 
 export const setSelectedLevel = (value: string) => {
-    sessionStorage.setItem(LEVEL_SELECT_STORAGE_KEY, JSON.stringify(value));
+    sessionStorage.setItem(LEVEL_SELECT_STORAGE_KEY, value);
 }
 
 export const recordTime = (starsCollected: number, counter: number, name: string, phone: string, map:string) => {
