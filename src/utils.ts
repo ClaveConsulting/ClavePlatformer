@@ -253,9 +253,11 @@ interface IGameRecord {
     time: string;
     name?: string;
     phone?: string;
+    map?: string;
 }
 
 const TIME_ARRAY_ASSETS_SHOWCASE = "timeArrayAssetsShowcase";
+const LEVEL_SELECT_STORAGE_KEY = "LEVEL_SELECT";
 
 export const getRecordTimeLocalStorage = () => {
     const rawTimeArrayAssetsShowcase = localStorage.getItem(
@@ -266,18 +268,29 @@ export const getRecordTimeLocalStorage = () => {
         : [];
 };
 
+export const getSelectedLevel = () => {
+    return sessionStorage.getItem(
+        LEVEL_SELECT_STORAGE_KEY
+    );
+}
+
 const setRecordTimeLocalStorage = (value: IGameRecord[]) => {
     localStorage.setItem(TIME_ARRAY_ASSETS_SHOWCASE, JSON.stringify(value));
 };
 
-export const recordTime = (starsCollected: number, counter: number, name: string, phone: string) => {
+export const setSelectedLevel = (value: string) => {
+    sessionStorage.setItem(LEVEL_SELECT_STORAGE_KEY, JSON.stringify(value));
+}
+
+export const recordTime = (starsCollected: number, counter: number, name: string, phone: string, map:string) => {
     const timeArrayAssetsShowcase = getRecordTimeLocalStorage();
 
     const gameRecord: IGameRecord = {
         name,
-        phone,
+        phone, 
         starsCollected,
         time: counter.toFixed(2),
+        map,
     };
 
     const previousAttempts = timeArrayAssetsShowcase.filter((previousAttempt) =>
@@ -337,6 +350,8 @@ export function newButton(
 
 export const GREEN = "#00ff00";
 export const WHITE = "#ffffff";
+export const WHITE_NUMBER = 0xffffff;
+export const PALE_GREEN_NUMBER = 0xb1bd9b;
 export const RED = "#ff0000";
 export const BLACK = "#000";
 export const YELLOW = "#FFBE2E";
@@ -381,6 +396,12 @@ export const INFO_TEXT_STYLE = {
         x: 20,
         y: 10,
     },
+};
+
+export const LEVEL_HEADER_STYLE = {
+    backgroundColor: TRANSPARENT,
+    fill: WHITE,
+    font: "40px monospace",
 };
 
 export const PAUSE_TEXT_STYLE = {

@@ -1,6 +1,6 @@
 import { Leaderboard } from "./models/leaderboard";
 import { IPlayerInfo } from "./models/playerInfo";
-import { BUTTON_STYLE, newButton } from "./utils";
+import { BUTTON_STYLE, getSelectedLevel, newButton } from "./utils";
 
 const windowHeight = window.innerHeight;
 const windowWidth = window.innerWidth;
@@ -56,10 +56,11 @@ export class LeaderboardScene extends Phaser.Scene {
 
     public update() {
         const pad = this.input.gamepad.pad1;
+        const selectedLevel = getSelectedLevel();
         leaderboard.refresh();
 
-        if (!this.fromMenu && ((pad && pad.isButtonDown(9)) || spaceKey.isDown)) {
-            this.scene.launch("game", {fromLeaderboard: true});
+        if (!this.fromMenu && ((pad && pad.isButtonDown(9)) || spaceKey.isDown) && !!selectedLevel) {
+            this.scene.launch(selectedLevel , {fromLeaderboard: true});
             this.scene.setVisible(false);
             this.scene.pause();
         }

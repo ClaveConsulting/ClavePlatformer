@@ -4,6 +4,7 @@ import {
     collectStar,
     crossedFinishline,
     deadlyTileHit,
+    getSelectedLevel,
     getWinners,
     movePlayer,
     newButton,
@@ -175,18 +176,6 @@ export class GameScene extends Phaser.Scene {
             Phaser.Input.Keyboard.KeyCodes.SPACE,
         );
 
-        // Controller inputs
-        if (this.input.gamepad.total === 0) {
-            this.input.gamepad.once(
-                "connected",
-                (pad: { id: number; }) => {
-                    // tslint:disable-next-line: no-console
-                    console.log("connected", pad.id);
-                },
-                this,
-            );
-        }
-
         // Balls
         balls = this.physics.add.group({
             enable: false,
@@ -357,6 +346,12 @@ export class GameScene extends Phaser.Scene {
             delay: 100,
             loop: true,
         });
+
+        if (getSelectedLevel() === null) {
+            this.scene.setVisible(false);
+            this.scene.start("levelSelect");
+            this.scene.stop();
+        }
 
         if (!this.fromLeaderboard) {
             this.scene.pause();
