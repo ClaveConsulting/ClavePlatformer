@@ -28,7 +28,10 @@ export function movePlayer(
         player.setAccelerationX(0);
     }
 
-    player.anims.play(direction, true);
+    player.anims.play(
+        direction, 
+        true
+    );
 }
 
 export function stopPlayer(
@@ -117,8 +120,8 @@ function throwBallFromGroup(
     direction: Direction,
 ) {
     const ball = group.getFirstDead(false);
-    let velocityX: number = 0;
-    let velocityY: number = 0;
+    let velocityX = 0;
+    let velocityY = 0;
     if (ball) {
         if (direction === Direction.Right) {
             velocityX = 1000;
@@ -234,14 +237,15 @@ export const getWinners = () => {
     const timeArrayAssetsShowcase = getRecordTimeLocalStorage();
     const random = Phaser.Math.Between(1, timeArrayAssetsShowcase.length - 1);
 
-    // tslint:disable-next-line: no-console
+    // eslint-disable-next-line no-console
     console.log("BEST TIME WINNER:");
-    // tslint:disable-next-line: no-console
+    // eslint-disable-next-line no-console
     console.log(timeArrayAssetsShowcase[0]);
-    // tslint:disable-next-line: no-console
+    // eslint-disable-next-line no-console
     console.log("RANDOM WINNER:");
-    // tslint:disable-next-line: no-console
+    // eslint-disable-next-line no-console
     console.log(timeArrayAssetsShowcase[random]);
+    
 };
 
 export const clearLeaderboard = () => {
@@ -268,11 +272,7 @@ export const getRecordTimeLocalStorage = () => {
         : [];
 };
 
-export const getSelectedLevel = () => {
-    return sessionStorage.getItem(
-        LEVEL_SELECT_STORAGE_KEY
-    );
-}
+export const getSelectedLevel = () => sessionStorage.getItem(LEVEL_SELECT_STORAGE_KEY);
 
 const setRecordTimeLocalStorage = (value: IGameRecord[]) => {
     localStorage.setItem(TIME_ARRAY_ASSETS_SHOWCASE, JSON.stringify(value));
@@ -324,19 +324,6 @@ export const compareGameRecordsTime = (a: IGameRecord, b: IGameRecord) => {
     return 0;
 };
 
-export function newButton(
-    scene: Phaser.Scene,
-    buttonText: string,
-    func: () => void,
-    posX: number,
-    posY: number,
-    buttonStyle: Phaser.Types.GameObjects.Text.TextStyle,
-    ) {
-
-    const button = scene.add.dom(posX, posY, "button", null, buttonText).setScrollFactor(0);
-    button.setClassName("nes-btn is-normal")
-    return button;
-}
 
 export const GREEN = "#00ff00";
 export const WHITE = "#ffffff";
@@ -352,7 +339,7 @@ export const BUTTON_STYLE = {
     backgroundColor: WHITE,
     fill: BLACK,
     fontSize: "50px ",
-    fontFamily: "Press Start 2P",
+    fontFamily: "Press2p",
     padding: {
         x: 20,
         y: 10,
@@ -360,9 +347,8 @@ export const BUTTON_STYLE = {
 };
 
 export const GAME_OVER_TEXT_STYLE = {
-    backgroundColor: RED,
-    fill: BLACK,
-    font: "64px monospace",
+    fontSize: "30px",
+    fontFamily: "Press2p",
     padding: {
         x: 20,
         y: 10,
@@ -372,7 +358,8 @@ export const GAME_OVER_TEXT_STYLE = {
 export const FINISH_TEXT_STYLE = {
     backgroundColor: GREEN,
     fill: BLACK,
-    font: "64px monospace",
+    fontSize: "35px",
+    fontFamily: "Press2p",
     padding: {
         x: 20,
         y: 10,
@@ -382,7 +369,8 @@ export const FINISH_TEXT_STYLE = {
 export const INFO_TEXT_STYLE = {
     backgroundColor: TRANSPARENT,
     fill: WHITE,
-    font: "15px monospace",
+    font: "15px",
+    fontFamily: "Press2p",
     padding: {
         x: 20,
         y: 10,
@@ -392,13 +380,15 @@ export const INFO_TEXT_STYLE = {
 export const LEVEL_HEADER_STYLE = {
     backgroundColor: TRANSPARENT,
     fill: WHITE,
-    font: "40px monospace",
+    fontSize: "40px",
+    fontFamily: "Press2p",
 };
 
 export const PAUSE_TEXT_STYLE = {
     backgroundColor: TRANSPARENT,
     fill: WHITE,
-    font: "64px monospace",
+    fontSize: "40px",
+    fontFamily: "Press2p",
     padding: {
         x: 20,
         y: 10,
@@ -422,12 +412,13 @@ export const TRIANGLE = {
 
 export const LEADERBOARD_STYLE = {
     color: BLACK,
-    fontSize: "32px",
-    fontStyle: "bold",
+    fontFamily: "Press2p",
+    fontSize: "20px",
 };
 
 export const LEADERBOARD_HIGHLIGHT_STYLE = {
     color: GREEN,
-    fontSize: "32px",
+    fontSize: "20px",
+    fontFamily: "Press2p",
     fontStyle: "bold",
 };
