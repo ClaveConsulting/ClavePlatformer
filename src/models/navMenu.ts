@@ -5,21 +5,15 @@ import { MenuDirection } from "./direction";
 const NES_BTN_CLASS_FONT_SIZE = 16;
 export class NavMenu {
   private elements: (MenuButton | MenuImage)[];
-
   private activeIndex: number;
-
   private direction: MenuDirection;
-
   private parent: Phaser.Scene;
 
   private nextButton: NES_Button;
-
   private prevButton: NES_Button;
 
   private nextKey: number;
-
   private prevKey: number;
-
   private activeKey: number;
 
   constructor(
@@ -120,11 +114,8 @@ export class NavMenu {
 
 export class MenuButton {
   public target: Phaser.GameObjects.DOMElement;
-
   private func: () => void;
-
   public boundingBox: Phaser.GameObjects.Rectangle;
-
   public type = "button";
 
   constructor(
@@ -193,13 +184,9 @@ export class MenuButton {
 
 export class MenuImage {
   private target: Phaser.GameObjects.Image;
-
   private func: () => void;
-
   private scale: number;
-
   private frame: Phaser.GameObjects.Rectangle;
-
   public type = "image";
 
   constructor(
