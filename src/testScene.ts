@@ -6,41 +6,41 @@ const windowHeight = window.innerHeight;
 const windowWidth = window.innerWidth;
 
 export class TestScene extends Phaser.Scene {
-    private menu: NavMenu;
+  private menu: NavMenu;
 
-    private form: InputForm;
+  private form: InputForm;
 
-    constructor(config: Phaser.Types.Scenes.SettingsConfig) {
-        super(config);
-    }
+  constructor(config: Phaser.Types.Scenes.SettingsConfig) {
+    super(config);
+  }
 
-    public preload() {
-        this.load.image("test", "assets/common/tileset.png");
-        this.load.css("nes-btn", "assets/common/nesCss.css");
-        this.load.html("nameField", "assets/common/inputField.html");
-    }
+  public preload() {
+    this.load.image("test", "assets/common/tileset.png");
+    this.load.css("nes-btn", "assets/common/nesCss.css");
+    this.load.html("nameField", "assets/common/inputField.html");
+  }
 
-    public create() {
-        this.cameras.main.setBackgroundColor("rgba(120, 120, 120, 0.5)");
+  public create() {
+    this.cameras.main.setBackgroundColor("rgba(120, 120, 120, 0.5)");
 
-        // Pause menu frame
-        const pauseMenuFrame = this.add
-            .rectangle(
-                windowWidth / 2,
-                windowHeight / 2 - 50,
-                250,
-                400,
-                PALE_GREEN_NUMBER
-            )
-            .setInteractive();
+    // Pause menu frame
+    const pauseMenuFrame = this.add
+      .rectangle(
+        windowWidth / 2,
+        windowHeight / 2 - 50,
+        250,
+        400,
+        PALE_GREEN_NUMBER
+      )
+      .setInteractive();
 
-        pauseMenuFrame.setStrokeStyle(10, WHITE_NUMBER);
+    pauseMenuFrame.setStrokeStyle(10, WHITE_NUMBER);
 
-        this.form = new InputForm(
-            this,
-            windowWidth / 2,
-            windowHeight / 2,
-            "nameField"
-        );
-    }
+    this.form = new InputForm(
+      this,
+      windowWidth / 2,
+      windowHeight / 2,
+      "nameField"
+    );
+  }
 }
