@@ -13,6 +13,9 @@ export class InputForm {
         posY: number,
         htmlRef: string
     ) {
+        this.phoneValue = "";
+        this.nameValue = "";
+
         this.form = parent.add.dom(posX, posY).createFromCache(htmlRef);
 
         this.form.addListener("input");

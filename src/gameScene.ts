@@ -160,11 +160,12 @@ export class GameScene extends Phaser.Scene {
 
         //  Input Events
         cursors = this.input.keyboard.createCursorKeys();
-        keyboardInputC = this.input.keyboard.addKey("C");
+        keyboardInputC = this.input.keyboard.addKey("C", false);
         keyboardInputC.emitOnRepeat = false;
-        keyboardInputQ = this.input.keyboard.addKey("Q");
+        keyboardInputQ = this.input.keyboard.addKey("Q", false);
         spaceKey = this.input.keyboard.addKey(
-            Phaser.Input.Keyboard.KeyCodes.SPACE
+            Phaser.Input.Keyboard.KeyCodes.SPACE,
+            false
         );
 
         // Balls
