@@ -1,4 +1,5 @@
 import { NES_Button } from "../buttonMap";
+import { GREEN_NUMBER, WHITE_NUMBER } from "../utils";
 import { MenuDirection } from "./direction";
 
 const NES_BTN_CLASS_FONT_SIZE = 16;
@@ -22,11 +23,13 @@ export class NavMenu {
     private activeKey: number;
 
     constructor(
-        menuItems:(MenuButton | MenuImage)[], direction:MenuDirection, parent:Phaser.Scene,
+        menuItems: (MenuButton | MenuImage)[],
+        direction: MenuDirection,
+        parent: Phaser.Scene
     ) {
         this.activeIndex = 0;
         this.elements = menuItems;
-        this.elements.forEach((element:MenuButton | MenuImage) => {
+        this.elements.forEach((element: MenuButton | MenuImage) => {
             element.deindicate();
         });
         this.elements[this.activeIndex].indicate();
@@ -47,8 +50,10 @@ export class NavMenu {
         }
 
         parent.input.gamepad.on(
-            "down", (
-                pad:Phaser.Input.Gamepad.Gamepad, button:Phaser.Input.Gamepad.Button,
+            "down",
+            (
+                pad: Phaser.Input.Gamepad.Gamepad,
+                button: Phaser.Input.Gamepad.Button
             ) => {
                 if (button.index == this.nextButton) {
                     this.next();
@@ -57,11 +62,12 @@ export class NavMenu {
                 } else if (button.index == NES_Button.A) {
                     this.elements[this.activeIndex].activate();
                 }
-            },
+            }
         );
 
         parent.input.keyboard.on(
-            "keydown", (event: { keyCode: number; key: string; }) => {
+            "keydown",
+            (event: { keyCode: number; key: string }) => {
                 if (event.keyCode === this.nextKey) {
                     this.next();
                 } else if (event.keyCode === this.prevKey) {
@@ -69,7 +75,7 @@ export class NavMenu {
                 } else if (event.keyCode === this.activeKey) {
                     this.elements[this.activeIndex].activate();
                 }
-            },
+            }
         );
     }
 
@@ -88,7 +94,7 @@ export class NavMenu {
     }
 
     public destroy() {
-        this.elements.forEach((element:MenuButton | MenuImage) => {
+        this.elements.forEach((element: MenuButton | MenuImage) => {
             element.destroy();
         });
     }
@@ -122,39 +128,48 @@ export class MenuButton {
     public type = "button";
 
     constructor(
-        x:number, y:number, text:string, func:()=>void, parent:Phaser.Scene, alternativeButton?:NES_Button, alternativeKey?:number,
+        x: number,
+        y: number,
+        text: string,
+        func: () => void,
+        parent: Phaser.Scene,
+        alternativeButton?: NES_Button,
+        alternativeKey?: number
     ) {
-        this.target = parent.add.dom(
-            x, y, "button", null, text,
-        ).setScrollFactor(0).disableInteractive();
+        this.target = parent.add
+            .dom(x, y, "button", null, text)
+            .setScrollFactor(0)
+            .disableInteractive();
         this.target.setClassName("nes-btn is-normal");
-        this.boundingBox = parent.add.rectangle(
-            x, y, this.target.width, this.target.height,
-        ).setInteractive().setScrollFactor(0);
+        this.boundingBox = parent.add
+            .rectangle(x, y, this.target.width, this.target.height)
+            .setInteractive()
+            .setScrollFactor(0);
         this.func = func;
-        this.boundingBox.on(
-            "pointerdown", () => {
-                func();
-            },
-        );
+        this.boundingBox.on("pointerdown", () => {
+            func();
+        });
 
         this.target.setX(this.target.x - NES_BTN_CLASS_FONT_SIZE / 2);
 
         parent.input.gamepad.on(
-            "down", (
-                _:Phaser.Input.Gamepad.Gamepad, button:Phaser.Input.Gamepad.Button,
+            "down",
+            (
+                _: Phaser.Input.Gamepad.Gamepad,
+                button: Phaser.Input.Gamepad.Button
             ) => {
                 if (button.index == alternativeButton) {
                     this.func();
                 }
-            },
+            }
         );
         parent.input.keyboard.on(
-            "keydown", (event: { keyCode: number; key: string; }) => {
+            "keydown",
+            (event: { keyCode: number; key: string }) => {
                 if (event.keyCode == alternativeKey) {
                     this.func();
                 }
-            },
+            }
         );
     }
 
@@ -181,30 +196,29 @@ export class MenuImage {
 
     private func: () => void;
 
-    private scale:number;
+    private scale: number;
 
     private frame: Phaser.GameObjects.Rectangle;
 
     public type = "image";
 
     constructor(
-        x:number, y:number, imageReference:string, scale:number, func:()=>void, parent:Phaser.Scene,
+        x: number,
+        y: number,
+        imageReference: string,
+        scale: number,
+        func: () => void,
+        parent: Phaser.Scene
     ) {
-        this.target = parent.add.image(
-            x, y, imageReference,
-        ).setInteractive();
+        this.target = parent.add.image(x, y, imageReference).setInteractive();
         this.target.setScale(scale);
         this.func = func;
-        this.target.on(
-            "pointerdown", func,
-        );
+        this.target.on("pointerdown", func);
         this.scale = scale;
-        this.frame = parent.add.rectangle(
-            x, y, this.target.width, this.target.height,
-        ).setScale(scale);
-        this.frame.setStrokeStyle(
-            10, 0xffffff,
-        );
+        this.frame = parent.add
+            .rectangle(x, y, this.target.width, this.target.height)
+            .setScale(scale);
+        this.frame.setStrokeStyle(10, WHITE_NUMBER);
     }
 
     public activate() {
@@ -214,17 +228,13 @@ export class MenuImage {
     public indicate() {
         this.target.setScale(this.scale * 1.1);
         this.frame.setScale(this.scale * 1.1);
-        this.frame.setStrokeStyle(
-            20, 0x00ff00,
-        );
+        this.frame.setStrokeStyle(20, GREEN_NUMBER);
     }
 
     public deindicate() {
         this.target.setScale(this.scale);
         this.frame.setScale(this.scale);
-        this.frame.setStrokeStyle(
-            10, 0xffffff,
-        );
+        this.frame.setStrokeStyle(10, WHITE_NUMBER);
     }
 
     public destroy() {

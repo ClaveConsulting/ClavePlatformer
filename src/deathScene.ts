@@ -6,7 +6,7 @@ const windowHeight = window.innerHeight;
 const windowWidth = window.innerWidth;
 
 export class DeathScene extends Phaser.Scene {
-    private menu:NavMenu;
+    private menu: NavMenu;
 
     constructor(config: Phaser.Types.Scenes.SettingsConfig) {
         super(config);
@@ -17,33 +17,42 @@ export class DeathScene extends Phaser.Scene {
 
         // Death menu frame
         const deathMenuFrame = this.add.rectangle(
-            windowWidth / 2, windowHeight / 2 - 50, 350, 200, PALE_GREEN_NUMBER,
+            windowWidth / 2,
+            windowHeight / 2 - 50,
+            350,
+            200,
+            PALE_GREEN_NUMBER
         );
 
-        deathMenuFrame.setStrokeStyle(
-            10, WHITE_NUMBER,
-        );
+        deathMenuFrame.setStrokeStyle(10, WHITE_NUMBER);
 
         // Game over text
         const deathText = this.add.text(
-            windowWidth / 2, windowHeight / 2 - 130, "GAME OVER", GAME_OVER_TEXT_STYLE,
+            windowWidth / 2,
+            windowHeight / 2 - 130,
+            "GAME OVER",
+            GAME_OVER_TEXT_STYLE
         );
         deathText.setX(deathText.x - deathText.width / 2);
 
         // New game button
         const newGameButton = new MenuButton(
-            windowWidth / 2, windowHeight / 2 - 40, "New Game", () => {
+            windowWidth / 2,
+            windowHeight / 2 - 40,
+            "New Game",
+            () => {
                 this.scene.pause();
-                this.scene.launch(
-                    "leaderboard", { fromMenu: false },
-                );
+                this.scene.launch("leaderboard", { fromMenu: false });
                 this.scene.setVisible(false);
                 this.menu.destroy();
-            }, this,
+            },
+            this
         );
 
         this.menu = new NavMenu(
-            [newGameButton], MenuDirection.Horizontal, this,
+            [newGameButton],
+            MenuDirection.Horizontal,
+            this
         );
     }
 }

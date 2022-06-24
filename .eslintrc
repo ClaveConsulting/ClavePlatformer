@@ -1,16 +1,15 @@
 {
     "root": true,
     "parser": "@typescript-eslint/parser",
-    "plugins": [
-      "@typescript-eslint"
-    ],
+    "plugins": ["@typescript-eslint"],
     "extends": [
-      "eslint:recommended",
-      "plugin:@typescript-eslint/eslint-recommended",
-      "plugin:@typescript-eslint/recommended"
+        "eslint:recommended",
+        "plugin:@typescript-eslint/eslint-recommended",
+        "plugin:@typescript-eslint/recommended"
     ],
     "rules": {
         "no-console": 1,
-        "no-extra-boolean-cast": 0
-      }
-  }
+        "no-extra-boolean-cast": 0,
+        "@typescript-eslint/no-non-null-assertion": 0
+    }
+}

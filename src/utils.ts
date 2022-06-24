@@ -8,7 +8,7 @@ export function movePlayer(
     player: Phaser.Physics.Arcade.Sprite,
     direction: Direction,
     speed: number,
-    acceleration: number,
+    acceleration: number
 ) {
     if (direction === Direction.Left) {
         movementDirection = -1;
@@ -28,16 +28,13 @@ export function movePlayer(
         player.setAccelerationX(0);
     }
 
-    player.anims.play(
-        direction, 
-        true
-    );
+    player.anims.play(direction, true);
 }
 
 export function stopPlayer(
     player: Phaser.Physics.Arcade.Sprite,
     direction: Direction,
-    acceleration: number,
+    acceleration: number
 ) {
     if (direction === Direction.Right && player.body.velocity.x > 0) {
         player.setAccelerationX(-2 * acceleration);
@@ -53,7 +50,7 @@ export function stopPlayer(
 export function deadlyTileHit(
     scene: Phaser.Scene,
     timedEvent: Phaser.Time.TimerEvent,
-    player: Phaser.Physics.Arcade.Sprite,
+    player: Phaser.Physics.Arcade.Sprite
 ) {
     scene.physics.pause();
 
@@ -73,7 +70,7 @@ export function crossedFinishline(
     timedEvent: Phaser.Time.TimerEvent,
     player: Phaser.Physics.Arcade.Sprite,
     starsCollected: number,
-    counter: number,
+    counter: number
 ) {
     scene.physics.pause();
     timedEvent.destroy();
@@ -82,7 +79,7 @@ export function crossedFinishline(
     player.anims.stop();
 
     scene.scene.pause();
-    scene.scene.launch("finish", {time: counter, stars: starsCollected});
+    scene.scene.launch("finish", { time: counter, stars: starsCollected });
 }
 
 export function updateCounter(counter: number) {
@@ -91,7 +88,7 @@ export function updateCounter(counter: number) {
 
 export function printCounter(
     counterText: Phaser.GameObjects.Text,
-    counter: number,
+    counter: number
 ) {
     counterText.setText("Time: " + counter.toFixed(2) + "S");
 }
@@ -107,7 +104,7 @@ export function throwBallFromPlayer(
     ballLifeSpan: number,
     balls: Phaser.Physics.Arcade.Group,
     player: Phaser.Physics.Arcade.Sprite,
-    direction: Direction,
+    direction: Direction
 ) {
     throwBallFromGroup(balls, player.x, player.y, ballLifeSpan, direction);
 }
@@ -117,7 +114,7 @@ function throwBallFromGroup(
     x: number,
     y: number,
     lifespan: number,
-    direction: Direction,
+    direction: Direction
 ) {
     const ball = group.getFirstDead(false);
     let velocityX = 0;
@@ -141,7 +138,7 @@ function throwBall(
     y: number,
     velocityX: number,
     velocityY: number,
-    lifespan: number,
+    lifespan: number
 ) {
     ball.enableBody(true, x, y, true, true);
     ball.setVelocity(velocityX, velocityY);
@@ -155,7 +152,7 @@ export function collectStar(
     starsCollected: number,
     scoreText: Phaser.GameObjects.Text,
     counterText: Phaser.GameObjects.Text,
-    scene: Phaser.Scene,
+    scene: Phaser.Scene
 ) {
     star.destroy();
 
@@ -173,29 +170,29 @@ export function collectStar(
 
 export function playerIntersect(
     player: Phaser.Physics.Arcade.Sprite,
-    mapLayer: Phaser.Tilemaps.TilemapLayer,
+    mapLayer: Phaser.Tilemaps.TilemapLayer
 ) {
     const playerTopRightCollideTile = mapLayer.getTileAtWorldXY(
         player.x + player.width / 2 - 1,
         player.y - player.height / 2,
-        true,
+        true
     ).index;
     const playerTopLeftCollideTile = mapLayer.getTileAtWorldXY(
         player.x - player.width / 2,
         player.y - player.height / 2,
-        true,
+        true
     ).index;
 
     // -1 compensating for pixel indexing in player
     const playerBottomRightCollideTile = mapLayer.getTileAtWorldXY(
         player.x + player.width / 2 - 1,
         player.y + player.height / 2 - 1,
-        true,
+        true
     ).index;
     const playerBottomLeftCollideTile = mapLayer.getTileAtWorldXY(
         player.x - player.width / 2,
         player.y + player.height / 2 - 1,
-        true,
+        true
     ).index;
 
     if (
@@ -212,18 +209,18 @@ export function playerIntersect(
 
 export function playerStandingOnMapLayer(
     player: Phaser.Physics.Arcade.Sprite,
-    mapLayer: Phaser.Tilemaps.TilemapLayer,
+    mapLayer: Phaser.Tilemaps.TilemapLayer
 ) {
     // +1 for getting pixel outside of player sprite
     const playerBottomRightCollideTile = mapLayer.getTileAtWorldXY(
         player.x + player.width / 2 - 1,
         player.y + player.height / 2 + 1,
-        true,
+        true
     ).index;
     const playerBottomLeftCollideTile = mapLayer.getTileAtWorldXY(
-        player.x - player.width / 2 ,
+        player.x - player.width / 2,
         player.y + player.height / 2 + 1,
-        true,
+        true
     ).index;
 
     if (playerBottomRightCollideTile > 0 || playerBottomLeftCollideTile > 0) {
@@ -264,14 +261,15 @@ const LEVEL_SELECT_STORAGE_KEY = "LEVEL_SELECT";
 
 export const getRecordTimeLocalStorage = () => {
     const rawTimeArrayAssetsShowcase = localStorage.getItem(
-        TIME_ARRAY_ASSETS_SHOWCASE,
+        TIME_ARRAY_ASSETS_SHOWCASE
     );
     return rawTimeArrayAssetsShowcase
         ? (JSON.parse(rawTimeArrayAssetsShowcase) as IGameRecord[])
         : [];
 };
 
-export const getSelectedLevel = () => sessionStorage.getItem(LEVEL_SELECT_STORAGE_KEY);
+export const getSelectedLevel = () =>
+    sessionStorage.getItem(LEVEL_SELECT_STORAGE_KEY);
 
 const setRecordTimeLocalStorage = (value: IGameRecord[]) => {
     localStorage.setItem(TIME_ARRAY_ASSETS_SHOWCASE, JSON.stringify(value));
@@ -281,19 +279,27 @@ export const setSelectedLevel = (value: string) => {
     sessionStorage.setItem(LEVEL_SELECT_STORAGE_KEY, value);
 };
 
-export const recordTime = (starsCollected: number, counter: number, name: string, phone: string, map:string) => {
+export const recordTime = (
+    starsCollected: number,
+    counter: number,
+    name: string,
+    phone: string,
+    map: string
+) => {
     const timeArrayAssetsShowcase = getRecordTimeLocalStorage();
 
     const gameRecord: IGameRecord = {
         name,
-        phone, 
+        phone,
         starsCollected,
         time: counter.toFixed(2),
         map,
     };
 
     const previousAttempts = timeArrayAssetsShowcase.filter((previousAttempt) =>
-    !!previousAttempt.phone ? previousAttempt.phone === gameRecord.phone : false,
+        !!previousAttempt.phone
+            ? previousAttempt.phone === gameRecord.phone
+            : false
     );
 
     if (previousAttempts.length > 0) {
@@ -301,7 +307,7 @@ export const recordTime = (starsCollected: number, counter: number, name: string
         if (compareGameRecordsTime(gameRecord, previousAttempts[0]) < 0) {
             timeArrayAssetsShowcase[
                 timeArrayAssetsShowcase.findIndex(
-                    (object) => object === previousAttempts[0],
+                    (object) => object === previousAttempts[0]
                 )
             ] = gameRecord;
         }
@@ -323,10 +329,11 @@ export const compareGameRecordsTime = (a: IGameRecord, b: IGameRecord) => {
     return 0;
 };
 
-
 export const GREEN = "#00ff00";
+export const GREEN_NUMBER = 0x00ff00;
 export const WHITE = "#ffffff";
 export const WHITE_NUMBER = 0xffffff;
+export const BLACK_NUMBER = 0x000000;
 export const PALE_GREEN_NUMBER = 0xb1bd9b;
 export const RED = "#ff0000";
 export const BLACK = "#000";

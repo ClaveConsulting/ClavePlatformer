@@ -44,9 +44,7 @@ window.onload = () => {
         width: initWidth,
     });
     resizeGame();
-    window.addEventListener(
-        "resize", resizeGame,
-    );
+    window.addEventListener("resize", resizeGame);
 };
 
 function resizeGame() {
