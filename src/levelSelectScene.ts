@@ -18,8 +18,8 @@ export class LevelSelectScene extends Phaser.Scene {
   }
 
   public preload() {
-    this.load.image("ntnu", "assets/ntnu/ntnu_logo.png");
-    this.load.image("uio", "assets/uio/uio_logo.png");
+    this.load.image("ntnu", "assets/ntnu/ntnuThumbnail.png");
+    this.load.image("uio", "assets/uio/uioThumbnail.png");
   }
 
   public create() {
