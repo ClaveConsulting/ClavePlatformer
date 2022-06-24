@@ -20,11 +20,8 @@ const playerInfo: IPlayerInfo = {
 };
 export class FinishScene extends Phaser.Scene {
   private stars: number;
-
   private timer: number;
-
   private inputForm: InputForm;
-
   private menu: NavMenu;
 
   constructor(config: Phaser.Types.Scenes.SettingsConfig) {

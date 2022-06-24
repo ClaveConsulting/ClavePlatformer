@@ -1,10 +1,7 @@
 export class InputForm {
   public value: string;
-
   public form: Phaser.GameObjects.DOMElement;
-
   private nameValue: string;
-
   private phoneValue: string;
 
   constructor(

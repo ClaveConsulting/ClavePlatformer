@@ -10,23 +10,14 @@ import { IPlayerInfo } from "./playerInfo";
 
 export class Leaderboard {
   public frame: Phaser.GameObjects.Rectangle;
-
   private parent: Phaser.Scene;
-
   private X: number;
-
   private Y: number;
-
   private title: Phaser.GameObjects.Text;
-
   private names: Phaser.GameObjects.Text[];
-
   private times: Phaser.GameObjects.Text[];
-
   private ranks: Phaser.GameObjects.Text[];
-
   private currentPlayer?: IPlayerInfo;
-
   private writtenCurrentPlayer: boolean;
 
   constructor(
