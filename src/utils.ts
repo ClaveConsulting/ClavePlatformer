@@ -245,7 +245,6 @@ export const getWinners = () => {
     console.log("RANDOM WINNER:");
     // eslint-disable-next-line no-console
     console.log(timeArrayAssetsShowcase[random]);
-    
 };
 
 export const clearLeaderboard = () => {
@@ -280,7 +279,7 @@ const setRecordTimeLocalStorage = (value: IGameRecord[]) => {
 
 export const setSelectedLevel = (value: string) => {
     sessionStorage.setItem(LEVEL_SELECT_STORAGE_KEY, value);
-}
+};
 
 export const recordTime = (starsCollected: number, counter: number, name: string, phone: string, map:string) => {
     const timeArrayAssetsShowcase = getRecordTimeLocalStorage();
