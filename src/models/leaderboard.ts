@@ -5,6 +5,7 @@ import {
   getSelectedLevel,
   PALE_GREEN_NUMBER,
   WHITE_NUMBER,
+  GREEN,
 } from "../utils";
 import { IPlayerInfo } from "./playerInfo";
 
@@ -36,7 +37,7 @@ export class Leaderboard {
     this.frame.setStrokeStyle(10, WHITE_NUMBER);
     this.title = this.parent.add
       .text(0, 0, "Leaderboard", {
-        color: "rgb(0,255,0)",
+        color: GREEN,
         fontSize: "50px",
         fontStyle: "bold",
         fontFamily: "Press2p",
