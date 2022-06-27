@@ -4,7 +4,10 @@ import {
   getSelectedLevel,
   LEVEL_HEADER_STYLE,
   PALE_GREEN_NUMBER,
+  PAUSE_TEXT_STYLE,
   setSelectedLevel,
+  TRANSPARENT,
+  WHITE,
   WHITE_NUMBER,
 } from "./utils";
 
@@ -18,8 +21,8 @@ export class LevelSelectScene extends Phaser.Scene {
   }
 
   public preload() {
-    this.load.image("ntnu", "assets/ntnu/ntnu_logo.png");
-    this.load.image("uio", "assets/uio/uio_logo.png");
+    this.load.image("ntnu", "assets/ntnu/ntnuThumbnail.png");
+    this.load.image("uio", "assets/uio/uioThumbnail.png");
   }
 
   public create() {
@@ -39,16 +42,28 @@ export class LevelSelectScene extends Phaser.Scene {
     levelSelectMenuFrame.setStrokeStyle(10, WHITE_NUMBER);
 
     // Select level text
-    const levelSelectText = this.add.text(
-      windowWidth / 2,
-      levelSelectMenuFrame.getTopCenter().y + 50,
-      "SELECT LEVEL",
-      LEVEL_HEADER_STYLE
-    );
-    levelSelectText.setX(levelSelectText.x - levelSelectText.width / 2);
+    const levelSelectText = this.add
+      .dom(
+        windowWidth / 2,
+        levelSelectMenuFrame.getTopCenter().y + 100,
+        "text",
+        null,
+        "SELECT LEVEL"
+      )
+      .setClassName("nes-text")
+      .setScale(3);
+
+    this.add
+      .text(
+        windowWidth / 2,
+        levelSelectMenuFrame.getTopCenter().y + 100,
+        "text",
+        PAUSE_TEXT_STYLE
+      )
+      .setVisible(false);
 
     const ntnuImage = new MenuImage(
-      levelSelectMenuFrame.getCenter().x - 250,
+      levelSelectMenuFrame.getCenter().x - 290,
       levelSelectMenuFrame.getCenter().y,
       "ntnu",
       IMAGESCALE,
@@ -56,12 +71,13 @@ export class LevelSelectScene extends Phaser.Scene {
         setSelectedLevel("ntnu");
         this.scene.launch("ntnu");
         this.scene.pause();
+        levelSelectText.destroy();
       },
       this
     );
 
     const uioImage = new MenuImage(
-      levelSelectMenuFrame.getCenter().x + 250,
+      levelSelectMenuFrame.getCenter().x + 290,
       levelSelectMenuFrame.getCenter().y,
       "uio",
       IMAGESCALE,
@@ -69,6 +85,7 @@ export class LevelSelectScene extends Phaser.Scene {
         setSelectedLevel("uio");
         this.scene.launch("uio");
         this.scene.pause();
+        levelSelectText.destroy();
       },
       this
     );
