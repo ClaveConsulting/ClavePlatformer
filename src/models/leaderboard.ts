@@ -66,125 +66,128 @@ export class Leaderboard {
   }
 
   private update() {
-    let timeArrayAssetsShowcase = getRecordTimeLocalStorage();
-
-    const currentPlayerRank =
-      timeArrayAssetsShowcase.findIndex(
-        (x) => x.phone == this.currentPlayer?.phone
-      ) + 1;
-
-    if (timeArrayAssetsShowcase.length > 10) {
-      timeArrayAssetsShowcase = timeArrayAssetsShowcase.slice(0, 10);
-    }
-
-    let yPos = this.frame.getTopCenter().y + 100;
-    let index = 0;
     const selectedLevel = getSelectedLevel();
-    timeArrayAssetsShowcase.forEach((gameRecord) => {
-      if (!!selectedLevel && gameRecord.map == selectedLevel) {
+
+    if (!!selectedLevel) {
+      let timeArrayAssetsShowcase = getRecordTimeLocalStorage(selectedLevel);
+
+      const currentPlayerRank =
+        timeArrayAssetsShowcase.findIndex(
+          (x) => x.phone == this.currentPlayer?.phone
+        ) + 1;
+
+      if (timeArrayAssetsShowcase.length > 10) {
+        timeArrayAssetsShowcase = timeArrayAssetsShowcase.slice(0, 10);
+      }
+
+      let yPos = this.frame.getTopCenter().y + 100;
+      let index = 0;
+      timeArrayAssetsShowcase.forEach((gameRecord) => {
+        if (gameRecord.map == selectedLevel) {
+          this.ranks.push(
+            this.parent.add
+              .text(
+                this.frame.getBottomLeft().x + 30,
+                yPos,
+                String(`${index + 1}.`),
+                LEADERBOARD_STYLE
+              )
+              .setScrollFactor(0)
+          );
+          if (
+            this.currentPlayer?.phone == gameRecord.phone &&
+            this.currentPlayer
+          ) {
+            this.names.push(
+              this.parent.add
+                .text(
+                  this.frame.getBottomLeft().x + 90,
+                  yPos,
+                  gameRecord.name ?? "--" + ": ",
+                  LEADERBOARD_HIGHLIGHT_STYLE
+                )
+                .setScrollFactor(0)
+            );
+            this.times.push(
+              this.parent.add
+                .text(
+                  this.frame.getBottomRight().x - 135,
+                  yPos,
+                  gameRecord.time,
+                  LEADERBOARD_HIGHLIGHT_STYLE
+                )
+                .setScrollFactor(0)
+            );
+            this.writtenCurrentPlayer = true;
+          } else {
+            this.names.push(
+              this.parent.add
+                .text(
+                  this.frame.getBottomLeft().x + 90,
+                  yPos,
+                  gameRecord.name ?? "--" + ": ",
+                  LEADERBOARD_STYLE
+                )
+                .setScrollFactor(0)
+            );
+            this.times.push(
+              this.parent.add
+                .text(
+                  this.frame.getBottomRight().x - 135,
+                  yPos,
+                  gameRecord.time,
+                  LEADERBOARD_STYLE
+                )
+                .setScrollFactor(0)
+            );
+          }
+          yPos += 45;
+          index++;
+        }
+      });
+
+      if (
+        typeof this.currentPlayer !== "undefined" &&
+        this.writtenCurrentPlayer == false
+      ) {
+        this.parent.add.text(
+          this.frame.getBottomLeft().x + 30,
+          yPos - 15,
+          " ... ",
+          LEADERBOARD_STYLE
+        );
+
         this.ranks.push(
           this.parent.add
             .text(
               this.frame.getBottomLeft().x + 30,
-              yPos,
-              String(`${index + 1}.`),
+              yPos + 25,
+              String(`${currentPlayerRank}.`),
               LEADERBOARD_STYLE
             )
             .setScrollFactor(0)
         );
-        if (
-          this.currentPlayer?.phone == gameRecord.phone &&
-          this.currentPlayer
-        ) {
-          this.names.push(
-            this.parent.add
-              .text(
-                this.frame.getBottomLeft().x + 90,
-                yPos,
-                gameRecord.name ?? "--" + ": ",
-                LEADERBOARD_HIGHLIGHT_STYLE
-              )
-              .setScrollFactor(0)
-          );
-          this.times.push(
-            this.parent.add
-              .text(
-                this.frame.getBottomRight().x - 135,
-                yPos,
-                gameRecord.time,
-                LEADERBOARD_HIGHLIGHT_STYLE
-              )
-              .setScrollFactor(0)
-          );
-          this.writtenCurrentPlayer = true;
-        } else {
-          this.names.push(
-            this.parent.add
-              .text(
-                this.frame.getBottomLeft().x + 90,
-                yPos,
-                gameRecord.name ?? "--" + ": ",
-                LEADERBOARD_STYLE
-              )
-              .setScrollFactor(0)
-          );
-          this.times.push(
-            this.parent.add
-              .text(
-                this.frame.getBottomRight().x - 135,
-                yPos,
-                gameRecord.time,
-                LEADERBOARD_STYLE
-              )
-              .setScrollFactor(0)
-          );
-        }
-        yPos += 45;
-        index++;
+        this.names.push(
+          this.parent.add
+            .text(
+              this.frame.getBottomLeft().x + 90,
+              yPos + 25,
+              this.currentPlayer.name ?? "--" + ": ",
+              LEADERBOARD_HIGHLIGHT_STYLE
+            )
+            .setScrollFactor(0)
+        );
+        this.times.push(
+          this.parent.add
+            .text(
+              this.frame.getBottomRight().x - 135,
+              yPos + 25,
+              this.currentPlayer.time,
+              LEADERBOARD_HIGHLIGHT_STYLE
+            )
+            .setScrollFactor(0)
+        );
       }
-    });
-
-    if (
-      typeof this.currentPlayer !== "undefined" &&
-      this.writtenCurrentPlayer == false
-    ) {
-      this.parent.add.text(
-        this.frame.getBottomLeft().x + 30,
-        yPos - 15,
-        " ... ",
-        LEADERBOARD_STYLE
-      );
-
-      this.ranks.push(
-        this.parent.add
-          .text(
-            this.frame.getBottomLeft().x + 30,
-            yPos + 25,
-            String(`${currentPlayerRank}.`),
-            LEADERBOARD_STYLE
-          )
-          .setScrollFactor(0)
-      );
-      this.names.push(
-        this.parent.add
-          .text(
-            this.frame.getBottomLeft().x + 90,
-            yPos + 25,
-            this.currentPlayer.name ?? "--" + ": ",
-            LEADERBOARD_HIGHLIGHT_STYLE
-          )
-          .setScrollFactor(0)
-      );
-      this.times.push(
-        this.parent.add
-          .text(
-            this.frame.getBottomRight().x - 135,
-            yPos + 25,
-            this.currentPlayer.time,
-            LEADERBOARD_HIGHLIGHT_STYLE
-          )
-          .setScrollFactor(0)
-      );
     }
   }
 

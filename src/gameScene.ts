@@ -402,9 +402,9 @@ export class GameScene extends Phaser.Scene {
     if (!(keyboardInputC.isDown || (pad && pad.Y))) {
       throwing = false;
     }
-
-    if (keyboardInputQ.isDown) {
-      getWinners();
+    const selectedLevel = getSelectedLevel();
+    if (!!selectedLevel && keyboardInputQ.isDown) {
+      getWinners(selectedLevel);
     }
 
     // Hiding and unhiding cave overlay

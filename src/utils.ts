@@ -230,8 +230,8 @@ export function playerStandingOnMapLayer(
   }
 }
 
-export const getWinners = () => {
-  const timeArrayAssetsShowcase = getRecordTimeLocalStorage();
+export const getWinners = (map: string) => {
+  const timeArrayAssetsShowcase = getRecordTimeLocalStorage(map);
   const random = Phaser.Math.Between(1, timeArrayAssetsShowcase.length - 1);
 
   // eslint-disable-next-line no-console
@@ -241,7 +241,10 @@ export const getWinners = () => {
   // eslint-disable-next-line no-console
   console.log("RANDOM WINNER:");
   // eslint-disable-next-line no-console
-  console.log(timeArrayAssetsShowcase[random]);
+  console.log(
+    timeArrayAssetsShowcase[random] ??
+      "Need at least one more player to determine random winnner"
+  );
 };
 
 export const clearLeaderboard = () => {
@@ -259,9 +262,9 @@ interface IGameRecord {
 const TIME_ARRAY_ASSETS_SHOWCASE = "timeArrayAssetsShowcase";
 const LEVEL_SELECT_STORAGE_KEY = "LEVEL_SELECT";
 
-export const getRecordTimeLocalStorage = () => {
+export const getRecordTimeLocalStorage = (map: string) => {
   const rawTimeArrayAssetsShowcase = localStorage.getItem(
-    TIME_ARRAY_ASSETS_SHOWCASE
+    `${TIME_ARRAY_ASSETS_SHOWCASE}_${map}`
   );
   return rawTimeArrayAssetsShowcase
     ? (JSON.parse(rawTimeArrayAssetsShowcase) as IGameRecord[])
@@ -272,7 +275,11 @@ export const getSelectedLevel = () =>
   sessionStorage.getItem(LEVEL_SELECT_STORAGE_KEY);
 
 const setRecordTimeLocalStorage = (value: IGameRecord[]) => {
-  localStorage.setItem(TIME_ARRAY_ASSETS_SHOWCASE, JSON.stringify(value));
+  const selectedLevel = getSelectedLevel();
+  localStorage.setItem(
+    `${TIME_ARRAY_ASSETS_SHOWCASE}_${selectedLevel ?? "unknown"}`,
+    JSON.stringify(value)
+  );
 };
 
 export const setSelectedLevel = (value: string) => {
@@ -286,7 +293,7 @@ export const recordTime = (
   phone: string,
   map: string
 ) => {
-  const timeArrayAssetsShowcase = getRecordTimeLocalStorage();
+  const timeArrayAssetsShowcase = getRecordTimeLocalStorage(map);
 
   const gameRecord: IGameRecord = {
     name,
