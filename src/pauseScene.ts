@@ -51,7 +51,7 @@ export class PauseScene extends Phaser.Scene {
         const selectedLevel = getSelectedLevel();
         if (!!selectedLevel) {
           this.scene.pause();
-          this.scene.resume(selectedLevel);
+          this.scene.launch("countdown");
           this.scene.setVisible(false);
           this.pauseMenu.destroy();
         }

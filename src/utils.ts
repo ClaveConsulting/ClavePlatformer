@@ -433,3 +433,10 @@ export const LEADERBOARD_HIGHLIGHT_STYLE = {
   fontFamily: "Press2p",
   fontStyle: "bold",
 };
+
+export const COUNTDOWN_TEXT_STYLE = {
+  color: WHITE,
+  fontSize: "200px",
+  fontFamily: "Press2p",
+  fontStyle: "bold",
+};
