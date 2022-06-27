@@ -1,4 +1,5 @@
 import Phaser from "phaser";
+import { CountdownScene } from "./countdownScene";
 import { DeathScene } from "./deathScene";
 import { FinishScene } from "./finishScene";
 import { LeaderboardScene } from "./leaderboardScene";
@@ -39,6 +40,7 @@ window.onload = () => {
       new DeathScene({ key: "death" }),
       new FinishScene({ key: "finish" }),
       new LeaderboardScene({ key: "leaderboard" }),
+      new CountdownScene({ key: "countdown" }),
     ],
     type: Phaser.AUTO,
     width: initWidth,
