@@ -345,6 +345,9 @@ export class GameScene extends Phaser.Scene {
     if (!this.fromLeaderboard) {
       this.scene.pause();
       this.scene.launch("leaderboard", { fromMenu: false });
+    } else {
+      this.scene.pause();
+      this.scene.launch("countdown");
     }
   }
 
