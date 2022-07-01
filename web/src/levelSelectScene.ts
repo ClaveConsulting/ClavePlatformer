@@ -1,3 +1,5 @@
+import ntnuThumbnail from "../assets/ntnu/ntnuThumbnail.png";
+import uioThumbnail from "../assets/uio/uioThumbnail.png";
 import { MenuDirection } from "./models/direction";
 import { MenuImage, NavMenu } from "./models/navMenu";
 import {
@@ -21,8 +23,8 @@ export class LevelSelectScene extends Phaser.Scene {
   }
 
   public preload() {
-    this.load.image("ntnu", "assets/ntnu/ntnuThumbnail.png");
-    this.load.image("uio", "assets/uio/uioThumbnail.png");
+    this.load.image("ntnu", ntnuThumbnail);
+    this.load.image("uio", uioThumbnail);
   }
 
   public create() {

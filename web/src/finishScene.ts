@@ -1,3 +1,4 @@
+import inputForm from "../assets/common/inputForm.xhtml";
 import { MenuDirection } from "./models/direction";
 import { InputForm } from "./models/inputField";
 import { MenuButton, NavMenu } from "./models/navMenu";
@@ -34,7 +35,7 @@ export class FinishScene extends Phaser.Scene {
   }
 
   public preload() {
-    this.load.html("playerInfoForm", "assets/common/inputForm.html");
+    this.load.html("playerInfoForm", inputForm);
   }
 
   public create() {

@@ -7,6 +7,8 @@ import { LevelSelectScene } from "./levelSelectScene";
 import { Ntnu } from "./ntnu";
 import { PauseScene } from "./pauseScene";
 import { Uio } from "./uio";
+import "./nesCss.css";
+import "./font.css";
 
 const initWidth = window.innerWidth;
 const initHeight = window.innerHeight;
