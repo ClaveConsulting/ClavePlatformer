@@ -1,4 +1,4 @@
-namespace Clave.Platformer.Function
+namespace Clave.Platformer.Models
 {
     using Newtonsoft.Json;
     public class SafeLeaderboard

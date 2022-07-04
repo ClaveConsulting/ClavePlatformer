@@ -6,18 +6,19 @@ using Microsoft.Azure.WebJobs.Extensions.Http;
 using Microsoft.Azure.Cosmos;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
+using Clave.Platformer.Data;
+using Clave.Platformer.Logic;
 
-
-namespace Clave.Platformer.Function
+namespace Clave.Platformer.Functions
 {
     public class AddScore
     {
-        private Container _scoresContainer;
-        public AddScore()
+        private DataContext _dataContext;
+        private ScoreService _scoreService;
+        public AddScore(DataContext dataContext, ScoreService scoreService)
         {
-            // Dependency injection
-            var cosmosClient = new CosmosClient(Environment.GetEnvironmentVariable("COSMOS_CONNECTION_STRING"));
-            _scoresContainer = cosmosClient.GetContainer("ClavePlatformer", "Scores");
+            _dataContext = dataContext;
+            _scoreService = scoreService;
         }
 
         [FunctionName("AddScore")]
@@ -29,10 +30,10 @@ namespace Clave.Platformer.Function
             // Skriv om til å bruke tryParse()
             float time = float.Parse(req.Query["time"]);
 
-            var phoneNumber = req.Query["phoneNumber"];
+            string phoneNumber = req.Query["phoneNumber"];
+            string map = req.Query["map"];
 
-            var item = new ClavePlatformerScoreDocument { Name = name, Time = time, PhoneNumber = phoneNumber, Id = Guid.NewGuid().ToString() };
-            var itemResponse = await _scoresContainer.UpsertItemAsync(item, new PartitionKey(item.Id));
+            await _scoreService.AddScoreToDatabaseAsync(name, time, phoneNumber, map);
 
             string responseMessage = string.IsNullOrEmpty(name)
                 ? "This HTTP triggered function executed successfully. Pass a name in the query string or in the request body for a personalized response."
@@ -40,6 +41,5 @@ namespace Clave.Platformer.Function
 
             return new OkObjectResult(responseMessage);
         }
-
     }
 }

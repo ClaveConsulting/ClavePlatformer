@@ -1,4 +1,4 @@
-namespace Clave.Platformer.Function
+namespace Clave.Platformer.Models
 {
     using Newtonsoft.Json;
     public class ClavePlatformerScoreDocument
@@ -14,5 +14,8 @@ namespace Clave.Platformer.Function
 
         [JsonProperty(PropertyName = "phoneNumber")]
         public string PhoneNumber { get; set; }
+
+        [JsonProperty(PropertyName = "map")]
+        public string Map { get; set; }
     }
 }
