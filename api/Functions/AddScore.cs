@@ -33,13 +33,9 @@ namespace Clave.Platformer.Functions
             string phoneNumber = req.Query["phoneNumber"];
             string map = req.Query["map"];
 
-            await _scoreService.AddScoreToDatabaseAsync(name, time, phoneNumber, map);
+            var response = await _scoreService.AddScoreToDatabaseAsync(name, time, phoneNumber, map);
 
-            string responseMessage = string.IsNullOrEmpty(name)
-                ? "This HTTP triggered function executed successfully. Pass a name in the query string or in the request body for a personalized response."
-                : $"Hello, {name}. This HTTP triggered function executed successfully.";
-
-            return new OkObjectResult(responseMessage);
+            return new OkObjectResult(response);
         }
     }
 }
