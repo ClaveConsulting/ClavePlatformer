@@ -4,6 +4,7 @@ using System.Linq.Expressions;
 using System.Threading.Tasks;
 using Microsoft.Azure.Cosmos;
 using Microsoft.Azure.Cosmos.Linq;
+using Clave.Platformer.Models;
 
 namespace Clave.Platformer.Data;
 
@@ -19,5 +20,16 @@ public static class Extensions
         }
 
         return default;
+    }
+
+    public static SafeLeaderboardItem toSafeLeaderboardItem(this ClavePlatformerScoreDocument scoreDocument)
+    {
+        return new SafeLeaderboardItem
+        {
+            Name = scoreDocument.Name,
+            Map = scoreDocument.Map,
+            Id = scoreDocument.Id,
+            Time = scoreDocument.Time,
+        };
     }
 }
