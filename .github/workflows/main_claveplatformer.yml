@@ -25,13 +25,15 @@ jobs:
               with:
                   node-version: ${{ matrix.node-version }}
 
-            - name: Build
+            - name: install dependencies
               uses: borales/actions-yarn@v3.0.0
               with:
-                cmd: install 
+                  cmd: install
+
+            - name: build
               uses: borales/actions-yarn@v3.0.0
               with:
-                cmd: build:production 
+                  cmd: build:production
 
     deployweb:
         runs-on: ubuntu-latest
