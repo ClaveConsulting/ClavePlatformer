@@ -7,6 +7,7 @@ using Clave.Platformer.Models;
 using Microsoft.Azure.Cosmos;
 using Microsoft.Azure.Cosmos.Linq;
 
+
 namespace Clave.Platformer.Logic;
 
 public class ScoreService
@@ -17,15 +18,15 @@ public class ScoreService
         _dataContext = dataContext;
     }
 
-    public async Task<ClavePlatformerScoreDocument> AddScoreToDatabaseAsync(string name, float time, string phoneNumber, string map)
+    public async Task<SafeLeaderboardItem> AddScoreToDatabaseAsync(string name, float time, string phoneNumber, string map)
     {
         var existingScoreInDatabase = await _dataContext.scoresContainer.GetSingle<ClavePlatformerScoreDocument>(x => (x.PhoneNumber == phoneNumber && x.Map == map));
         var item = new ClavePlatformerScoreDocument { Name = name, Time = Math.Min(time, existingScoreInDatabase?.Time ?? time), PhoneNumber = phoneNumber, Map = map, Id = existingScoreInDatabase?.Id ?? Guid.NewGuid().ToString() };
         var itemResponse = await _dataContext.scoresContainer.UpsertItemAsync(item, new PartitionKey(item.Id));
-        return itemResponse;
+        return itemResponse.Resource.toSafeLeaderboardItem();
     }
 
-    public async Task<List<SafeLeaderboard>> GetLeaderboardPerMap(string map)
+    public async Task<List<SafeLeaderboardItem>> GetLeaderboardPerMap(string map)
     {
         var rawLeaderboard = new List<ClavePlatformerScoreDocument>();
         var feedIterator = _dataContext.scoresContainer.GetItemLinqQueryable<ClavePlatformerScoreDocument>().Where(x => x.Map == map).OrderBy(x => x.Time).Take(10).ToFeedIterator();
@@ -39,16 +40,14 @@ public class ScoreService
             }
         }
 
-        var publicSafeDocunents = new List<SafeLeaderboard>();
+        var publicSafeDocuments = new List<SafeLeaderboardItem>();
 
         foreach (var item in rawLeaderboard)
         {
-            var safeItem = new SafeLeaderboard();
-            safeItem.Name = item.Name;
-            safeItem.Time = item.Time;
-            publicSafeDocunents.Add(safeItem);
+            SafeLeaderboardItem safeItem = new(item.Name, item.Time, item.Map, item.Id);
+            publicSafeDocuments.Add(safeItem);
         }
-        return publicSafeDocunents;
+        return publicSafeDocuments;
     }
 
 }
