@@ -6,6 +6,10 @@ import {
   PALE_GREEN_NUMBER,
   WHITE_NUMBER,
   GREEN,
+  getTournamentValue,
+  getRecordTimeAPI,
+  IGameRecord,
+  IRecordTimeApiResponse,
 } from "../utils";
 import { IPlayerInfo } from "./playerInfo";
 
@@ -20,6 +24,7 @@ export class Leaderboard {
   private ranks: Phaser.GameObjects.Text[];
   private currentPlayer?: IPlayerInfo;
   private writtenCurrentPlayer: boolean;
+  private content: IPlayerInfo[];
 
   constructor(
     parent: Phaser.Scene,
@@ -52,10 +57,24 @@ export class Leaderboard {
     this.ranks = [];
     this.currentPlayer = currentPlayer;
     this.writtenCurrentPlayer = false;
-    this.update();
+
+    this.refresh();
   }
 
-  public refresh() {
+  public async init() {
+    const selectedLevel = getSelectedLevel();
+    const isLocalTournament = getTournamentValue();
+    if (!!selectedLevel) {
+      if (isLocalTournament) {
+        this.content = getRecordTimeLocalStorage(selectedLevel);
+      } else {
+        this.content = await getRecordTimeAPI(selectedLevel);
+      }
+    }
+  }
+
+  public async refresh() {
+    await this.init();
     this.clear();
     this.update();
   }
@@ -68,84 +87,81 @@ export class Leaderboard {
 
   private update() {
     const selectedLevel = getSelectedLevel();
-
+    const currentPlayer = this.currentPlayer;
+    let currentPlayerRank = 0;
     if (!!selectedLevel) {
-      let timeArrayAssetsShowcase = getRecordTimeLocalStorage(selectedLevel);
-
-      const currentPlayerRank =
-        timeArrayAssetsShowcase.findIndex(
-          (x) => x.phone == this.currentPlayer?.phone
-        ) + 1;
-
-      if (timeArrayAssetsShowcase.length > 10) {
-        timeArrayAssetsShowcase = timeArrayAssetsShowcase.slice(0, 10);
+      if (!!currentPlayer) {
+        currentPlayerRank =
+          this.content.findIndex((x) => x.id === currentPlayer.id) + 1;
+      }
+      if (this.content.length > 10) {
+        this.content = this.content.slice(0, 10);
       }
 
       let yPos = this.frame.getTopCenter().y + 100;
       let index = 0;
-      timeArrayAssetsShowcase.forEach((gameRecord) => {
-        if (gameRecord.map == selectedLevel) {
-          this.ranks.push(
-            this.parent.add
-              .text(
-                this.frame.getBottomLeft().x + 30,
-                yPos,
-                String(`${index + 1}.`),
-                LEADERBOARD_STYLE
-              )
-              .setScrollFactor(0)
-          );
-          if (
-            this.currentPlayer?.phone == gameRecord.phone &&
-            this.currentPlayer
-          ) {
-            this.names.push(
+      this.content.forEach(
+        (gameRecord: IGameRecord | IRecordTimeApiResponse) => {
+          if (gameRecord.map == selectedLevel) {
+            this.ranks.push(
               this.parent.add
                 .text(
-                  this.frame.getBottomLeft().x + 90,
+                  this.frame.getBottomLeft().x + 30,
                   yPos,
-                  gameRecord.name ?? "--" + ": ",
-                  LEADERBOARD_HIGHLIGHT_STYLE
-                )
-                .setScrollFactor(0)
-            );
-            this.times.push(
-              this.parent.add
-                .text(
-                  this.frame.getBottomRight().x - 135,
-                  yPos,
-                  gameRecord.time,
-                  LEADERBOARD_HIGHLIGHT_STYLE
-                )
-                .setScrollFactor(0)
-            );
-            this.writtenCurrentPlayer = true;
-          } else {
-            this.names.push(
-              this.parent.add
-                .text(
-                  this.frame.getBottomLeft().x + 90,
-                  yPos,
-                  gameRecord.name ?? "--" + ": ",
+                  String(`${index + 1}.`),
                   LEADERBOARD_STYLE
                 )
                 .setScrollFactor(0)
             );
-            this.times.push(
-              this.parent.add
-                .text(
-                  this.frame.getBottomRight().x - 135,
-                  yPos,
-                  gameRecord.time,
-                  LEADERBOARD_STYLE
-                )
-                .setScrollFactor(0)
-            );
+            if (this.currentPlayer?.id == gameRecord.id && this.currentPlayer) {
+              this.names.push(
+                this.parent.add
+                  .text(
+                    this.frame.getBottomLeft().x + 90,
+                    yPos,
+                    gameRecord.name ?? "--" + ": ",
+                    LEADERBOARD_HIGHLIGHT_STYLE
+                  )
+                  .setScrollFactor(0)
+              );
+              this.times.push(
+                this.parent.add
+                  .text(
+                    this.frame.getBottomRight().x - 135,
+                    yPos,
+                    gameRecord.time,
+                    LEADERBOARD_HIGHLIGHT_STYLE
+                  )
+                  .setScrollFactor(0)
+              );
+              this.writtenCurrentPlayer = true;
+            } else {
+              this.names.push(
+                this.parent.add
+                  .text(
+                    this.frame.getBottomLeft().x + 90,
+                    yPos,
+                    gameRecord.name ?? "--" + ": ",
+                    LEADERBOARD_STYLE
+                  )
+                  .setScrollFactor(0)
+              );
+              this.times.push(
+                this.parent.add
+                  .text(
+                    this.frame.getBottomRight().x - 135,
+                    yPos,
+                    gameRecord.time,
+                    LEADERBOARD_STYLE
+                  )
+                  .setScrollFactor(0)
+              );
+            }
+            yPos += 45;
+            index++;
           }
-          yPos += 45;
-          index++;
         }
-      });
+      );
 
       if (
         typeof this.currentPlayer !== "undefined" &&
@@ -183,7 +199,7 @@ export class Leaderboard {
             .text(
               this.frame.getBottomRight().x - 135,
               yPos + 25,
-              this.currentPlayer.time,
+              String(this.currentPlayer.time),
               LEADERBOARD_HIGHLIGHT_STYLE
             )
             .setScrollFactor(0)

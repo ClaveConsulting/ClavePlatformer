@@ -5,9 +5,11 @@ import { MenuButton, NavMenu } from "./models/navMenu";
 import { IPlayerInfo } from "./models/playerInfo";
 import {
   getSelectedLevel,
+  getTournamentValue,
   PALE_GREEN_NUMBER,
   PAUSE_TEXT_STYLE,
   recordTime,
+  recordTimeAPI,
   WHITE_NUMBER,
 } from "./utils";
 
@@ -18,6 +20,7 @@ const playerInfo: IPlayerInfo = {
   name: "",
   phone: "",
   time: "",
+  id: "",
 };
 export class FinishScene extends Phaser.Scene {
   private stars: number;
@@ -72,19 +75,34 @@ export class FinishScene extends Phaser.Scene {
       windowWidth / 2,
       windowHeight / 2 + 50,
       "Submit",
-      () => {
+      async () => {
         const selectedLevel = getSelectedLevel();
         playerInfo.name = this.inputForm.getName();
         playerInfo.phone = this.inputForm.getPhone();
         playerInfo.time = String(this.timer.toFixed(2));
+        const isLocalTournament = getTournamentValue();
         if (!!selectedLevel) {
-          recordTime(
-            this.stars,
-            this.timer,
-            playerInfo.name,
-            playerInfo.phone,
-            selectedLevel
-          );
+          if (isLocalTournament) {
+            const insertedPlayer = recordTime(
+              this.stars,
+              this.timer,
+              playerInfo.name,
+              playerInfo.phone,
+              selectedLevel
+            );
+            playerInfo.id = insertedPlayer.id;
+          } else if (!isLocalTournament) {
+            const responsePlayerObject = await recordTimeAPI(
+              this.timer,
+              playerInfo.name,
+              playerInfo.phone,
+              selectedLevel
+            );
+            playerInfo.id = responsePlayerObject.id;
+            playerInfo.name = responsePlayerObject.name;
+            playerInfo.time = responsePlayerObject.time;
+            playerInfo.phone = "";
+          }
         }
         this.scene.pause();
         this.scene.launch("leaderboard", {
@@ -106,7 +124,6 @@ export class FinishScene extends Phaser.Scene {
         this.scene.pause();
         this.scene.launch("leaderboard", {
           fromMenu: false,
-          currentPlayer: playerInfo,
         });
         this.scene.setVisible(false);
         this.menu.destroy();

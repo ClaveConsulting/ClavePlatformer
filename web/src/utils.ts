@@ -1,4 +1,6 @@
+import { Guid } from "guid-typescript";
 import { Direction } from "./models/direction";
+import { IPlayerInfo } from "./models/playerInfo";
 
 let movementDirection;
 
@@ -251,16 +253,19 @@ export const clearLeaderboard = () => {
   setRecordTimeLocalStorage([]);
 };
 
-interface IGameRecord {
+export interface IGameRecord {
   starsCollected: number;
   time: string;
   name?: string;
   phone?: string;
   map?: string;
+  id?: string;
 }
 
 const TIME_ARRAY_ASSETS_SHOWCASE = "timeArrayAssetsShowcase";
+const LOCAL_TOURNAMENT_VALUE = "localTournamentValue";
 const LEVEL_SELECT_STORAGE_KEY = "LEVEL_SELECT";
+const API_URL = "https://func-clave-platformer.azurewebsites.net/api/";
 
 export const getRecordTimeLocalStorage = (map: string) => {
   const rawTimeArrayAssetsShowcase = localStorage.getItem(
@@ -270,6 +275,15 @@ export const getRecordTimeLocalStorage = (map: string) => {
     ? (JSON.parse(rawTimeArrayAssetsShowcase) as IGameRecord[])
     : [];
 };
+
+export async function getRecordTimeAPI(map: string) {
+  const rawTimeArrayAssetsShowcase = await (
+    await fetch(API_URL + `GetLeaderboard?map=${map}`)
+  ).json();
+  return rawTimeArrayAssetsShowcase
+    ? (rawTimeArrayAssetsShowcase as IGameRecord[])
+    : [];
+}
 
 export const getSelectedLevel = () =>
   sessionStorage.getItem(LEVEL_SELECT_STORAGE_KEY);
@@ -286,6 +300,48 @@ export const setSelectedLevel = (value: string) => {
   sessionStorage.setItem(LEVEL_SELECT_STORAGE_KEY, value);
 };
 
+export const setTournamentValue = (value: boolean) => {
+  if (value) {
+    sessionStorage.setItem(LOCAL_TOURNAMENT_VALUE, "true");
+  } else {
+    sessionStorage.setItem(LOCAL_TOURNAMENT_VALUE, "false");
+  }
+};
+
+export const getTournamentValue = () => {
+  const rawValue = sessionStorage.getItem(LOCAL_TOURNAMENT_VALUE);
+  let value = false;
+  if (rawValue == "true") {
+    value = true;
+  } else if (rawValue == "false") {
+    value = false;
+  }
+  return value;
+};
+
+export interface IRecordTimeApiResponse {
+  name: string;
+  time: string;
+  map: string;
+  id: string;
+}
+
+export async function recordTimeAPI(
+  counter: number,
+  name: string,
+  phone: string,
+  map: string
+) {
+  const dataString = `?name=${name}&phoneNumber=${phone}&time=${counter}&map=${map}`;
+  const response = await (
+    await fetch(API_URL + "AddScore" + dataString, {
+      method: "POST",
+    })
+  ).json();
+
+  return response as IRecordTimeApiResponse;
+}
+
 export const recordTime = (
   starsCollected: number,
   counter: number,
@@ -294,13 +350,13 @@ export const recordTime = (
   map: string
 ) => {
   const timeArrayAssetsShowcase = getRecordTimeLocalStorage(map);
-
   const gameRecord: IGameRecord = {
     name,
     phone,
     starsCollected,
     time: counter.toFixed(2),
     map,
+    id: Guid.create().toString(),
   };
 
   const previousAttempts = timeArrayAssetsShowcase.filter((previousAttempt) =>
@@ -322,6 +378,7 @@ export const recordTime = (
 
   timeArrayAssetsShowcase.sort(compareGameRecordsTime);
   setRecordTimeLocalStorage(timeArrayAssetsShowcase);
+  return gameRecord as IPlayerInfo;
 };
 
 export const compareGameRecordsTime = (a: IGameRecord, b: IGameRecord) => {

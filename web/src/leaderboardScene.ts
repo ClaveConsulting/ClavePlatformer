@@ -95,8 +95,6 @@ export class LeaderboardScene extends Phaser.Scene {
   public update() {
     const pad = this.input.gamepad.pad1;
     const selectedLevel = getSelectedLevel();
-    leaderboard.refresh();
-
     if (
       !this.fromMenu &&
       ((pad && pad.isButtonDown(9)) || spaceKey.isDown) &&
