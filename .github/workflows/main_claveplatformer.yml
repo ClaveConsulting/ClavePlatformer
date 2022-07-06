@@ -26,15 +26,15 @@ jobs:
                   node-version: ${{ matrix.node-version }}
 
             - name: install dependencies
-              working-directory: ./web
               uses: borales/actions-yarn@v3.0.0
               with:
+                  working-directory: ./web
                   cmd: install
 
             - name: build
-              working-directory: ./web
               uses: borales/actions-yarn@v3.0.0
               with:
+                  working-directory: ./web
                   cmd: build:production
 
     deployweb:
