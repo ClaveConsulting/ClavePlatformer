@@ -33,7 +33,7 @@ namespace Clave.Platformer.Functions
                     ILogger log)
         {
             string requestedMap = req.Query["map"];
-            List<SafeLeaderboard> leaderboard = await _scoreService.GetLeaderboardPerMap(requestedMap);
+            List<SafeLeaderboardItem> leaderboard = await _scoreService.GetLeaderboardPerMap(requestedMap);
             return (new OkObjectResult(leaderboard));
         }
     }
