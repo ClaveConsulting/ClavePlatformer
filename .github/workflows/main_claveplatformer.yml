@@ -25,17 +25,11 @@ jobs:
               with:
                   node-version: ${{ matrix.node-version }}
 
-            - name: install dependencies
-              uses: borales/actions-yarn@v3.0.0
-              with:
-                  working-directory: ${GITHUB_WORKSPACE}/web
-                  cmd: install
-
-            - name: build
-              uses: borales/actions-yarn@v3.0.0
-              with:
-                  working-directory: ${GITHUB_WORKSPACE}/web
-                  cmd: build:production
+            - name: Build
+              run: |
+                  cd ${GITHUB_WORKSPACE}/web
+                  npm install
+                  npx webpack --mode production
 
     deployweb:
         runs-on: ubuntu-latest
