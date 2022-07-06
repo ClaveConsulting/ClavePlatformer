@@ -27,11 +27,11 @@ jobs:
 
             - name: Build
               uses: borales/actions-yarn@v3.0.0
-                with:
-                  cmd: install 
+              with:
+                cmd: install 
               uses: borales/actions-yarn@v3.0.0
-                with:
-                  cmd: build:production 
+              with:
+                cmd: build:production 
 
     deployweb:
         runs-on: ubuntu-latest
