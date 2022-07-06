@@ -28,12 +28,12 @@ jobs:
             - name: install dependencies
               uses: borales/actions-yarn@v3.0.0
               with:
-                  cmd: install
+                  cmd: install ./web
 
             - name: build
               uses: borales/actions-yarn@v3.0.0
               with:
-                  cmd: build:production
+                  cmd: build:production ./web
 
     deployweb:
         runs-on: ubuntu-latest
