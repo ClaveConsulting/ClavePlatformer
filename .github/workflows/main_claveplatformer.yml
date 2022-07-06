@@ -15,7 +15,7 @@ jobs:
 
         strategy:
             matrix:
-                node-version: [12.x, 14.x, 16.x]
+                node-version: [16.x]
 
         steps:
             - uses: actions/checkout@v3
@@ -26,14 +26,16 @@ jobs:
                   node-version: ${{ matrix.node-version }}
 
             - name: install dependencies
+              working-directory: ./web
               uses: borales/actions-yarn@v3.0.0
               with:
-                  cmd: install ./web
+                  cmd: install
 
             - name: build
+              working-directory: ./web
               uses: borales/actions-yarn@v3.0.0
               with:
-                  cmd: build:production ./web
+                  cmd: build:production
 
     deployweb:
         runs-on: ubuntu-latest
@@ -47,6 +49,7 @@ jobs:
 
             - name: Upload to blob storage
               uses: azure/CLI@v1
+              working-directory: ./web
               with:
                   inlineScript: |
                       az storage blob upload-batch --account-name storewebclaveplatformer --auth-mode key -d '$web' -s ./dist
