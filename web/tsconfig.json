@@ -11,8 +11,7 @@
     "preserveConstEnums": true,
     "lib": ["ESNext", "dom", "scripthost"],
     "typeRoots": ["./node_modules/phaser/types"],
-    "types": ["Phaser"]
+    "types": ["./node_modules/phaser/types"]
   },
-  "files": ["./node_modules/phaser/types/*"],
   "include": ["src/**/*"]
 }
