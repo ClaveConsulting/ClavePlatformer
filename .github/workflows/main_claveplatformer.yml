@@ -46,7 +46,6 @@ jobs:
             - name: Upload to blob storage
               uses: azure/CLI@v1
               with:
-                  working-directory: ${GITHUB_WORKSPACE}/web
                   inlineScript: |
                       az storage blob upload-batch --account-name storewebclaveplatformer --auth-mode key -d '$web' -s ${GITHUB_WORKSPACE}/web/dist
 
