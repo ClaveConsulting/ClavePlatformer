@@ -1,17 +1,18 @@
 {
-    "compilerOptions": {
-        "target": "ES6",
-        "esModuleInterop": true,
-        "module": "commonjs",
-        "sourceMap": true,
-        "allowJs": true,
-        "strictNullChecks": true,
-        "noImplicitAny": true,
-        "removeComments": true,
-        "preserveConstEnums": true,
-        "lib": ["ESNext", "dom", "scripthost"],
-        "typeRoots": ["./node_modules/phaser/types"],
-        "types": ["Phaser"]
-    },
-    "include": ["src/**/*"]
+  "compilerOptions": {
+    "target": "ES6",
+    "esModuleInterop": true,
+    "module": "commonjs",
+    "sourceMap": true,
+    "allowJs": true,
+    "strictNullChecks": true,
+    "noImplicitAny": true,
+    "removeComments": true,
+    "preserveConstEnums": true,
+    "lib": ["ESNext", "dom", "scripthost"],
+    "typeRoots": ["./node_modules/phaser/types"],
+    "types": ["Phaser"],
+    "files": ["./node_modules/phaser/types/*"]
+  },
+  "include": ["src/**/*"]
 }
