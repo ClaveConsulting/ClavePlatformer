@@ -32,6 +32,8 @@ jobs:
               run: |
                   yarn
                   yarn build:production
+                  ls -la
+                  pwd
 
             - name: Upload to cache
               uses: actions/upload-artifact@v2
