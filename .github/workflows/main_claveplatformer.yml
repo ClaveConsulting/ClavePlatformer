@@ -32,8 +32,6 @@ jobs:
               run: |
                   yarn
                   yarn build:production
-                  ls -la
-                  pwd
 
             - name: Upload to cache
               uses: actions/upload-artifact@v2
@@ -52,6 +50,7 @@ jobs:
               uses: actions/download-artifact@v2
               with:
                   name: dist
+                  path: ./dist
 
             - uses: azure/login@v1
               with:
@@ -61,7 +60,6 @@ jobs:
               uses: azure/CLI@v1
               with:
                   inlineScript: |
-                      ls -la
                       az storage blob upload-batch --account-name storewebclaveplatformer --auth-mode key -d '$web' -s ./dist
 
             # Azure logout
