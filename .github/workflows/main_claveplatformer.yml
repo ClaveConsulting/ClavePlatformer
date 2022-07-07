@@ -47,8 +47,8 @@ jobs:
               uses: azure/CLI@v1
               with:
                   inlineScript: |
-                      ls -la
-                      az storage blob upload-batch --account-name storewebclaveplatformer --auth-mode key -d '$web' -s ${GITHUB_WORKSPACE}/web/dist
+                      ls -la web
+                      az storage blob upload-batch --account-name storewebclaveplatformer --auth-mode key -d '$web' -s ./web/dist
 
             # Azure logout
             - name: logout
