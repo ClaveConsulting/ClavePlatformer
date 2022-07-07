@@ -11,9 +11,8 @@ on:
 
 jobs:
     buildweb:
-        de
         runs-on: ubuntu-latest
-        defaults: 
+        defaults:
             run:
                 working-directory: ./web
 
@@ -31,8 +30,8 @@ jobs:
 
             - name: Build
               run: |
-                yarn
-                yarn build:production
+                  yarn
+                  yarn build:production
 
     deployweb:
         runs-on: ubuntu-latest
