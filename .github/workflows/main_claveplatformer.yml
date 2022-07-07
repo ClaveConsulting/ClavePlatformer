@@ -47,6 +47,7 @@ jobs:
               uses: azure/CLI@v1
               with:
                   inlineScript: |
+                      ls -la ..
                       ls -la web
                       az storage blob upload-batch --account-name storewebclaveplatformer --auth-mode key -d '$web' -s ./web/dist
 
