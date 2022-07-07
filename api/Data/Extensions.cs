@@ -18,7 +18,6 @@ public static class Extensions
             var result = await iterator.ReadNextAsync();
             return result.FirstOrDefault();
         }
-
         return default;
     }
 
