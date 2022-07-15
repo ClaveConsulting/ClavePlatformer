@@ -2,7 +2,6 @@ import { NES_Button } from "./buttonMap";
 import { CheckBox } from "./models/checkbox";
 import { MenuDirection } from "./models/direction";
 import { MenuButton, NavMenu } from "./models/navMenu";
-import checkboxOn from "../assets/common/tournamentToggleOn.xhtml";
 import checkboxOff from "../assets/common/tournamentToggleOff.xhtml";
 import {
   BUTTON_SPACING,
@@ -10,6 +9,7 @@ import {
   getTournamentValue,
   PALE_GREEN_NUMBER,
   PAUSE_TEXT_STYLE,
+  TRANSPARENT_GREY,
   WHITE_NUMBER,
 } from "./utils";
 
@@ -25,11 +25,10 @@ export class PauseScene extends Phaser.Scene {
   }
   public preload() {
     this.load.html("checkboxOff", checkboxOff);
-    this.load.html("checkboxOn", checkboxOn);
   }
 
   public create() {
-    this.cameras.main.setBackgroundColor("rgba(120, 120, 120, 0.5)");
+    this.cameras.main.setBackgroundColor(TRANSPARENT_GREY);
 
     // Pause menu frame
     const pauseMenuFrame = this.add.rectangle(
@@ -113,10 +112,9 @@ export class PauseScene extends Phaser.Scene {
       windowHeight / 2 + 2 * BUTTON_SPACING
     );
 
+    this.tournamentToggleBox.init("checkboxOff");
     if (getTournamentValue()) {
-      this.tournamentToggleBox.init("checkboxOn");
-    } else {
-      this.tournamentToggleBox.init("checkboxOff");
+      this.tournamentToggleBox.changeState();
     }
   }
 }

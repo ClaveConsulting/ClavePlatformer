@@ -26,6 +26,12 @@ export class CheckBox {
     });
   }
 
+  public changeState() {
+    document
+      .querySelectorAll('input[type="checkbox"]')
+      .forEach((e: HTMLFormElement) => (e.checked ^= 1));
+  }
+
   public destroy() {
     this.box.destroy();
   }

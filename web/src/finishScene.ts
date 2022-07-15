@@ -91,7 +91,7 @@ export class FinishScene extends Phaser.Scene {
               selectedLevel
             );
             playerInfo.id = insertedPlayer.id;
-          } else if (!isLocalTournament) {
+          } else {
             const responsePlayerObject = await recordTimeAPI(
               this.timer,
               playerInfo.name,

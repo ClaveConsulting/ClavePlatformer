@@ -378,7 +378,7 @@ export const recordTime = (
 
   timeArrayAssetsShowcase.sort(compareGameRecordsTime);
   setRecordTimeLocalStorage(timeArrayAssetsShowcase);
-  return gameRecord as IPlayerInfo;
+  return gameRecord;
 };
 
 export const compareGameRecordsTime = (a: IGameRecord, b: IGameRecord) => {
@@ -402,6 +402,7 @@ export const BLACK = "#000";
 export const YELLOW = "#FFBE2E";
 export const TRANSPARENT = "rgba(0,0,0,0)";
 export const GREY = "#555";
+export const TRANSPARENT_GREY = "rgba(120, 120, 120, 0.5)";
 
 export const BUTTON_STYLE = {
   backgroundColor: WHITE,
