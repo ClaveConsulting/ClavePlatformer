@@ -1,0 +1,4 @@
+node_modules
+dist
+assets
+webpack.config.js

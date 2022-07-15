@@ -1,0 +1,38 @@
+{
+  "name": "clave-platformer",
+  "version": "0.1.0",
+  "description": "A nice 2D platformer game",
+  "scripts": {
+    "start": "webpack serve",
+    "build": "webpack --mode development",
+    "build:production": "webpack --mode production",
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "lint": "eslint . --ext .ts"
+  },
+  "author": "",
+  "devDependencies": {
+    "css-loader": "^6.7.1",
+    "eslint": "^8.18.0",
+    "file-loader": "^6.2.0",
+    "html-webpack-plugin": "^5.5.0",
+    "style-loader": "^3.3.1",
+    "ts-loader": "^6.0.1",
+    "tslint": "^5.16.0",
+    "typescript": "^3.5.1",
+    "webpack": "^5.70.0",
+    "webpack-cli": "^4.9.2",
+    "webpack-dev-server": "^4.9.2"
+  },
+  "dependencies": {
+    "@typescript-eslint/eslint-plugin": "^5.29.0",
+    "@typescript-eslint/parser": "^5.29.0",
+    "eslint-cli": "^1.1.1",
+    "guid-typescript": "^1.0.9",
+    "http-server": "^14.1.0",
+    "phaser": "^3.55.2"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/evilppoHobby/clave-platformer-v1.git"
+  }
+}
