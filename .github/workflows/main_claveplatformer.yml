@@ -84,7 +84,7 @@ jobs:
               run: dotnet build  --configuration Release  ${GITHUB_WORKSPACE}/api/ClavePlatformer.csproj
 
             - name: Test with dotnet
-              run: dotnet test
+              run: dotnet test --configuration Release  ${GITHUB_WORKSPACE}/api/ClavePlatformer.csproj
 
             - name: dotnet publish
               run: dotnet publish ${GITHUB_WORKSPACE}/api/ClavePlatformer.csproj -c Release -o ClavePlatformerApi
