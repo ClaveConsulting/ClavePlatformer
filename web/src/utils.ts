@@ -1,6 +1,5 @@
 import { Guid } from "guid-typescript";
 import { Direction } from "./models/direction";
-import { IPlayerInfo } from "./models/playerInfo";
 
 let movementDirection;
 
