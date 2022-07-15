@@ -81,13 +81,13 @@ jobs:
                   include-prerelease: true
 
             - name: Build with dotnet
-              run: dotnet build  --configuration Release
+              run: dotnet build  --configuration Release ${GITHUB_WORKSPACE}/api/Clave.Platformer.sln
 
             - name: Test with dotnet
-              run: dotnet test --configuration Release
+              run: dotnet test --configuration Release ${GITHUB_WORKSPACE}/api/Clave.Platformer.sln
 
             - name: dotnet publish
-              run: dotnet publish ${GITHUB_WORKSPACE}/api/ClavePlatformer.csproj -c Release -o ClavePlatformerApi
+              run: dotnet publish ${GITHUB_WORKSPACE}/api/Clave.Platformer/Clave.Platformer.csproj -c Release -o ClavePlatformerApi
 
             - name: Upload artifact for deployment job
               uses: actions/upload-artifact@v2
