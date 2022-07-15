@@ -81,10 +81,10 @@ jobs:
                   include-prerelease: true
 
             - name: Build with dotnet
-              run: dotnet build  --configuration Release  ${GITHUB_WORKSPACE}/api/ClavePlatformer.csproj
+              run: dotnet build  --configuration Release
 
             - name: Test with dotnet
-              run: dotnet test --configuration Release  ${GITHUB_WORKSPACE}/api/ClavePlatformer.csproj
+              run: dotnet test --configuration Release
 
             - name: dotnet publish
               run: dotnet publish ${GITHUB_WORKSPACE}/api/ClavePlatformer.csproj -c Release -o ClavePlatformerApi
