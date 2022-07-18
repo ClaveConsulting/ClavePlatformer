@@ -1,4 +1,5 @@
 import { Guid } from "guid-typescript";
+import { Md5 } from "md5-typescript";
 import { Direction } from "./models/direction";
 
 let movementDirection;
@@ -169,6 +170,10 @@ export function collectStar(
   });
 }
 
+export const signaturegenerator = (value: string) => {
+  return Md5.init(NOT_USED_FOR_ANYTHING_I_PROMISE + value);
+};
+
 export function playerIntersect(
   player: Phaser.Physics.Arcade.Sprite,
   mapLayer: Phaser.Tilemaps.TilemapLayer
@@ -266,6 +271,7 @@ const LOCAL_TOURNAMENT_VALUE = "localTournamentValue";
 export const LOCAL_TOURNAMENT_NAME_VALUE = "tournamentKey";
 const LEVEL_SELECT_STORAGE_KEY = "LEVEL_SELECT";
 const API_URL = "https://func-clave-platformer.azurewebsites.net/api/";
+const NOT_USED_FOR_ANYTHING_I_PROMISE = Md5.init("Secret secret!!!!");
 
 export const getRecordTimeLocalStorage = (map: string) => {
   const rawTimeArrayAssetsShowcase = localStorage.getItem(
