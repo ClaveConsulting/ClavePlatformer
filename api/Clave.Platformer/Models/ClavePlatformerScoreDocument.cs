@@ -17,5 +17,8 @@ namespace Clave.Platformer.Models
 
         [JsonProperty(PropertyName = "map")]
         public string Map { get; set; }
+
+        [JsonProperty(PropertyName = "tournament")]
+        public string Tournament { get; set; }
     }
 }

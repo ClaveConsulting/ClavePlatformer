@@ -18,34 +18,34 @@ public class ScoreService
         _dataContext = dataContext;
     }
 
-    public async Task<SafeLeaderboardItem> AddScoreToDatabaseAsync(string name, float time, string phoneNumber, string map)
+    public async Task<SafeLeaderboardItem> AddScoreToDatabaseAsync(string name, float time, string phoneNumber, string map, string tournament)
     {
         var existingScoreInDatabase = await _dataContext.scoresContainer
-            .GetSingle<ClavePlatformerScoreDocument>(x => (x.PhoneNumber == phoneNumber && x.Map == map));
+            .GetSingle<ClavePlatformerScoreDocument>(x => (x.PhoneNumber == phoneNumber && x.Map == map && x.Tournament == tournament));
         var item = new ClavePlatformerScoreDocument
         {
             Name = name,
             Time = Math.Min(time, existingScoreInDatabase?.Time ?? time),
             PhoneNumber = phoneNumber,
             Map = map,
-            Id = existingScoreInDatabase?.Id ?? Guid.NewGuid().ToString()
+            Id = existingScoreInDatabase?.Id ?? Guid.NewGuid().ToString(),
+            Tournament = tournament
         };
         var itemResponse = await _dataContext.scoresContainer.UpsertItemAsync(item, new PartitionKey(item.Id));
         return itemResponse.Resource.toSafeLeaderboardItem();
     }
 
-    public async Task<List<SafeLeaderboardItem>> GetLeaderboardPerMap(string map)
+    public async Task<List<SafeLeaderboardItem>> GetLeaderboardPerMap(string map, string tournament)
     {
         var rawLeaderboard = new List<ClavePlatformerScoreDocument>();
         var feedIterator = _dataContext.scoresContainer
             .GetItemLinqQueryable<ClavePlatformerScoreDocument>()
-            .Where(x => x.Map == map)
+            .Where(x => (x.Map == map && x.Tournament == tournament))
             .OrderBy(x => x.Time)
             .Take(10)
             .ToFeedIterator();
 
         while (feedIterator.HasMoreResults)
-
         {
             var feedResponse = await feedIterator.ReadNextAsync();
             foreach (var item in feedResponse)
@@ -58,7 +58,7 @@ public class ScoreService
 
         foreach (var item in rawLeaderboard)
         {
-            SafeLeaderboardItem safeItem = new(item.Name, item.Time, item.Map, item.Id);
+            SafeLeaderboardItem safeItem = new(item.Name, item.Time, item.Map, item.Id, item.Tournament);
             publicSafeDocuments.Add(safeItem);
         }
         return publicSafeDocuments;

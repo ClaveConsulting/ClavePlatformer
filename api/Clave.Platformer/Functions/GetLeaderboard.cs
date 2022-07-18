@@ -33,7 +33,8 @@ namespace Clave.Platformer.Functions
                     ILogger log)
         {
             string requestedMap = req.Query["map"];
-            List<SafeLeaderboardItem> leaderboard = await _scoreService.GetLeaderboardPerMap(requestedMap);
+            string tournament = req.Query["tournament"];
+            List<SafeLeaderboardItem> leaderboard = await _scoreService.GetLeaderboardPerMap(requestedMap, tournament);
             return (new OkObjectResult(leaderboard));
         }
     }
