@@ -1,12 +1,9 @@
 import { NES_Button } from "./buttonMap";
-import { CheckBox } from "./models/checkbox";
 import { MenuDirection } from "./models/direction";
 import { MenuButton, NavMenu } from "./models/navMenu";
-import checkboxOff from "../assets/common/tournamentToggleOff.xhtml";
 import {
   BUTTON_SPACING,
   getSelectedLevel,
-  getTournamentValue,
   PALE_GREEN_NUMBER,
   PAUSE_TEXT_STYLE,
   TRANSPARENT_GREY,
@@ -18,13 +15,9 @@ const windowWidth = window.innerWidth;
 
 export class PauseScene extends Phaser.Scene {
   private pauseMenu: NavMenu;
-  private tournamentToggleBox: CheckBox;
 
   constructor(config: Phaser.Types.Scenes.SettingsConfig) {
     super(config);
-  }
-  public preload() {
-    this.load.html("checkboxOff", checkboxOff);
   }
 
   public create() {
@@ -33,7 +26,7 @@ export class PauseScene extends Phaser.Scene {
     // Pause menu frame
     const pauseMenuFrame = this.add.rectangle(
       windowWidth / 2,
-      windowHeight / 2 - 50,
+      windowHeight / 2,
       420,
       450,
       PALE_GREEN_NUMBER
@@ -62,7 +55,6 @@ export class PauseScene extends Phaser.Scene {
           this.scene.launch("countdown");
           this.scene.setVisible(false);
           this.pauseMenu.destroy();
-          this.tournamentToggleBox.destroy();
         }
       },
       this,
@@ -80,7 +72,6 @@ export class PauseScene extends Phaser.Scene {
         this.scene.launch("leaderboard", { fromMenu: false });
         this.scene.setVisible(false);
         this.pauseMenu.destroy();
-        this.tournamentToggleBox.destroy();
       },
       this
     );
@@ -95,26 +86,28 @@ export class PauseScene extends Phaser.Scene {
         this.scene.launch("leaderboard", { fromMenu: true });
         this.scene.setVisible(false);
         this.pauseMenu.destroy();
-        this.tournamentToggleBox.destroy();
+      },
+      this
+    );
+
+    // show tounramentMenu button
+    const tournamentButton = new MenuButton(
+      windowWidth / 2,
+      windowHeight / 2 + 2 * BUTTON_SPACING,
+      "Tournament",
+      () => {
+        this.scene.pause();
+        this.scene.launch("tournament");
+        this.scene.setVisible(false);
+        this.pauseMenu.destroy();
       },
       this
     );
 
     this.pauseMenu = new NavMenu(
-      [continueButton, newGameButton, leaderboardButton],
+      [continueButton, newGameButton, leaderboardButton, tournamentButton],
       MenuDirection.Vertical,
       this
     );
-
-    this.tournamentToggleBox = new CheckBox(
-      this,
-      windowWidth / 2,
-      windowHeight / 2 + 2 * BUTTON_SPACING
-    );
-
-    this.tournamentToggleBox.init("checkboxOff");
-    if (getTournamentValue()) {
-      this.tournamentToggleBox.changeState();
-    }
   }
 }
