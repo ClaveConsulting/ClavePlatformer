@@ -108,6 +108,6 @@ jobs:
               uses: Azure/functions-action@v1
               with:
                   app-name: "func-clave-platformer"
-                  slot-name: "func-clave-platformer-Test"
-                  publish-profile: ${{ secrets.AZURE_FUNCTIONAPP_PUBLISH_PROFILE }}
+                  slot-name: "Test"
+                  publish-profile: ${{ secrets.AZURE_FUNCTIONAPP_PUBLISH_PROFILE_TEST }}
                   package: .
