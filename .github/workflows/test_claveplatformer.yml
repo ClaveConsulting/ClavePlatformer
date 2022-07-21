@@ -4,10 +4,10 @@
 name: Build and deploy ASP.Net Core app to Azure Web App - claveplatformer
 
 on:
-    pull_request:
-        types:
-            - opened
-    push
+    - push
+    - pull_request:
+          types:
+              - opened
 
 jobs:
     buildweb:
