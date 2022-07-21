@@ -265,7 +265,7 @@ const TIME_ARRAY_ASSETS_SHOWCASE = "timeArrayAssetsShowcase";
 const LOCAL_TOURNAMENT_VALUE = "localTournamentValue";
 export const LOCAL_TOURNAMENT_NAME_VALUE = "tournamentKey";
 const LEVEL_SELECT_STORAGE_KEY = "LEVEL_SELECT";
-const API_URL = "http://localhost:7071/api/";
+const API_URL = "https://func-clave-platformer.azurewebsites.net/api/";
 
 export const getRecordTimeLocalStorage = (map: string) => {
   const rawTimeArrayAssetsShowcase = localStorage.getItem(
