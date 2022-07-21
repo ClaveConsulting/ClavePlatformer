@@ -1,5 +1,4 @@
 import { Guid } from "guid-typescript";
-import { Md5 } from "md5-typescript";
 import { Direction } from "./models/direction";
 
 let movementDirection;
@@ -170,8 +169,29 @@ export function collectStar(
   });
 }
 
-export const signaturegenerator = (value: string) => {
-  return Md5.init(NOT_USED_FOR_ANYTHING_I_PROMISE + value);
+function buf2hex(buffer: ArrayBuffer) {
+  // buffer is an ArrayBuffer
+  return [...new Uint8Array(buffer)]
+    .map((x) => x.toString(16).padStart(2, "0"))
+    .join("");
+}
+
+export const signatureGenerator = async (message: string) => {
+  const encoder = new TextEncoder();
+  const key = await window.crypto.subtle.importKey(
+    "raw",
+    encoder.encode(NOT_USED_FOR_ANYTHING_I_PROMISE + message),
+    { name: "HMAC", hash: { name: "SHA-512" } },
+    false,
+    ["sign", "verify"]
+  );
+  const signature = await window.crypto.subtle.sign(
+    "HMAC",
+    key,
+    encoder.encode(message)
+  );
+  const signatureHex = buf2hex(signature);
+  return signatureHex;
 };
 
 export function playerIntersect(
@@ -271,7 +291,7 @@ const LOCAL_TOURNAMENT_VALUE = "localTournamentValue";
 export const LOCAL_TOURNAMENT_NAME_VALUE = "tournamentKey";
 const LEVEL_SELECT_STORAGE_KEY = "LEVEL_SELECT";
 const API_URL = "https://func-clave-platformer.azurewebsites.net/api/";
-const NOT_USED_FOR_ANYTHING_I_PROMISE = Md5.init("Secret secret!!!!");
+const NOT_USED_FOR_ANYTHING_I_PROMISE = "Secret secret!!!!";
 
 export const getRecordTimeLocalStorage = (map: string) => {
   const rawTimeArrayAssetsShowcase = localStorage.getItem(
@@ -357,9 +377,17 @@ export async function recordTimeAPI(
   const tournamentName = getTournamentNameValue();
   let dataString;
   if (!!tournamentName) {
-    dataString = `?name=${name}&phoneNumber=${phone}&time=${counter}&map=${map}&tournament=${tournamentName}`;
+    dataString = `?name=${name}&phoneNumber=${phone}&time=${counter.toFixed(
+      2
+    )}&map=${map}&signature=${await signatureGenerator(
+      String(counter.toFixed(2))
+    )}&tournament=${tournamentName}`;
   } else {
-    dataString = `?name=${name}&phoneNumber=${phone}&time=${counter}&map=${map}`;
+    dataString = `?name=${name}&phoneNumber=${phone}&time=${counter.toFixed(
+      2
+    )}&map=${map}&signature=${await signatureGenerator(
+      String(counter.toFixed(2))
+    )}`;
   }
   const response = await (
     await fetch(API_URL + "AddScore" + dataString, {
