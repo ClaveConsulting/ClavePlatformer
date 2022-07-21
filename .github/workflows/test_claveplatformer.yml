@@ -1,0 +1,113 @@
+# Docs for the Azure Web Apps Deploy action: https://github.com/Azure/webapps-deploy
+# More GitHub Actions for Azure: https://github.com/Azure/actions
+
+name: Build and deploy ASP.Net Core app to Azure Web App - claveplatformer
+
+on: push
+
+jobs:
+    buildweb:
+        runs-on: ubuntu-latest
+        defaults:
+            run:
+                working-directory: ./web
+
+        strategy:
+            matrix:
+                node-version: [16.x]
+
+        steps:
+            - uses: actions/checkout@v3
+
+            - name: Use Node.js ${{ matrix.node-version }}
+              uses: actions/setup-node@v3
+              with:
+                  node-version: ${{ matrix.node-version }}
+
+            - name: Build
+              run: |
+                  yarn
+                  yarn build:production
+
+            - name: Upload to cache
+              uses: actions/upload-artifact@v2
+              with:
+                  name: dist
+                  path: /home/runner/work/ClavePlatformer/ClavePlatformer/web/dist
+
+    deployweb:
+        runs-on: ubuntu-latest
+        needs: buildweb
+
+        steps:
+            - uses: actions/checkout@v2
+
+            - name: Download from cache
+              uses: actions/download-artifact@v2
+              with:
+                  name: dist
+                  path: ./dist
+
+            - uses: azure/login@v1
+              with:
+                  creds: ${{ secrets.STOREWEB_AZURE_CREDENTIALS }}
+
+            - name: Upload to blob storage
+              uses: azure/CLI@v1
+              with:
+                  inlineScript: |
+                      az storage blob upload-batch --account-name storewebclaveplattest --auth-mode key -d '$web' -s ./dist
+
+            - name: logout
+              run: |
+                  az logout
+              if: always()
+
+    buildapi:
+        runs-on: ubuntu-latest
+
+        steps:
+            - uses: actions/checkout@v2
+
+            - name: Set up .NET Core
+              uses: actions/setup-dotnet@v1
+              with:
+                  dotnet-version: "6.0.x"
+                  include-prerelease: true
+
+            - name: Build with dotnet
+              run: dotnet build  --configuration Release ${GITHUB_WORKSPACE}/api/Clave.Platformer.sln
+
+            - name: Test with dotnet
+              run: dotnet test --configuration Release ${GITHUB_WORKSPACE}/api/Clave.Platformer.sln
+
+            - name: dotnet publish
+              run: dotnet publish ${GITHUB_WORKSPACE}/api/Clave.Platformer/Clave.Platformer.csproj -c Release -o ClavePlatformerApi
+
+            - name: Upload artifact for deployment job
+              uses: actions/upload-artifact@v2
+              with:
+                  name: ClavePlatformerApi
+                  path: ClavePlatformerApi
+
+    deployapi:
+        runs-on: ubuntu-latest
+        needs: buildapi
+        environment:
+            name: "Test"
+            url: ${{ steps.deploy-to-webapp.outputs.webapp-url }}
+
+        steps:
+            - name: Download artifact from build job
+              uses: actions/download-artifact@v2
+              with:
+                  name: ClavePlatformerApi
+
+            - name: Deploy to Azure Web App
+              id: deploy-to-webapp
+              uses: Azure/functions-action@v1
+              with:
+                  app-name: "func-clave-platformer"
+                  slot-name: "Test"
+                  publish-profile: ${{ secrets.AZURE_FUNCTIONAPP_PUBLISH_PROFILE_TEST }}
+                  package: .
