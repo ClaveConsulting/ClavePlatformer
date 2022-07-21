@@ -4,12 +4,9 @@ import { MenuDirection } from "./models/direction";
 import { MenuImage, NavMenu } from "./models/navMenu";
 import {
   getSelectedLevel,
-  LEVEL_HEADER_STYLE,
   PALE_GREEN_NUMBER,
   PAUSE_TEXT_STYLE,
   setSelectedLevel,
-  TRANSPARENT,
-  WHITE,
   WHITE_NUMBER,
 } from "./utils";
 
