@@ -29,6 +29,7 @@ public static class Extensions
             Map = scoreDocument.Map,
             Id = scoreDocument.Id,
             Time = scoreDocument.Time,
+            Tournament = scoreDocument.Tournament,
         };
     }
 }

@@ -9,6 +9,7 @@ import { PauseScene } from "./pauseScene";
 import { Uio } from "./uio";
 import "./nesCss.css";
 import "./font.css";
+import { TournamentScene } from "./tournamentScene";
 
 const initWidth = window.innerWidth;
 const initHeight = window.innerHeight;
@@ -43,6 +44,7 @@ window.onload = () => {
       new FinishScene({ key: "finish" }),
       new LeaderboardScene({ key: "leaderboard" }),
       new CountdownScene({ key: "countdown" }),
+      new TournamentScene({ key: "tournament" }),
     ],
     type: Phaser.AUTO,
     width: initWidth,

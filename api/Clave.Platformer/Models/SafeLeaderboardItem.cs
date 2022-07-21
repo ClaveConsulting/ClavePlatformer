@@ -14,12 +14,16 @@ namespace Clave.Platformer.Models
 
         [JsonProperty(PropertyName = "id")]
         public string Id { get; set; }
-        public SafeLeaderboardItem(string name, float time, string map, string id)
+
+        [JsonProperty(PropertyName = "tournament")]
+        public string Tournament { get; set; }
+        public SafeLeaderboardItem(string name, float time, string map, string id, string tournament)
         {
             Name = name;
             Time = time;
             Map = map;
             Id = id;
+            Tournament = tournament;
         }
         public SafeLeaderboardItem() { }
     }
