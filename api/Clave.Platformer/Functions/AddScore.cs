@@ -33,8 +33,9 @@ namespace Clave.Platformer.Functions
             string phoneNumber = req.Query["phoneNumber"];
             string map = req.Query["map"];
             string tournament = req.Query["tournament"];
+            string signature = req.Query["signature"];
 
-            var response = await _scoreService.AddScoreToDatabaseAsync(name, time, phoneNumber, map, tournament);
+            var response = await _scoreService.AddScoreToDatabaseAsync(name, time, phoneNumber, map, tournament, signature);
 
             return new OkObjectResult(response);
         }

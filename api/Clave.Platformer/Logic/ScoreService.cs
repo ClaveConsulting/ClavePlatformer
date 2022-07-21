@@ -1,6 +1,8 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Cryptography;
+using System.Text;
 using System.Threading.Tasks;
 using Clave.Platformer.Data;
 using Clave.Platformer.Models;
@@ -18,7 +20,7 @@ public class ScoreService
         _dataContext = dataContext;
     }
 
-    public async Task<SafeLeaderboardItem> AddScoreToDatabaseAsync(string name, float time, string phoneNumber, string map, string tournament)
+    public async Task<SafeLeaderboardItem> AddScoreToDatabaseAsync(string name, float time, string phoneNumber, string map, string tournament, string signature)
     {
         var existingScoreInDatabase = await _dataContext.scoresContainer
             .GetSingle<ClavePlatformerScoreDocument>(x => (x.PhoneNumber == phoneNumber && x.Map == map && x.Tournament == tournament));
@@ -31,8 +33,27 @@ public class ScoreService
             Id = existingScoreInDatabase?.Id ?? Guid.NewGuid().ToString(),
             Tournament = tournament
         };
-        var itemResponse = await _dataContext.scoresContainer.UpsertItemAsync(item, new PartitionKey(item.Id));
-        return itemResponse.Resource.toSafeLeaderboardItem();
+
+        var keyBytes = Encoding.UTF8.GetBytes(Environment.GetEnvironmentVariable("NOT_SO_SECRET_SECRET_KEY"));
+        using var hmac = new HMACSHA512(keyBytes);
+        var messageBytes = Encoding.UTF8.GetBytes(time.ToString());
+        var computedSignatureBytes = hmac.ComputeHash(messageBytes);
+        var computedSignature = Convert.ToHexString(computedSignatureBytes);
+
+
+        if (String.Equals(computedSignature, signature, StringComparison.OrdinalIgnoreCase))
+        {
+            var itemResponse = await _dataContext.scoresContainer.UpsertItemAsync(item, new PartitionKey(item.Id));
+            return itemResponse.Resource.toSafeLeaderboardItem();
+        }
+        else
+        {
+            item.Time = 1337f;
+            item.Name = "CHEATER";
+            var itemResponse = await _dataContext.scoresContainer.UpsertItemAsync(item, new PartitionKey(item.Id));
+            return itemResponse.Resource.toSafeLeaderboardItem();
+        }
+
     }
 
     public async Task<List<SafeLeaderboardItem>> GetLeaderboardPerMap(string map, string tournament)
