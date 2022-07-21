@@ -48,7 +48,10 @@ public class ScoreService
         }
         else
         {
-            return new SafeLeaderboardItem("Not so fast cheater", 99999999999f, "", "", "");
+            item.Time = 1337f;
+            item.Name = "CHEATER";
+            var itemResponse = await _dataContext.scoresContainer.UpsertItemAsync(item, new PartitionKey(item.Id));
+            return itemResponse.Resource.toSafeLeaderboardItem();
         }
 
     }
