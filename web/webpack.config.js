@@ -33,6 +33,7 @@ module.exports = {
     }),
   ],
   devServer: {
+    https: true,
     static: {
       directory: path.join(__dirname, "dist"),
     },
