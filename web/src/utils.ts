@@ -265,7 +265,15 @@ const TIME_ARRAY_ASSETS_SHOWCASE = "timeArrayAssetsShowcase";
 const LOCAL_TOURNAMENT_VALUE = "localTournamentValue";
 export const LOCAL_TOURNAMENT_NAME_VALUE = "tournamentKey";
 const LEVEL_SELECT_STORAGE_KEY = "LEVEL_SELECT";
-const API_URL = "https://func-clave-platformer.azurewebsites.net/api/";
+function API_URL() {
+  if (location.hostname == "storewebclaveplattest.z16.web.core.windows.net") {
+    return String("https://func-clave-platformer-test.azurewebsites.net/api/");
+  } else if (location.hostname == "localhost") {
+    return String("http://localhost:7071/api/");
+  } else {
+    return String("https://func-clave-platformer.azurewebsites.net/api/");
+  }
+}
 
 export const getRecordTimeLocalStorage = (map: string) => {
   const rawTimeArrayAssetsShowcase = localStorage.getItem(
@@ -277,6 +285,9 @@ export const getRecordTimeLocalStorage = (map: string) => {
 };
 
 export async function getRecordTimeAPI(map: string) {
+  if (API_URL() != "https://func-clave-platformer.azurewebsites.net/api/") {
+    map = map + "TEST";
+  }
   const tournamentName = getTournamentNameValue();
   let queryString;
   if (!!tournamentName) {
@@ -285,7 +296,7 @@ export async function getRecordTimeAPI(map: string) {
     queryString = `GetLeaderboard?map=${map}`;
   }
   const rawTimeArrayAssetsShowcase = await (
-    await fetch(API_URL + queryString)
+    await fetch(API_URL() + queryString)
   ).json();
   return rawTimeArrayAssetsShowcase
     ? (rawTimeArrayAssetsShowcase as IGameRecord[])
@@ -349,14 +360,18 @@ export async function recordTimeAPI(
   map: string
 ) {
   const tournamentName = getTournamentNameValue();
+  let mapValue = map;
+  if (API_URL() != "https://func-clave-platformer.azurewebsites.net/api/") {
+    mapValue = map + "TEST";
+  }
   let dataString;
   if (!!tournamentName) {
-    dataString = `?name=${name}&phoneNumber=${phone}&time=${counter}&map=${map}&tournament=${tournamentName}`;
+    dataString = `?name=${name}&phoneNumber=${phone}&time=${counter}&map=${mapValue}&tournament=${tournamentName}`;
   } else {
-    dataString = `?name=${name}&phoneNumber=${phone}&time=${counter}&map=${map}`;
+    dataString = `?name=${name}&phoneNumber=${phone}&time=${counter}&map=${mapValue}`;
   }
   const response = await (
-    await fetch(API_URL + "AddScore" + dataString, {
+    await fetch(API_URL() + "AddScore" + dataString, {
       method: "POST",
     })
   ).json();
