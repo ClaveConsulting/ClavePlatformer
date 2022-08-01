@@ -2,9 +2,9 @@ using System;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
+using Clave.Platformer.Models;
 using Microsoft.Azure.Cosmos;
 using Microsoft.Azure.Cosmos.Linq;
-using Clave.Platformer.Models;
 
 namespace Clave.Platformer.Data;
 
@@ -12,12 +12,13 @@ public static class Extensions
 {
     public static async Task<T> GetSingle<T>(this Container container, Expression<Func<T, bool>> selector)
     {
-        var iterator = container.GetItemLinqQueryable<T>().Where(selector).ToFeedIterator<T>();
+        var iterator = container.GetItemLinqQueryable<T>().Where(selector).ToFeedIterator();
         while (iterator.HasMoreResults)
         {
             var result = await iterator.ReadNextAsync();
             return result.FirstOrDefault();
         }
+
         return default;
     }
 
@@ -29,7 +30,7 @@ public static class Extensions
             Map = scoreDocument.Map,
             Id = scoreDocument.Id,
             Time = scoreDocument.Time,
-            Tournament = scoreDocument.Tournament,
+            Tournament = scoreDocument.Tournament
         };
     }
 }

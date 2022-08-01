@@ -24,6 +24,7 @@
     "webpack-dev-server": "^4.9.2"
   },
   "dependencies": {
+    "@material-ui/core": "^4.12.4",
     "@typescript-eslint/eslint-plugin": "^5.29.0",
     "@typescript-eslint/parser": "^5.29.0",
     "eslint-cli": "^1.1.1",

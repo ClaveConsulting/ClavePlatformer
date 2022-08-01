@@ -5,7 +5,6 @@ namespace Clave.Platformer.Tests;
 
 public class ExtensionsTests
 {
-
     [Fact]
     public void toSafeLeaderboardItem_Should_Work()
     {
@@ -35,11 +34,11 @@ public class ExtensionsTests
         var b = a.toSafeLeaderboardItem();
 
         // Verify
-        Assert.NotSame(a,b);
-        Assert.Equal(a.Map,b.Map);
-        Assert.Equal(a.Name,b.Name);
-        Assert.Equal(a.Time,b.Time);
-        Assert.Equal(a.Id,b.Id);
+        Assert.NotSame(a, b);
+        Assert.Equal(a.Map, b.Map);
+        Assert.Equal(a.Name, b.Name);
+        Assert.Equal(a.Time, b.Time);
+        Assert.Equal(a.Id, b.Id);
         Assert.IsNotType<ClavePlatformerScoreDocument>(b);
     }
 }
