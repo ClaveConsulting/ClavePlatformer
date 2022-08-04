@@ -89,7 +89,7 @@ export function Search() {
                             variant="contained"
                             color="success"
                             startIcon={<SearchIcon/>}
-                            sx={{padding: 2, margin: 1}}
+                            sx={{padding: 2}}
                             fullWidth
                             onClick={handleSubmit}
                         >
@@ -103,7 +103,7 @@ export function Search() {
                             color="error"
                             startIcon={<Clear/>}
                             type="reset"
-                            sx={{padding: 2, margin: 1}}
+                            sx={{padding: 2}}
                             fullWidth
                         >
                             Clear
