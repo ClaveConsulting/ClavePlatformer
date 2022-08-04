@@ -22,5 +22,6 @@ public class Startup : FunctionsStartup
         });
 
         builder.Services.AddTransient<ScoreService>();
+        builder.Services.AddTransient<SearchService>();
     }
 }

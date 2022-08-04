@@ -21,8 +21,9 @@ import EmojiEventsIcon from "@mui/icons-material/EmojiEvents";
 import EditIcon from "@mui/icons-material/Edit";
 import { Link } from "react-router-dom";
 import HomeIcon from "@mui/icons-material/Home";
-import { Button } from "@mui/material";
+import { Button, colors } from "@mui/material";
 import PersonIcon from "@mui/icons-material/Person";
+import { color } from "@mui/system";
 
 const drawerWidth = 240;
 
@@ -108,7 +109,7 @@ function ListButtonWithIcon({
 }) {
     return (
         <ListItem disablePadding sx={{ display: "block" }}>
-            <Link to={href}>
+            <Link to={href} style={{ textDecoration: "none", color: "black" }}>
                 <ListItemButton
                     sx={{
                         minHeight: 48,
@@ -170,7 +171,7 @@ export default function TopBar({ children }: { children: React.ReactNode }) {
                         sx={{ flexGrow: 1 }}
                         noWrap
                     >
-                        🕹️CPAD🕹️
+                        Clave Platformer Administration Dashboard️
                     </Typography>
                     <Link to="">
                         <IconButton color="default">
