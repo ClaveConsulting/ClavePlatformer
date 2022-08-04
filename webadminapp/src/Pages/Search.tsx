@@ -1,11 +1,10 @@
-import {Box, Button, Divider, Grid, TextField} from "@mui/material";
+import {Box, Button, Grid, TextField} from "@mui/material";
 import React, {useState} from "react";
 import SearchIcon from "@mui/icons-material/Search";
-import {Clear, CropSquareSharp, DataArray, Error} from "@mui/icons-material";
+import {Clear} from "@mui/icons-material";
 import BasicTable from "../Components/Table";
 import {searchDatabase} from "../services/SearchService";
-import {ISearchDataElement, ISearchDataResponse} from "../Interfaces/RawDataResponse";
-
+import {ISearchDataElement} from "../Interfaces/RawDataResponse";
 
 export function Search() {
     const [name, setName] = useState("");
@@ -27,7 +26,7 @@ export function Search() {
         setTournament(e.target.value);
     };
     const handleSubmit = async () => {
-        const data = await searchDatabase(name, phone, tournament)
+        const data = await searchDatabase(name, phone, map, tournament)
         if (!!data) {
             setDataResponse(data);
         }
@@ -37,13 +36,9 @@ export function Search() {
     return (
         <Box>
             <form
-                id="searchform"
                 noValidate
                 autoComplete="off"
-                onSubmit={(event) => {
-                    console.log("submitted form ");
-                }}
-                onReset={(e) => {
+                onReset={async () => {
                     setMap("");
                     setName("");
                     setPhone("");

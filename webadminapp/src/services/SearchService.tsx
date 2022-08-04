@@ -1,35 +1,47 @@
-﻿import {ISearchDataElement, ISearchDataResponse} from "../Interfaces/RawDataResponse";
+﻿import {ISearchDataElement} from "../Interfaces/RawDataResponse";
 
 const API_URL = () => {
     return "http://localhost:7071/api/"
 }
 
 export async function searchDatabase(name?: string, phone?: string, map?: string, tournament?: string) {
+    
     const queryString = () => {
         let query = "GetUserData?";
-        if (!!name) {
+        if (name) {
             query += `&name=${name}`
         }
-        if (!!phone) {
+        if (phone) {
             query += `&phone=${phone}`
         }
-        if (!!tournament) {
+        if (tournament) {
             query += `&tournament=${tournament}`
         }
-        if (!!map) {
+        if (map) {
             query += `&map=${map}`
         }
         return query
     }
 
-    let responseElements = [];
     if (!name && !phone && !tournament) {
         return []
     } else {
         let response = await fetch(API_URL() + queryString())
-        let data = await response.text()
-        responseElements = JSON.parse(data) as ISearchDataElement[];
-        
+        let data = await response.json()
+        return data as ISearchDataElement[];
+
     }
-    return responseElements
+}
+
+export async function getSingleUserById(id: string) {
+    const query = `GetSingleUserById?id=${id}`;
+    
+    if (!id) {
+        return null
+    } else {
+        let response = await fetch(API_URL() + query)
+        let data = await response.json()
+        return data as ISearchDataElement;
+
+    }
 }

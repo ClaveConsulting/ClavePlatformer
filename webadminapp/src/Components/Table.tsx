@@ -9,7 +9,8 @@ import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
 import IconButton from "@mui/material/IconButton";
 import {Delete, Edit} from "@mui/icons-material";
-import {ISearchDataElement, ISearchDataResponse} from "../Interfaces/RawDataResponse";
+import {ISearchDataElement} from "../Interfaces/RawDataResponse";
+import {getSingleUserById} from "../services/SearchService";
 
 const useStyles = makeStyles({
     table: {
@@ -48,9 +49,9 @@ export default function BasicTable({dataResponseArray,
                             <TableCell align="right">{entry.time}</TableCell>
                             <TableCell align="right">{entry.map}</TableCell>
                             <TableCell align="right">{entry.tournament}</TableCell>
-                            <TableCell>
-                                <IconButton>
-                                    <Edit></Edit>
+                            <TableCell align="right">
+                                <IconButton onClick={async ()=>{console.log(await getSingleUserById(entry.id))}}>
+                                    <Edit ></Edit>
                                 </IconButton>
                                 <IconButton>
                                     <Delete></Delete>

@@ -7,6 +7,3 @@
     time:string,
 }
 
-export interface ISearchDataResponse {
-    elements: ISearchDataElement[]|null
-}
