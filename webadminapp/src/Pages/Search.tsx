@@ -2,7 +2,7 @@ import {Box, Button, Grid, TextField} from "@mui/material";
 import React, {useState} from "react";
 import SearchIcon from "@mui/icons-material/Search";
 import {Clear} from "@mui/icons-material";
-import BasicTable from "../Components/Table";
+import DataTable from "../Components/Table";
 import {searchDatabase} from "../services/SearchService";
 import {ISearchDataElement} from "../Interfaces/RawDataResponse";
 
@@ -115,7 +115,7 @@ export function Search() {
 
             <Grid container spacing={1}>
                 <Grid item xs={12}>
-                    <BasicTable dataResponseArray={dataResponse}></BasicTable>
+                    <DataTable dataResponseArray={dataResponse}></DataTable>
                 </Grid>
             </Grid>
 

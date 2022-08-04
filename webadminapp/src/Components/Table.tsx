@@ -11,6 +11,7 @@ import IconButton from "@mui/material/IconButton";
 import {Delete, Edit} from "@mui/icons-material";
 import {ISearchDataElement} from "../Interfaces/RawDataResponse";
 import {getSingleUserById} from "../services/SearchService";
+import {DeleteButton} from "./DeletePopUp";
 
 const useStyles = makeStyles({
     table: {
@@ -18,7 +19,7 @@ const useStyles = makeStyles({
     },
 });
 
-export default function BasicTable({dataResponseArray,
+export default function DataTable({dataResponseArray,
             
 }: {
     dataResponseArray: ISearchDataElement[];
@@ -53,9 +54,7 @@ export default function BasicTable({dataResponseArray,
                                 <IconButton onClick={async ()=>{console.log(await getSingleUserById(entry.id))}}>
                                     <Edit ></Edit>
                                 </IconButton>
-                                <IconButton>
-                                    <Delete></Delete>
-                                </IconButton>
+                                <DeleteButton scoreId={entry.id} ></DeleteButton>
                             </TableCell>
                         </TableRow>
                     ))}
