@@ -24,6 +24,7 @@ import HomeIcon from "@mui/icons-material/Home";
 import { Button, colors } from "@mui/material";
 import PersonIcon from "@mui/icons-material/Person";
 import { color } from "@mui/system";
+import {SignInButton} from "./signInButton";
 
 const drawerWidth = 240;
 
@@ -178,10 +179,8 @@ export default function TopBar({ children }: { children: React.ReactNode }) {
                             <HomeIcon />
                         </IconButton>
                     </Link>
-                    <Button color="inherit">
-                        <PersonIcon></PersonIcon>
-                        Login
-                    </Button>
+
+                    <SignInButton/>
                 </Toolbar>
             </AppBar>
             <Drawer variant="permanent" open={open}>
