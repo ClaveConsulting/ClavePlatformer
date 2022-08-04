@@ -26,15 +26,26 @@ public class SearchService
             .GetItemLinqQueryable<ClavePlatformerScoreDocument>()
             .Where((x) => ((name == null || x.Name == name) &&
                            (phoneNumber == null || x.PhoneNumber == phoneNumber) &&
-                           (tournament == null || x.Tournament == tournament)))
+                           (tournament == null || x.Tournament == tournament) &&
+                           (map == null || x.Map == map)))
             .OrderBy(x => x.Time)
             .ToFeedIterator();
 
         while (feedIterator.HasMoreResults)
         {
             var feedResponse = await feedIterator.ReadNextAsync();
-            foreach (var item in feedResponse) rawSearchResult.Add(item);
+
+            rawSearchResult.AddRange(feedResponse);
         }
+
+        return rawSearchResult;
+    }
+
+    public async Task<ClavePlatformerScoreDocument> GetScoreById(string id)
+    {
+        var rawSearchResult = await _dataContext.scoresContainer
+            .GetSingle<ClavePlatformerScoreDocument>(x =>
+                x.Id == id);
 
         return rawSearchResult;
     }
