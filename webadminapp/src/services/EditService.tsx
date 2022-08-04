@@ -16,6 +16,6 @@ export async function deleteSingleEntryById(id: string) {
 }
 
 export async function editScoreById(id: string, name: string, phone: string, time: string, map: string, tournament: string|null) {
-    const query = `EditScore?id=${id}&name=${name}&phone=${phone}&time=${time}&map=${map}&tournament=${tournament}`
+    const query = `EditScore?id=${id}&name=${name}&phoneNumber=${phone}&time=${time}&map=${map}&tournament=${tournament}`
     return await fetch(API_URL() + query, {method: "POST"})
 }
