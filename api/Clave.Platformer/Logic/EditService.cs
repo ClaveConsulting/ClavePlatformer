@@ -16,14 +16,21 @@ public class EditService
     {
         _dataContext = dataContext;
     }
-    
+
     public async Task<ClavePlatformerScoreDocument> DeleteScoreByIdAsync(string id)
     {
-        return await _dataContext.scoresContainer.DeleteItemAsync<ClavePlatformerScoreDocument>(id,new PartitionKey(id));
+        return await _dataContext.scoresContainer.DeleteItemAsync<ClavePlatformerScoreDocument>(id,
+            new PartitionKey(id));
     }
-    
-    public async Task<ClavePlatformerScoreDocument> EditScoreByIdAsync(string id,string name, float time, string phoneNumber, string map, string tournament)
+
+    public async Task<ClavePlatformerScoreDocument> EditScoreByIdAsync(string id, string name, float time,
+        string phoneNumber, string map, string tournament)
     {
+        if (tournament is "")
+        {
+            tournament = null;
+        }
+
         var item = new ClavePlatformerScoreDocument
         {
             Name = name,
@@ -33,10 +40,8 @@ public class EditService
             Id = id,
             Tournament = tournament
         };
-        
-        var response = await _dataContext.scoresContainer.UpsertItemAsync(item,new PartitionKey(id));
+
+        var response = await _dataContext.scoresContainer.UpsertItemAsync(item, new PartitionKey(id));
         return response.Resource;
     }
-
-    
 }
