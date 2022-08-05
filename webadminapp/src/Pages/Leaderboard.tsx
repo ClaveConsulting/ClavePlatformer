@@ -2,8 +2,6 @@ import {Box} from "@mui/system";
 import React, {useState} from "react";
 import SingleLeaderBoard from "../Components/SingleLeaderBoard";
 import {Button, Grid, TextField} from "@mui/material";
-import {DropdownButton} from "react-bootstrap";
-import DropdownItem from "react-bootstrap/DropdownItem";
 import {ArrowForwardIosRounded, Public} from "@mui/icons-material";
 import {searchDatabase} from "../services/SearchService";
 
@@ -37,7 +35,6 @@ export function Leaderboard() {
         }
     }
 
-
     return <Box>
         <Grid container spacing={2}>
             <Grid item xs={12} md={6}>
@@ -64,7 +61,9 @@ export function Leaderboard() {
                             />
                         </Grid>
                         <Grid item xs={4}>
-                            <Button fullWidth variant={"contained"} sx={{padding: 2}} color={"success"}
+                            <Button fullWidth variant={"contained"} 
+                                    sx={{padding: 2}} 
+                                    color={"success"}
                                     onClick={handleSubmit}
                                     endIcon={<ArrowForwardIosRounded/>}>Go</Button>
                         </Grid>
