@@ -81,7 +81,7 @@ export function Add() {
                     />
 
                 </Grid>
-                <Grid item xs={6}>
+                <Grid item xs={12} md={6} lg={3}>
                     <TextField id="time" label="Time" type="number" fullWidth
                                onChange={handleTimeChange}/>
 

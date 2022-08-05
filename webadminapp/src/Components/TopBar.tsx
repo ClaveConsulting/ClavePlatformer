@@ -1,8 +1,8 @@
 import * as React from "react";
-import { styled, useTheme, Theme, CSSObject } from "@mui/material/styles";
+import {styled, useTheme, Theme, CSSObject} from "@mui/material/styles";
 import Box from "@mui/material/Box";
 import MuiDrawer from "@mui/material/Drawer";
-import MuiAppBar, { AppBarProps as MuiAppBarProps } from "@mui/material/AppBar";
+import MuiAppBar, {AppBarProps as MuiAppBarProps} from "@mui/material/AppBar";
 import Toolbar from "@mui/material/Toolbar";
 import List from "@mui/material/List";
 import CssBaseline from "@mui/material/CssBaseline";
@@ -18,12 +18,13 @@ import ListItemIcon from "@mui/material/ListItemIcon";
 import ListItemText from "@mui/material/ListItemText";
 import SearchIcon from "@mui/icons-material/Search";
 import EmojiEventsIcon from "@mui/icons-material/EmojiEvents";
-import { Link } from "react-router-dom";
+import {Link} from "react-router-dom";
 import HomeIcon from "@mui/icons-material/Home";
 
 import {SignInButton} from "./signInButton";
 import {SignOutButton} from "./logoutButton";
 import {Add} from "@mui/icons-material";
+import {AuthenticatedTemplate, UnauthenticatedTemplate} from "@azure/msal-react";
 
 const drawerWidth = 240;
 
@@ -48,7 +49,7 @@ const closedMixin = (theme: Theme): CSSObject => ({
     },
 });
 
-const DrawerHeader = styled("div")(({ theme }) => ({
+const DrawerHeader = styled("div")(({theme}) => ({
     display: "flex",
     alignItems: "center",
     justifyContent: "flex-end",
@@ -63,7 +64,7 @@ interface AppBarProps extends MuiAppBarProps {
 
 const AppBar = styled(MuiAppBar, {
     shouldForwardProp: (prop) => prop !== "open",
-})<AppBarProps>(({ theme, open }) => ({
+})<AppBarProps>(({theme, open}) => ({
     zIndex: theme.zIndex.drawer + 1,
     transition: theme.transitions.create(["width", "margin"], {
         easing: theme.transitions.easing.sharp,
@@ -81,7 +82,7 @@ const AppBar = styled(MuiAppBar, {
 
 const Drawer = styled(MuiDrawer, {
     shouldForwardProp: (prop) => prop !== "open",
-})(({ theme, open }) => ({
+})(({theme, open}) => ({
     width: drawerWidth,
     flexShrink: 0,
     whiteSpace: "nowrap",
@@ -97,19 +98,19 @@ const Drawer = styled(MuiDrawer, {
 }));
 
 function ListButtonWithIcon({
-    text,
-    icon,
-    href,
-    open,
-}: {
+                                text,
+                                icon,
+                                href,
+                                open,
+                            }: {
     text: string;
     icon: React.ReactNode;
     href: string;
     open: boolean | undefined;
 }) {
     return (
-        <ListItem disablePadding sx={{ display: "block" }}>
-            <Link to={href} style={{ textDecoration: "none", color: "black" }}>
+        <ListItem disablePadding sx={{display: "block"}}>
+            <Link to={href} style={{textDecoration: "none", color: "black"}}>
                 <ListItemButton
                     sx={{
                         minHeight: 48,
@@ -128,7 +129,7 @@ function ListButtonWithIcon({
                     </ListItemIcon>
                     <ListItemText
                         primary={text}
-                        sx={{ opacity: open ? 1 : 0 }}
+                        sx={{opacity: open ? 1 : 0}}
                     />
                 </ListItemButton>
             </Link>
@@ -136,7 +137,7 @@ function ListButtonWithIcon({
     );
 }
 
-export default function TopBar({ children }: { children: React.ReactNode }) {
+export default function TopBar({children}: { children: React.ReactNode }) {
     const theme = useTheme();
     const [open, setOpen] = React.useState(false);
 
@@ -149,8 +150,8 @@ export default function TopBar({ children }: { children: React.ReactNode }) {
     };
 
     return (
-        <Box sx={{ display: "flex" }}>
-            <CssBaseline />
+        <Box sx={{display: "flex"}}>
+            <CssBaseline/>
             <AppBar position="fixed" open={open}>
                 <Toolbar>
                     <IconButton
@@ -160,50 +161,53 @@ export default function TopBar({ children }: { children: React.ReactNode }) {
                         edge="start"
                         sx={{
                             marginRight: 5,
-                            ...(open && { display: "none" }),
+                            ...(open && {display: "none"}),
                         }}
                     >
-                        <MenuIcon />
+                        <MenuIcon/>
                     </IconButton>
                     <Typography
                         variant="h6"
                         component="div"
-                        sx={{ flexGrow: 1 }}
+                        sx={{flexGrow: 1}}
                         noWrap
                     >
                         Clave Platformer Administration Dashboard️
                     </Typography>
                     <Link to="">
                         <IconButton color="default">
-                            <HomeIcon />
+                            <HomeIcon/>
                         </IconButton>
                     </Link>
-
-                    <SignInButton/>
-                    <SignOutButton/>
+                    <AuthenticatedTemplate>
+                        <SignOutButton/>
+                    </AuthenticatedTemplate>
+                    <UnauthenticatedTemplate>
+                        <SignInButton/>
+                    </UnauthenticatedTemplate>
                 </Toolbar>
             </AppBar>
             <Drawer variant="permanent" open={open}>
                 <DrawerHeader>
                     <IconButton onClick={handleDrawerClose}>
                         {theme.direction === "rtl" ? (
-                            <ChevronRightIcon />
+                            <ChevronRightIcon/>
                         ) : (
-                            <ChevronLeftIcon />
+                            <ChevronLeftIcon/>
                         )}
                     </IconButton>
                 </DrawerHeader>
-                <Divider />
+                <Divider/>
                 <List>
                     <ListButtonWithIcon
                         text="Search"
-                        icon={<SearchIcon />}
+                        icon={<SearchIcon/>}
                         open={open}
                         href="/search"
                     />
                     <ListButtonWithIcon
                         text="Leaderboard"
-                        icon={<EmojiEventsIcon />}
+                        icon={<EmojiEventsIcon/>}
                         open={open}
                         href="/leaderboard"
                     />
@@ -215,8 +219,8 @@ export default function TopBar({ children }: { children: React.ReactNode }) {
                     />
                 </List>
             </Drawer>
-            <Box component="main" sx={{ flexGrow: 1, p: 3 }}>
-                <DrawerHeader />
+            <Box component="main" sx={{flexGrow: 1}}>
+                <DrawerHeader/>
                 {children}
             </Box>
         </Box>
