@@ -1,0 +1,20 @@
+{
+  "name": "clave-platformer",
+  "version": "0.0.1",
+  "description": "A nice 2D platformer game",
+  "directories": {
+    "lib": "lib",
+    "test": "test"
+  },
+  "dependencies": {
+    "http-server": "^0.11.1"
+  },
+  "scripts": {
+    "start": "http-server",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/evilppoHobby/clave-platformer-v1.git"
+  }
+}
