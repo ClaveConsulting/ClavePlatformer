@@ -4,7 +4,7 @@ import {styled} from "@mui/material/styles";
 import DataTable from "../Components/Table";
 
 export function Home() {
-    return <Grid container spacing={2}>
+    return <Grid container spacing={1}>
         <Grid item xs={8}>
             <Item>Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the
                 industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and

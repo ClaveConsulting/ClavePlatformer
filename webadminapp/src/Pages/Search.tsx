@@ -38,7 +38,7 @@ export function Search() {
             <form
                 noValidate
                 autoComplete="off"
-                onReset={async () => {
+                onReset={() => {
                     setMap("");
                     setName("");
                     setPhone("");

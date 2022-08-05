@@ -19,3 +19,8 @@ export async function editScoreById(id: string, name: string, phone: string, tim
     const query = `EditScore?id=${id}&name=${name}&phoneNumber=${phone}&time=${time}&map=${map}&tournament=${tournament}`
     return await fetch(API_URL() + query, {method: "POST"})
 }
+
+export async function addToDatabase(name: string, phone: string, time: string, map: string, tournament: string|null) {
+    const query = `AddScoreAdmin?&name=${name}&phoneNumber=${phone}&time=${time}&map=${map}&tournament=${tournament}`
+    return await fetch(API_URL() + query, {method: "POST"})
+}

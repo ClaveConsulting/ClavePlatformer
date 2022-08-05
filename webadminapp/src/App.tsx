@@ -5,7 +5,7 @@ import "./App.css";
 import Layout from "./Pages/layout";
 import {Leaderboard} from "./Pages/Leaderboard";
 import {Search} from "./Pages/Search";
-import {Edit} from "./Pages/Edit";
+import {Add} from "./Pages/Add";
 import {Home} from "./Pages/Home";
 
 function App() {
@@ -16,7 +16,7 @@ function App() {
                     <Route path="" element={<Home/>}/>
                     <Route path="search" element={<Search/>}/>
                     <Route path="leaderboard" element={<Leaderboard/>}/>{" "}
-                    <Route path="edit" element={<Edit/>}/>
+                    <Route path="add" element={<Add/>}/>
                 </Route>
             </Routes>
         </BrowserRouter>

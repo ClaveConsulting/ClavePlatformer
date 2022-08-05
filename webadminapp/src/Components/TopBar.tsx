@@ -18,13 +18,12 @@ import ListItemIcon from "@mui/material/ListItemIcon";
 import ListItemText from "@mui/material/ListItemText";
 import SearchIcon from "@mui/icons-material/Search";
 import EmojiEventsIcon from "@mui/icons-material/EmojiEvents";
-import EditIcon from "@mui/icons-material/Edit";
 import { Link } from "react-router-dom";
 import HomeIcon from "@mui/icons-material/Home";
-import { Button, colors } from "@mui/material";
-import PersonIcon from "@mui/icons-material/Person";
-import { color } from "@mui/system";
+
 import {SignInButton} from "./signInButton";
+import {SignOutButton} from "./logoutButton";
+import {Add} from "@mui/icons-material";
 
 const drawerWidth = 240;
 
@@ -181,6 +180,7 @@ export default function TopBar({ children }: { children: React.ReactNode }) {
                     </Link>
 
                     <SignInButton/>
+                    <SignOutButton/>
                 </Toolbar>
             </AppBar>
             <Drawer variant="permanent" open={open}>
@@ -208,10 +208,10 @@ export default function TopBar({ children }: { children: React.ReactNode }) {
                         href="/leaderboard"
                     />
                     <ListButtonWithIcon
-                        text="Edit"
-                        icon={<EditIcon />}
+                        text="Add entry"
+                        icon={<Add/>}
                         open={open}
-                        href="/edit"
+                        href="/add"
                     />
                 </List>
             </Drawer>

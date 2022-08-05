@@ -5,7 +5,6 @@ const API_URL = () => {
 }
 
 export async function searchDatabase(name?: string, phone?: string, map?: string, tournament?: string) {
-    
     const queryString = () => {
         let query = "GetUserData?";
         if (name) {
@@ -23,7 +22,7 @@ export async function searchDatabase(name?: string, phone?: string, map?: string
         return query
     }
 
-    if (!name && !phone && !tournament) {
+    if (!name && !phone && !tournament && !map) {
         return []
     } else {
         let response = await fetch(API_URL() + queryString())

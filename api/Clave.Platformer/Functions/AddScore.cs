@@ -21,7 +21,26 @@ public class AddScore
     }
 
     [FunctionName("AddScore")]
-    public async Task<IActionResult> Run(
+    public async Task<IActionResult> AddScore_Run(
+        [HttpTrigger(AuthorizationLevel.Anonymous, "post", Route = null)]
+        HttpRequest req,
+        ILogger log)
+    {
+        string name = req.Query["name"];
+        // Skriv om til å bruke tryParse()
+        var time = float.Parse(req.Query["time"]);
+
+        string phoneNumber = req.Query["phoneNumber"];
+        string map = req.Query["map"];
+        string tournament = req.Query["tournament"];
+
+        var response = await _scoreService.AddScoreToDatabaseAsync(name, time, phoneNumber, map, tournament);
+
+        return new OkObjectResult(response);
+    }
+    
+    [FunctionName("AddScoreAdmin")]
+    public async Task<IActionResult> AddScoreAdmin_Run(
         [HttpTrigger(AuthorizationLevel.Anonymous, "post", Route = null)]
         HttpRequest req,
         ILogger log)
