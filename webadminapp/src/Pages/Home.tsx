@@ -1,7 +1,6 @@
 import React from "react";
 import {Grid, Paper} from "@mui/material";
 import {styled} from "@mui/material/styles";
-import DataTable from "../Components/Table";
 
 export function Home() {
     return <Grid container spacing={1}>

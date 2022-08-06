@@ -7,10 +7,7 @@ import TableContainer from '@mui/material/TableContainer';
 import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
-import IconButton from "@mui/material/IconButton";
-import {Delete, Edit} from "@mui/icons-material";
 import {ISearchDataElement} from "../Interfaces/RawDataResponse";
-import {getSingleUserById} from "../services/SearchService";
 import {DeleteButton, EditButton} from "./PopUps";
 
 const useStyles = makeStyles({

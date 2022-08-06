@@ -3,7 +3,7 @@ import { useMsal } from "@azure/msal-react";
 import { loginRequest } from "../authConfig";
 import {Button} from "@mui/material";
 import {IPublicClientApplication} from "@azure/msal-browser";
-import {Person, VerifiedUser} from "@mui/icons-material";
+import {Person} from "@mui/icons-material";
 
 function handleLogin(instance: IPublicClientApplication) {
     instance.loginPopup(loginRequest).catch(e => {

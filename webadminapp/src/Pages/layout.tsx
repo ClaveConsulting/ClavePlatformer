@@ -4,7 +4,6 @@ import TopBar from "../Components/TopBar";
 import {AuthenticatedTemplate, UnauthenticatedTemplate} from "@azure/msal-react";
 import Typography from "@mui/material/Typography";
 import {Box} from "@mui/system";
-import {Grid} from "@mui/material";
 
 const Layout = () => {
     return (

@@ -13,7 +13,6 @@ import IconButton from "@mui/material/IconButton";
 import {Cancel, Clear, Delete, Edit, Save} from "@mui/icons-material";
 import {deleteSingleEntryById, editScoreById} from "../services/EditService";
 import {ISearchDataElement} from "../Interfaces/RawDataResponse";
-import SearchIcon from "@mui/icons-material/Search";
 import {Box} from "@mui/system";
 
 export function DeleteButton({scoreId}: { scoreId: string }) {

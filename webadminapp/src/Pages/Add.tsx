@@ -1,9 +1,5 @@
 import React, {useState} from "react";
-import {ISearchDataElement} from "../Interfaces/RawDataResponse";
-import {searchDatabase} from "../services/SearchService";
 import {Button, Grid, TextField} from "@mui/material";
-import SearchIcon from "@mui/icons-material/Search";
-import {Clear} from "@mui/icons-material";
 import {Box} from "@mui/system";
 import AddIcon from "@mui/icons-material/Add";
 import {addToDatabase} from "../services/EditService";
