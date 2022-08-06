@@ -21,9 +21,14 @@ public class ScoreService
     public async Task<SafeLeaderboardItem> AddScoreToDatabaseAsync(string name, float time, string phoneNumber,
         string map, string tournament)
     {
+        if (tournament == "")
+        {
+            tournament = null;
+        }
         var existingScoreInDatabase = await _dataContext.scoresContainer
             .GetSingle<ClavePlatformerScoreDocument>(x =>
                 x.PhoneNumber == phoneNumber && x.Map == map && x.Tournament == tournament);
+        
         var item = new ClavePlatformerScoreDocument
         {
             Name = name,

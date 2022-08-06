@@ -52,6 +52,7 @@ public class AddScore
         string phoneNumber = req.Query["phoneNumber"];
         string map = req.Query["map"];
         string tournament = req.Query["tournament"];
+        
 
         var response = await _scoreService.AddScoreToDatabaseAsync(name, time, phoneNumber, map, tournament);
 

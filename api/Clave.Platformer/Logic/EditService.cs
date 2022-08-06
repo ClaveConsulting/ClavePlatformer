@@ -26,7 +26,7 @@ public class EditService
     public async Task<ClavePlatformerScoreDocument> EditScoreByIdAsync(string id, string name, float time,
         string phoneNumber, string map, string tournament)
     {
-        if (tournament is "")
+        if (tournament == "")
         {
             tournament = null;
         }
