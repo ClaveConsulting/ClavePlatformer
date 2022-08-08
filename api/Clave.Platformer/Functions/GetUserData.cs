@@ -27,21 +27,11 @@ public class GetUserData
 
     [FunctionName("GetUserData")]
     public async Task<IActionResult> GetUserData_Run(
-        [HttpTrigger(AuthorizationLevel.Anonymous, "get", Route = null)]
-        HttpRequest req,
-        ILogger log)
+        [HttpTrigger(AuthorizationLevel.Anonymous, "post", Route = null)]
+        GetScoresQuery getScoresQuery
+        )
     {
-        string name = req.Query["name"];
-        string phone = req.Query["phone"];
-        string tournament = req.Query["tournament"];
-        string map = req.Query["map"];
-        var response = await _mediator.Send(new GetScoresQuery
-        {
-            Name = name,
-            Map = map,
-            Tournament = tournament,
-            PhoneNumber = phone
-        });
+        var response = await _mediator.Send(getScoresQuery);
         return new OkObjectResult(response);
     }
 
