@@ -61,7 +61,7 @@ export function Search() {
                         <TextField
                             id="phone"
                             label="Phone number"
-                            type="number"
+                            type="tel"
                             fullWidth
                             onChange={handlePhoneChange}
                             onEmptied={handlePhoneChange}

@@ -1,7 +1,12 @@
 using System;
+using System.Collections.Generic;
+using System.Net.NetworkInformation;
 using Clave.Platformer;
 using Clave.Platformer.Data;
 using Clave.Platformer.Logic;
+using Clave.Platformer.Models;
+using Clave.Platformer.Scores;
+using MediatR;
 using Microsoft.Azure.Cosmos;
 using Microsoft.Azure.Functions.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection;
@@ -20,9 +25,12 @@ public class Startup : FunctionsStartup
             var scoresContainer = cosmosClient.GetContainer("ClavePlatformer", "Scores");
             return new DataContext(scoresContainer);
         });
-
+        
         builder.Services.AddTransient<ScoreService>();
         builder.Services.AddTransient<SearchService>();
         builder.Services.AddTransient<EditService>();
+        builder.Services.AddMediatR(typeof(Ping));
+        builder.Services.AddScoped(typeof(IRequestHandler<GetScoresQuery, IEnumerable<ClavePlatformerScoreDocument>>), typeof(GetScoresHandler));
+        
     }
 }

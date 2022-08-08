@@ -1,6 +1,9 @@
-﻿using System.Threading.Tasks;
+﻿using System.Security.AccessControl;
+using System.Threading.Tasks;
 using Clave.Platformer.Data;
 using Clave.Platformer.Logic;
+using Clave.Platformer.Scores;
+using MediatR;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Azure.WebJobs;
@@ -13,11 +16,13 @@ public class GetUserData
 {
     private DataContext _dataContext;
     private readonly SearchService _searchService;
+    private readonly IMediator _mediator;
 
-    public GetUserData(DataContext dataContext, SearchService searchService)
+    public GetUserData(DataContext dataContext, SearchService searchService, IMediator mediator)
     {
         _dataContext = dataContext;
         _searchService = searchService;
+        _mediator = mediator;
     }
 
     [FunctionName("GetUserData")]
@@ -30,10 +35,16 @@ public class GetUserData
         string phone = req.Query["phone"];
         string tournament = req.Query["tournament"];
         string map = req.Query["map"];
-        var searchResult = await _searchService.GetScoresByPropertyAsync(name,phone,map,tournament);
-        return new OkObjectResult(searchResult);
+        var response = await _mediator.Send(new GetScoresQuery
+        {
+            Name = name,
+            Map = map,
+            Tournament = tournament,
+            PhoneNumber = phone
+        });
+        return new OkObjectResult(response);
     }
-    
+
     [FunctionName("GetSingleUserById")]
     public async Task<IActionResult> GetSingleUserById_Run(
         [HttpTrigger(AuthorizationLevel.Anonymous, "get", Route = null)]
