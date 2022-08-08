@@ -1,11 +1,8 @@
 using System;
-using System.Collections.Generic;
-using System.Net.NetworkInformation;
+using System.Reflection;
 using Clave.Platformer;
 using Clave.Platformer.Data;
 using Clave.Platformer.Logic;
-using Clave.Platformer.Models;
-using Clave.Platformer.Scores;
 using MediatR;
 using Microsoft.Azure.Cosmos;
 using Microsoft.Azure.Functions.Extensions.DependencyInjection;
@@ -29,8 +26,9 @@ public class Startup : FunctionsStartup
         builder.Services.AddTransient<ScoreService>();
         builder.Services.AddTransient<SearchService>();
         builder.Services.AddTransient<EditService>();
-        builder.Services.AddMediatR(typeof(Ping));
-        builder.Services.AddScoped(typeof(IRequestHandler<GetScoresQuery, IEnumerable<ClavePlatformerScoreDocument>>), typeof(GetScoresHandler));
+        //builder.Services.AddMediatR(typeof(Ping));
+        builder.Services.AddMediatR(Assembly.GetExecutingAssembly());
+        //builder.Services.AddScoped(typeof(IRequestHandler<GetScoresQuery, IEnumerable<ClavePlatformerScoreDocument>>), typeof(GetScoresHandler));
         
     }
 }

@@ -2,7 +2,7 @@
 using Clave.Platformer.Models;
 using MediatR;
 
-namespace Clave.Platformer.Scores;
+namespace Clave.Platformer.MediatorLogic.GetScores;
 
 public class GetScoresQuery : IRequest<IEnumerable<ClavePlatformerScoreDocument>>
 {

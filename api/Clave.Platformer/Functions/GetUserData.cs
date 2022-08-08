@@ -2,6 +2,8 @@
 using System.Threading.Tasks;
 using Clave.Platformer.Data;
 using Clave.Platformer.Logic;
+using Clave.Platformer.MediatorLogic.GetScores;
+using Clave.Platformer.MediatorLogic.GetSingleUser;
 using Clave.Platformer.Scores;
 using MediatR;
 using Microsoft.AspNetCore.Http;
@@ -37,13 +39,12 @@ public class GetUserData
 
     [FunctionName("GetSingleUserById")]
     public async Task<IActionResult> GetSingleUserById_Run(
-        [HttpTrigger(AuthorizationLevel.Anonymous, "get", Route = null)]
+        [HttpTrigger(AuthorizationLevel.Anonymous, "post", Route = null)]
+        GetSingleUserQuery getSingleUserQuery,
         HttpRequest req,
         ILogger log)
     {
-        string id = req.Query["id"];
-
-        var searchResult = await _searchService.GetScoreById(id);
+        var searchResult = await _mediator.Send(getSingleUserQuery);
         return new OkObjectResult(searchResult);
     }
 }
