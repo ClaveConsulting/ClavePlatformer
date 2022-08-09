@@ -1,43 +1,27 @@
 ﻿using System.Threading.Tasks;
-using Clave.Platformer.Data;
-using Clave.Platformer.Logic;
-using Microsoft.AspNetCore.Http;
+using Clave.Platformer.MediatorLogic.Commands.EditScore;
+using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Azure.WebJobs;
 using Microsoft.Azure.WebJobs.Extensions.Http;
-using Microsoft.Extensions.Logging;
 
 namespace Clave.Platformer.Functions;
 
 public class EditScore
 {
-    private DataContext _dataContext;
-    private readonly EditService _editService;
+    private readonly IMediator _mediator;
 
-    public EditScore(DataContext dataContext, EditService editService)
+    public EditScore(IMediator mediator)
     {
-        _dataContext = dataContext;
-        _editService = editService;
+        _mediator = mediator;
     }
-    
-    
-    // TODO: CHange to mediator
+
     [FunctionName("EditScore")]
     public async Task<IActionResult> Run(
         [HttpTrigger(AuthorizationLevel.Anonymous, "post", Route = null)]
-        HttpRequest req,
-        ILogger log)
+        EditScoreCommand editScoreCommand)
     {
-        string id = req.Query["id"];
-        string name = req.Query["name"];
-        var time = decimal.Parse(req.Query["time"]);
-        string phoneNumber = req.Query["phoneNumber"];
-        string map = req.Query["map"];
-        string tournament = req.Query["tournament"];
-
-        var response = await _editService.EditScoreByIdAsync(id,name, time, phoneNumber, map, tournament);
-
+        var response = await _mediator.Send(editScoreCommand);
         return new OkObjectResult(response);
     }
-
 }
