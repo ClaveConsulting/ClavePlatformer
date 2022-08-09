@@ -1,3 +1,4 @@
+
 {
   "version": "2.0",
   "logging": {
@@ -6,6 +7,9 @@
         "isEnabled": true,
         "excludedTypes": "Request"
       }
+    },
+    "logLevel": {
+      "Clave.Platformer.Pipelines": "Information"
     }
   }
 }

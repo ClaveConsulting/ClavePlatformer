@@ -20,7 +20,7 @@ public class ScoreService
         _dataContext = dataContext;
     }
 
-    public async Task<SafeLeaderboardItem> AddScoreToDatabaseAsync(string name, float time, string phoneNumber, string map, string tournament, string signature)
+    public async Task<SafeLeaderboardItem> AddScoreToDatabaseAsync(string name, decimal time, string phoneNumber, string map, string tournament, string signature)
     {
         if (tournament == "")
         {
@@ -54,7 +54,7 @@ public class ScoreService
         }
         else
         {
-            item.Time = 1337f;
+            item.Time = 1337;
             item.Name = "CHEATER";
             var itemResponse = await _dataContext.scoresContainer.UpsertItemAsync(item, new PartitionKey(item.Id));
             return itemResponse.Resource.toSafeLeaderboardItem();

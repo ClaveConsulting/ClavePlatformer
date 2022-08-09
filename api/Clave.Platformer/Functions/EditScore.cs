@@ -28,7 +28,7 @@ public class EditScore
     {
         string id = req.Query["id"];
         string name = req.Query["name"];
-        var time = float.Parse(req.Query["time"]);
+        var time = decimal.Parse(req.Query["time"]);
         string phoneNumber = req.Query["phoneNumber"];
         string map = req.Query["map"];
         string tournament = req.Query["tournament"];

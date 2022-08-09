@@ -8,7 +8,7 @@ public class ClavePlatformerScoreDocument
 
     [JsonProperty(PropertyName = "name")] public string Name { get; set; }
 
-    [JsonProperty(PropertyName = "time")] public float Time { get; set; }
+    [JsonProperty(PropertyName = "time")] public decimal Time { get; set; }
 
     [JsonProperty(PropertyName = "phoneNumber")]
     public string PhoneNumber { get; set; }

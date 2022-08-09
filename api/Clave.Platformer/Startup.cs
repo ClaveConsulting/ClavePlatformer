@@ -9,6 +9,7 @@ using MediatR;
 using Microsoft.Azure.Cosmos;
 using Microsoft.Azure.Functions.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
 
 [assembly: FunctionsStartup(typeof(Startup))]
 
@@ -30,8 +31,8 @@ public class Startup : FunctionsStartup
         builder.Services.AddTransient<EditService>();
         builder.Services.AddMediatR(Assembly.GetExecutingAssembly());
         builder.Services.AddValidatorsFromAssembly(typeof(Startup).Assembly);
+        builder.Services.AddLogging();
         builder.Services.AddTransient(typeof(IPipelineBehavior<,>), typeof(ValidationBehaviour<,>));
         builder.Services.AddTransient(typeof(IPipelineBehavior<,>), typeof(LoggingBehaviour<,>));
-        
     }
 }

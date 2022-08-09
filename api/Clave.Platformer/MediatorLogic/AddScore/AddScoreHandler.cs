@@ -17,7 +17,6 @@ public class AddScoreHandler : IRequestHandler<AddScoreQuery, SafeLeaderboardIte
         _dataContext = dataContext;
     }
 
-
     public async Task<SafeLeaderboardItem> Handle(AddScoreQuery request, CancellationToken cancellationToken)
     {
         if (request.Tournament == "") request.Tournament = null;

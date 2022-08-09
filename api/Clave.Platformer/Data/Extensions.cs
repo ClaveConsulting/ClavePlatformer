@@ -39,10 +39,12 @@ public static class Extensions
 
     public static string GenerateSignature(this AddScoreQuery addScoreQuery)
     {
-        var keyBytes = Encoding.UTF8.GetBytes(Environment.GetEnvironmentVariable("NOT_SO_SECRET_SECRET_KEY"));
+        var keyBytes =
+            Encoding.UTF8.GetBytes(
+                Environment.GetEnvironmentVariable("NOT_SO_SECRET_SECRET_KEY") + addScoreQuery.Time.ToString("F2"));
         using var hmac = new HMACSHA512(keyBytes);
-        var messageBytes = Encoding.UTF8.GetBytes(addScoreQuery.Time.ToString());
+        var messageBytes = Encoding.UTF8.GetBytes(addScoreQuery.Time.ToString("F2"));
         var computedSignatureBytes = hmac.ComputeHash(messageBytes);
-        return  Convert.ToHexString(computedSignatureBytes);
+        return Convert.ToHexString(computedSignatureBytes);
     }
 }

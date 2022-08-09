@@ -4,7 +4,7 @@ namespace Clave.Platformer.Models;
 
 public class SafeLeaderboardItem
 {
-    public SafeLeaderboardItem(string name, float time, string map, string id, string tournament)
+    public SafeLeaderboardItem(string name, decimal time, string map, string id, string tournament)
     {
         Name = name;
         Time = time;
@@ -19,7 +19,7 @@ public class SafeLeaderboardItem
 
     [JsonProperty(PropertyName = "name")] public string Name { get; set; }
 
-    [JsonProperty(PropertyName = "time")] public float Time { get; set; }
+    [JsonProperty(PropertyName = "time")] public decimal Time { get; set; }
 
     [JsonProperty(PropertyName = "map")] public string Map { get; set; }
 

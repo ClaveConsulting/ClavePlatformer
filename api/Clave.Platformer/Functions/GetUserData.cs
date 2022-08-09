@@ -1,10 +1,8 @@
-﻿using System.Security.AccessControl;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using Clave.Platformer.Data;
 using Clave.Platformer.Logic;
 using Clave.Platformer.MediatorLogic.GetScores;
 using Clave.Platformer.MediatorLogic.GetSingleUser;
-using Clave.Platformer.Scores;
 using MediatR;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -16,9 +14,9 @@ namespace Clave.Platformer.Functions;
 
 public class GetUserData
 {
-    private DataContext _dataContext;
-    private readonly SearchService _searchService;
     private readonly IMediator _mediator;
+    private readonly SearchService _searchService;
+    private DataContext _dataContext;
 
     public GetUserData(DataContext dataContext, SearchService searchService, IMediator mediator)
     {
@@ -31,7 +29,7 @@ public class GetUserData
     public async Task<IActionResult> GetUserData_Run(
         [HttpTrigger(AuthorizationLevel.Anonymous, "post", Route = null)]
         GetScoresQuery getScoresQuery
-        )
+    )
     {
         var response = await _mediator.Send(getScoresQuery);
         return new OkObjectResult(response);

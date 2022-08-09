@@ -23,7 +23,7 @@ public class EditService
             new PartitionKey(id));
     }
 
-    public async Task<ClavePlatformerScoreDocument> EditScoreByIdAsync(string id, string name, float time,
+    public async Task<ClavePlatformerScoreDocument> EditScoreByIdAsync(string id, string name, decimal time,
         string phoneNumber, string map, string tournament)
     {
         if (tournament == "")
