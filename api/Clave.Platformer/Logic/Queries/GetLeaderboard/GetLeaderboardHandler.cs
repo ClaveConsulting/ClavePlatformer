@@ -7,7 +7,7 @@ using Clave.Platformer.Models;
 using MediatR;
 using Microsoft.Azure.Cosmos.Linq;
 
-namespace Clave.Platformer.MediatorLogic.Queries.GetLeaderboard;
+namespace Clave.Platformer.Logic.Queries.GetLeaderboard;
 
 public class GetLeaderboardHandler : IRequestHandler<GetLeaderBoardQuery, IEnumerable<SafeLeaderboardItem>>
 {

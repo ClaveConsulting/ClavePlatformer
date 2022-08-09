@@ -6,7 +6,7 @@ using Clave.Platformer.Models;
 using MediatR;
 using Microsoft.Azure.Cosmos;
 
-namespace Clave.Platformer.MediatorLogic.Commands.AddScore;
+namespace Clave.Platformer.Logic.Commands.AddScore;
 
 public class AddScoreHandler : IRequestHandler<AddScoreCommand, SafeLeaderboardItem>
 {

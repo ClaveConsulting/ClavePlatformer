@@ -1,24 +1,18 @@
 using System.Threading.Tasks;
-using Clave.Platformer.Logic;
-using Clave.Platformer.MediatorLogic.Commands.AddScore;
+using Clave.Platformer.Logic.Commands.AddScore;
 using MediatR;
-using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Azure.WebJobs;
 using Microsoft.Azure.WebJobs.Extensions.Http;
-using Microsoft.Extensions.Logging;
 
 namespace Clave.Platformer.Functions;
 
 public class AddScore
 {
     private readonly IMediator _mediator;
-    private readonly ScoreService _scoreService;
 
-    public AddScore(ScoreService scoreService, IMediator mediator)
+    public AddScore(IMediator mediator)
     {
-        _scoreService = scoreService;
         _mediator = mediator;
     }
 

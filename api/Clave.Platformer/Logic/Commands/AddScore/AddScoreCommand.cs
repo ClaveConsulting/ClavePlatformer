@@ -3,7 +3,7 @@ using Clave.Platformer.Models;
 using FluentValidation;
 using MediatR;
 
-namespace Clave.Platformer.MediatorLogic.Commands.AddScore;
+namespace Clave.Platformer.Logic.Commands.AddScore;
 
 public class AddScoreCommand : IRequest<SafeLeaderboardItem>
 {

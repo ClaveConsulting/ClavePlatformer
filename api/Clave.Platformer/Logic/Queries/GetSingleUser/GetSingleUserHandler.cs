@@ -4,11 +4,11 @@ using Clave.Platformer.Data;
 using Clave.Platformer.Models;
 using MediatR;
 
-namespace Clave.Platformer.MediatorLogic.Queries.GetSingleUser;
+namespace Clave.Platformer.Logic.Queries.GetSingleUser;
 
 public class GetSingleUserHandler : IRequestHandler<GetSingleUserQuery, ClavePlatformerScoreDocument>
 {
-    private readonly DataContext _dataContext;    
+    private readonly DataContext _dataContext;
 
     public GetSingleUserHandler(DataContext dataContext)
     {
@@ -16,11 +16,11 @@ public class GetSingleUserHandler : IRequestHandler<GetSingleUserQuery, ClavePla
     }
 
 
-    public async Task<ClavePlatformerScoreDocument> Handle(GetSingleUserQuery request, CancellationToken cancellationToken)
+    public async Task<ClavePlatformerScoreDocument> Handle(GetSingleUserQuery request,
+        CancellationToken cancellationToken)
     {
-        
         var searchResult =
-            await _dataContext.scoresContainer.GetSingle<ClavePlatformerScoreDocument>(x => (x.Id == request.Id));
+            await _dataContext.scoresContainer.GetSingle<ClavePlatformerScoreDocument>(x => x.Id == request.Id);
 
         return searchResult;
     }

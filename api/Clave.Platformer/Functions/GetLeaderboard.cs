@@ -1,7 +1,6 @@
 using System.Threading.Tasks;
-using Clave.Platformer.Data;
 using Clave.Platformer.Logic;
-using Clave.Platformer.MediatorLogic.Queries.GetLeaderboard;
+using Clave.Platformer.Logic.Queries.GetLeaderboard;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Azure.WebJobs;
@@ -12,13 +11,9 @@ namespace Clave.Platformer.Functions;
 public class GetLeaderboard
 {
     private readonly IMediator _mediator;
-    private readonly ScoreService _scoreService;
-    private DataContext _dataContext;
 
-    public GetLeaderboard(DataContext dataContext, ScoreService scoreService, IMediator mediator)
+    public GetLeaderboard(IMediator mediator)
     {
-        _dataContext = dataContext;
-        _scoreService = scoreService;
         _mediator = mediator;
     }
 

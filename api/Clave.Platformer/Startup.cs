@@ -26,9 +26,6 @@ public class Startup : FunctionsStartup
             return new DataContext(scoresContainer);
         });
         
-        builder.Services.AddTransient<ScoreService>();
-        builder.Services.AddTransient<SearchService>();
-        builder.Services.AddTransient<EditService>();
         builder.Services.AddMediatR(Assembly.GetExecutingAssembly());
         builder.Services.AddValidatorsFromAssembly(typeof(Startup).Assembly);
         builder.Services.AddLogging();

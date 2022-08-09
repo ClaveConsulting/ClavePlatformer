@@ -2,7 +2,7 @@
 using FluentValidation;
 using MediatR;
 
-namespace Clave.Platformer.MediatorLogic.Commands.DeleteScore;
+namespace Clave.Platformer.Logic.Commands.DeleteScore;
 
 public class DeleteScoreCommand : IRequest<SafeLeaderboardItem>
 {

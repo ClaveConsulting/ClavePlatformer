@@ -2,7 +2,7 @@
 using FluentValidation;
 using MediatR;
 
-namespace Clave.Platformer.MediatorLogic.Commands.EditScore;
+namespace Clave.Platformer.Logic.Commands.EditScore;
 
 public class EditScoreCommand : IRequest<ClavePlatformerScoreDocument>
 {

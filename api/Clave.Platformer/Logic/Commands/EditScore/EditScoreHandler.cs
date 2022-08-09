@@ -5,7 +5,7 @@ using Clave.Platformer.Models;
 using MediatR;
 using Microsoft.Azure.Cosmos;
 
-namespace Clave.Platformer.MediatorLogic.Commands.EditScore;
+namespace Clave.Platformer.Logic.Commands.EditScore;
 
 public class EditScoreHandler : IRequestHandler<EditScoreCommand, ClavePlatformerScoreDocument>
 {

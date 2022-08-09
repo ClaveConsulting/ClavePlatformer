@@ -1,5 +1,5 @@
 ﻿using System.Threading.Tasks;
-using Clave.Platformer.MediatorLogic.Commands.EditScore;
+using Clave.Platformer.Logic.Commands.EditScore;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Azure.WebJobs;
