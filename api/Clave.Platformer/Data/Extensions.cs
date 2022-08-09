@@ -1,7 +1,10 @@
 using System;
 using System.Linq;
 using System.Linq.Expressions;
+using System.Security.Cryptography;
+using System.Text;
 using System.Threading.Tasks;
+using Clave.Platformer.MediatorLogic.AddScore;
 using Clave.Platformer.Models;
 using Microsoft.Azure.Cosmos;
 using Microsoft.Azure.Cosmos.Linq;
@@ -32,5 +35,14 @@ public static class Extensions
             Time = scoreDocument.Time,
             Tournament = scoreDocument.Tournament
         };
+    }
+
+    public static string GenerateSignature(this AddScoreQuery addScoreQuery)
+    {
+        var keyBytes = Encoding.UTF8.GetBytes(Environment.GetEnvironmentVariable("NOT_SO_SECRET_SECRET_KEY"));
+        using var hmac = new HMACSHA512(keyBytes);
+        var messageBytes = Encoding.UTF8.GetBytes(addScoreQuery.Time.ToString());
+        var computedSignatureBytes = hmac.ComputeHash(messageBytes);
+        return  Convert.ToHexString(computedSignatureBytes);
     }
 }

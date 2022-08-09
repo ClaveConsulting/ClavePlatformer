@@ -3,6 +3,8 @@ using System.Reflection;
 using Clave.Platformer;
 using Clave.Platformer.Data;
 using Clave.Platformer.Logic;
+using Clave.Platformer.Pipelines;
+using FluentValidation;
 using MediatR;
 using Microsoft.Azure.Cosmos;
 using Microsoft.Azure.Functions.Extensions.DependencyInjection;
@@ -26,9 +28,10 @@ public class Startup : FunctionsStartup
         builder.Services.AddTransient<ScoreService>();
         builder.Services.AddTransient<SearchService>();
         builder.Services.AddTransient<EditService>();
-        //builder.Services.AddMediatR(typeof(Ping));
         builder.Services.AddMediatR(Assembly.GetExecutingAssembly());
-        //builder.Services.AddScoped(typeof(IRequestHandler<GetScoresQuery, IEnumerable<ClavePlatformerScoreDocument>>), typeof(GetScoresHandler));
+        builder.Services.AddValidatorsFromAssembly(typeof(Startup).Assembly);
+        builder.Services.AddTransient(typeof(IPipelineBehavior<,>), typeof(ValidationBehaviour<,>));
+        builder.Services.AddTransient(typeof(IPipelineBehavior<,>), typeof(LoggingBehaviour<,>));
         
     }
 }

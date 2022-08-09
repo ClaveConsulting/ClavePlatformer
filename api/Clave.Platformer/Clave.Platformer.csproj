@@ -4,6 +4,8 @@
         <AzureFunctionsVersion>v4</AzureFunctionsVersion>
     </PropertyGroup>
     <ItemGroup>
+        <PackageReference Include="FluentValidation" Version="11.1.1" />
+        <PackageReference Include="FluentValidation.DependencyInjectionExtensions" Version="11.1.1" />
         <PackageReference Include="Microsoft.NET.Sdk.Functions" Version="4.1.1" />
         <PackageReference Include="Microsoft.Azure.Cosmos" Version="3.28.0" />
         <PackageReference Include="Microsoft.Azure.Functions.Extensions" Version="1.1.0" />
