@@ -25,10 +25,12 @@ public class GetScoresHandler : IRequestHandler<GetScoresQuery, IEnumerable<Clav
         var rawSearchResult = new List<ClavePlatformerScoreDocument>();
         var feedIterator = _dataContext.scoresContainer
             .GetItemLinqQueryable<ClavePlatformerScoreDocument>()
-            .Where(x => (request.Name == null || x.Name == request.Name) &&
-                        (request.PhoneNumber == null || x.PhoneNumber == request.PhoneNumber) &&
-                        (request.Tournament == null || x.Tournament == request.Tournament) &&
-                        (request.Map == null || x.Map == request.Map))
+            .Where(x => (request.Name == "" || request.Name == null || x.Name == request.Name) &&
+                        (request.PhoneNumber == "" || request.PhoneNumber == null ||
+                         x.PhoneNumber == request.PhoneNumber) &&
+                        (request.Tournament == "" || request.Tournament == null ||
+                         x.Tournament == request.Tournament) &&
+                        (request.Map == "" || request.Map == null || x.Map == request.Map))
             .OrderBy(x => x.Time)
             .ToFeedIterator();
 

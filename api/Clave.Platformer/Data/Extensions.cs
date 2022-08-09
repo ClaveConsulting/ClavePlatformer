@@ -1,4 +1,5 @@
 using System;
+using System.Globalization;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Security.Cryptography;
@@ -41,9 +42,10 @@ public static class Extensions
     {
         var keyBytes =
             Encoding.UTF8.GetBytes(
-                Environment.GetEnvironmentVariable("NOT_SO_SECRET_SECRET_KEY") + addScoreCommand.Time.ToString("F2"));
+                Environment.GetEnvironmentVariable("NOT_SO_SECRET_SECRET_KEY") + addScoreCommand.Time.ToString());
         using var hmac = new HMACSHA512(keyBytes);
-        var messageBytes = Encoding.UTF8.GetBytes(addScoreCommand.Time.ToString("F2"));
+        
+        var messageBytes = Encoding.UTF8.GetBytes(addScoreCommand.Time.ToString(CultureInfo.CurrentCulture));
         var computedSignatureBytes = hmac.ComputeHash(messageBytes);
         return Convert.ToHexString(computedSignatureBytes);
     }
