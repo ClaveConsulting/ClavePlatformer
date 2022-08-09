@@ -1,5 +1,6 @@
 import {Guid} from "guid-typescript";
 import {Direction} from "./models/direction";
+import To = Phaser.Math.Snap.To;
 
 
 let movementDirection;
@@ -388,6 +389,9 @@ export async function recordTimeAPI(
     phone: string,
     map: string
 ) {
+    if (API_URL() != "https://func-clave-platformer.azurewebsites.net/api/") {
+        map = map + "TEST";
+    }
     const tournamentName = getTournamentNameValue();
     const response = await (
         await fetch(API_URL() + "AddScore", {
@@ -396,8 +400,9 @@ export async function recordTimeAPI(
                 Name: name,
                 PhoneNumber: phone,
                 Tournament: tournamentName,
+                Time: counter.toFixed(2),
                 Map: map,
-                Signature: signatureGenerator(counter.toFixed(2))
+                Signature: await signatureGenerator(counter.toFixed(2))
             })
         })
     ).json();
