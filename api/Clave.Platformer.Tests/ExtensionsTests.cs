@@ -27,7 +27,7 @@ public class ExtensionsTests
         a.Map = "map";
         a.Name = "name";
         a.PhoneNumber = "12345678";
-        a.Time = 1.23f;
+        a.Time = 1.23m;
 
 
         // Act

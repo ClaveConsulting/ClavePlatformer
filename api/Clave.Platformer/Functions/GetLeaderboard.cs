@@ -19,7 +19,7 @@ public class GetLeaderboard
         _dataContext = dataContext;
         _scoreService = scoreService;
     }
-
+    // TODO: CHange to Mediator
     [FunctionName("GetLeaderboard")]
     public async Task<IActionResult> Run(
         [HttpTrigger(AuthorizationLevel.Anonymous, "get", Route = null)]

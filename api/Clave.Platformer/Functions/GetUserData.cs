@@ -1,27 +1,19 @@
 ﻿using System.Threading.Tasks;
-using Clave.Platformer.Data;
-using Clave.Platformer.Logic;
 using Clave.Platformer.MediatorLogic.GetScores;
 using Clave.Platformer.MediatorLogic.GetSingleUser;
 using MediatR;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Azure.WebJobs;
 using Microsoft.Azure.WebJobs.Extensions.Http;
-using Microsoft.Extensions.Logging;
 
 namespace Clave.Platformer.Functions;
 
 public class GetUserData
 {
     private readonly IMediator _mediator;
-    private readonly SearchService _searchService;
-    private DataContext _dataContext;
 
-    public GetUserData(DataContext dataContext, SearchService searchService, IMediator mediator)
+    public GetUserData(IMediator mediator)
     {
-        _dataContext = dataContext;
-        _searchService = searchService;
         _mediator = mediator;
     }
 
@@ -38,9 +30,8 @@ public class GetUserData
     [FunctionName("GetSingleUserById")]
     public async Task<IActionResult> GetSingleUserById_Run(
         [HttpTrigger(AuthorizationLevel.Anonymous, "post", Route = null)]
-        GetSingleUserQuery getSingleUserQuery,
-        HttpRequest req,
-        ILogger log)
+        GetSingleUserQuery getSingleUserQuery
+    )
     {
         var searchResult = await _mediator.Send(getSingleUserQuery);
         return new OkObjectResult(searchResult);

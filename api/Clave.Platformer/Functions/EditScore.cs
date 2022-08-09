@@ -19,7 +19,9 @@ public class EditScore
         _dataContext = dataContext;
         _editService = editService;
     }
-
+    
+    
+    // TODO: CHange to mediator
     [FunctionName("EditScore")]
     public async Task<IActionResult> Run(
         [HttpTrigger(AuthorizationLevel.Anonymous, "post", Route = null)]

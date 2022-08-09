@@ -19,7 +19,8 @@ public class Delete
         _dataContext = dataContext;
         _editService = editService;
     }
-
+    
+    // TODO: Change to Mediator
     [FunctionName("Delete")]
     public async Task<IActionResult> Delete_Run(
         [HttpTrigger(AuthorizationLevel.Anonymous, "post", Route = null)]

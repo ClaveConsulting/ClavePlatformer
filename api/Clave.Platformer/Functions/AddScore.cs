@@ -1,5 +1,4 @@
 using System.Threading.Tasks;
-using Clave.Platformer.Data;
 using Clave.Platformer.Logic;
 using Clave.Platformer.MediatorLogic.AddScore;
 using MediatR;
@@ -13,13 +12,11 @@ namespace Clave.Platformer.Functions;
 
 public class AddScore
 {
-    private DataContext _dataContext;
     private readonly ScoreService _scoreService;
     private readonly IMediator _mediator;
 
-    public AddScore(DataContext dataContext, ScoreService scoreService, IMediator mediator)
+    public AddScore(ScoreService scoreService, IMediator mediator)
     {
-        _dataContext = dataContext;
         _scoreService = scoreService;
         _mediator = mediator;
     }
@@ -27,14 +24,14 @@ public class AddScore
     [FunctionName("AddScore")]
     public async Task<IActionResult> AddScore_Run(
         [HttpTrigger(AuthorizationLevel.Anonymous, "post", Route = null)]
-        AddScoreQuery addScoreQuery,
-        HttpRequest req,
-        ILogger log)
+        AddScoreQuery addScoreQuery)
     {
         var response = await _mediator.Send(addScoreQuery);
         return new OkObjectResult(response);
     }
     
+    
+    // TODO: Change to mediator
     [FunctionName("AddScoreAdmin")]
     public async Task<IActionResult> AddScoreAdmin_Run(
         [HttpTrigger(AuthorizationLevel.Anonymous, "post", Route = null)]
@@ -42,7 +39,6 @@ public class AddScore
         ILogger log)
     {
         string name = req.Query["name"];
-        // Skriv om til å bruke tryParse()
         var time = decimal.Parse(req.Query["time"]);
 
             string phoneNumber = req.Query["phoneNumber"];
