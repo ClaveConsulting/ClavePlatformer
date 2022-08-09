@@ -1,5 +1,6 @@
-import { Guid } from "guid-typescript";
-import { Direction } from "./models/direction";
+import {Guid} from "guid-typescript";
+import {Direction} from "./models/direction";
+
 
 let movementDirection;
 
@@ -170,28 +171,28 @@ export function collectStar(
 }
 
 function buf2hex(buffer: ArrayBuffer) {
-  // buffer is an ArrayBuffer
-  return [...new Uint8Array(buffer)]
-    .map((x) => x.toString(16).padStart(2, "0"))
-    .join("");
+    // buffer is an ArrayBuffer
+    return [...new Uint8Array(buffer)]
+        .map((x) => x.toString(16).padStart(2, "0"))
+        .join("");
 }
 
 export const signatureGenerator = async (message: string) => {
-  const encoder = new TextEncoder();
-  const key = await window.crypto.subtle.importKey(
-    "raw",
-    encoder.encode(NOT_USED_FOR_ANYTHING_I_PROMISE + message),
-    { name: "HMAC", hash: { name: "SHA-512" } },
-    false,
-    ["sign", "verify"]
-  );
-  const signature = await window.crypto.subtle.sign(
-    "HMAC",
-    key,
-    encoder.encode(message)
-  );
-  const signatureHex = buf2hex(signature);
-  return signatureHex;
+    const encoder = new TextEncoder();
+    const key = await window.crypto.subtle.importKey(
+        "raw",
+        encoder.encode(NOT_USED_FOR_ANYTHING_I_PROMISE + message),
+        {name: "HMAC", hash: {name: "SHA-512"}},
+        false,
+        ["sign", "verify"]
+    );
+    const signature = await window.crypto.subtle.sign(
+        "HMAC",
+        key,
+        encoder.encode(message)
+    );
+    const signatureHex = buf2hex(signature);
+    return signatureHex;
 };
 
 export function playerIntersect(
@@ -316,15 +317,16 @@ export async function getRecordTimeAPI(map: string) {
         map = map + "TEST";
     }
     const tournamentName = getTournamentNameValue();
-    let queryString;
-    if (!!tournamentName) {
-        queryString = `GetLeaderboard?map=${map}&tournament=${tournamentName}`;
-    } else {
-        queryString = `GetLeaderboard?map=${map}`;
-    }
+    const query = "GetLeaderboard";
     const rawTimeArrayAssetsShowcase = await (
-        await fetch(API_URL() + queryString)
+        await fetch(API_URL() + query, {
+            method: "POST",
+            body: JSON.stringify({
+                Map: map, Tournament: tournamentName
+            })
+        })
     ).json();
+    console.log(rawTimeArrayAssetsShowcase as IGameRecord[])
     return rawTimeArrayAssetsShowcase
         ? (rawTimeArrayAssetsShowcase as IGameRecord[])
         : [];
@@ -386,26 +388,19 @@ export async function recordTimeAPI(
     phone: string,
     map: string
 ) {
-  const tournamentName = getTournamentNameValue();
-  let dataString;
-  if (!!tournamentName) {
-    dataString = `?name=${name}&phoneNumber=${phone}&time=${counter.toFixed(
-      2
-    )}&map=${map}&signature=${await signatureGenerator(
-      String(counter.toFixed(2))
-    )}&tournament=${tournamentName}`;
-  } else {
-    dataString = `?name=${name}&phoneNumber=${phone}&time=${counter.toFixed(
-      2
-    )}&map=${map}&signature=${await signatureGenerator(
-      String(counter.toFixed(2))
-    )}`;
-  }
-  const response = await (
-    await fetch(API_URL() + "AddScore" + dataString, {
-      method: "POST",
-    })
-  ).json();
+    const tournamentName = getTournamentNameValue();
+    const response = await (
+        await fetch(API_URL() + "AddScore", {
+            method: "POST",
+            body: JSON.stringify({
+                Name: name,
+                PhoneNumber: phone,
+                Tournament: tournamentName,
+                Map: map,
+                Signature: signatureGenerator(counter.toFixed(2))
+            })
+        })
+    ).json();
 
     return response as IRecordTimeApiResponse;
 }

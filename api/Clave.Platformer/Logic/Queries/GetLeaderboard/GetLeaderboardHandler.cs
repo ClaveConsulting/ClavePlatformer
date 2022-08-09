@@ -25,7 +25,7 @@ public class GetLeaderboardHandler : IRequestHandler<GetLeaderBoardQuery, IEnume
         var feedIterator = _dataContext.scoresContainer
             .GetItemLinqQueryable<ClavePlatformerScoreDocument>()
             .Where(x => x.Map == request.Map)
-            .Where(x => x.Tournament == request.Tournament)
+            .Where(x => x.Tournament == request.Tournament || request.Tournament == "")
             .OrderBy(x => x.Time)
             .Take(10)
             .ToFeedIterator();
