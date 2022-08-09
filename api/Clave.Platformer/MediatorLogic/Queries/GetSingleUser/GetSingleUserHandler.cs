@@ -1,14 +1,10 @@
-﻿using System.Collections.Generic;
-using System.Linq;
-using System.Threading;
+﻿using System.Threading;
 using System.Threading.Tasks;
 using Clave.Platformer.Data;
 using Clave.Platformer.Models;
-using Clave.Platformer.Scores;
 using MediatR;
-using Microsoft.Azure.Cosmos.Linq;
 
-namespace Clave.Platformer.MediatorLogic.GetSingleUser;
+namespace Clave.Platformer.MediatorLogic.Queries.GetSingleUser;
 
 public class GetSingleUserHandler : IRequestHandler<GetSingleUserQuery, ClavePlatformerScoreDocument>
 {

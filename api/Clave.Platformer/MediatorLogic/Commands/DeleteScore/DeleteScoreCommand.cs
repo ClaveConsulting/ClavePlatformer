@@ -1,9 +1,8 @@
-﻿using Clave.Platformer.MediatorLogic.AddScore;
-using Clave.Platformer.Models;
+﻿using Clave.Platformer.Models;
 using FluentValidation;
 using MediatR;
 
-namespace Clave.Platformer.MediatorLogic.DeleteScore;
+namespace Clave.Platformer.MediatorLogic.Commands.DeleteScore;
 
 public class DeleteScoreCommand : IRequest<SafeLeaderboardItem>
 {

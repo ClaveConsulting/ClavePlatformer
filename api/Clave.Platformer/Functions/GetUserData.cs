@@ -1,6 +1,6 @@
 ﻿using System.Threading.Tasks;
-using Clave.Platformer.MediatorLogic.GetScores;
-using Clave.Platformer.MediatorLogic.GetSingleUser;
+using Clave.Platformer.MediatorLogic.Queries.GetScores;
+using Clave.Platformer.MediatorLogic.Queries.GetSingleUser;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Azure.WebJobs;

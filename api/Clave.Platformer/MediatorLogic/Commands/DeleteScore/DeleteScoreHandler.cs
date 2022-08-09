@@ -5,7 +5,7 @@ using Clave.Platformer.Models;
 using MediatR;
 using Microsoft.Azure.Cosmos;
 
-namespace Clave.Platformer.MediatorLogic.DeleteScore;
+namespace Clave.Platformer.MediatorLogic.Commands.DeleteScore;
 
 public class DeleteScoreHandler : IRequestHandler<DeleteScoreCommand, SafeLeaderboardItem>
 {

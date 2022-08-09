@@ -3,12 +3,11 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using Clave.Platformer.Data;
-using Clave.Platformer.MediatorLogic.GetScores;
 using Clave.Platformer.Models;
 using MediatR;
 using Microsoft.Azure.Cosmos.Linq;
 
-namespace Clave.Platformer.Scores;
+namespace Clave.Platformer.MediatorLogic.Queries.GetScores;
 
 public class GetScoresHandler : IRequestHandler<GetScoresQuery, IEnumerable<ClavePlatformerScoreDocument>>
 {

@@ -2,7 +2,7 @@
 using FluentValidation;
 using MediatR;
 
-namespace Clave.Platformer.MediatorLogic.GetSingleUser;
+namespace Clave.Platformer.MediatorLogic.Queries.GetSingleUser;
 
 public class GetSingleUserQuery : IRequest<ClavePlatformerScoreDocument>
 {

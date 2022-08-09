@@ -1,6 +1,6 @@
 using System.Threading.Tasks;
 using Clave.Platformer.Logic;
-using Clave.Platformer.MediatorLogic.AddScore;
+using Clave.Platformer.MediatorLogic.Commands.AddScore;
 using MediatR;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;

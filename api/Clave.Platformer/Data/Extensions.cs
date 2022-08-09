@@ -4,7 +4,7 @@ using System.Linq.Expressions;
 using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
-using Clave.Platformer.MediatorLogic.AddScore;
+using Clave.Platformer.MediatorLogic.Commands.AddScore;
 using Clave.Platformer.Models;
 using Microsoft.Azure.Cosmos;
 using Microsoft.Azure.Cosmos.Linq;

@@ -1,5 +1,5 @@
 ﻿using System.Threading.Tasks;
-using Clave.Platformer.MediatorLogic.DeleteScore;
+using Clave.Platformer.MediatorLogic.Commands.DeleteScore;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Azure.WebJobs;

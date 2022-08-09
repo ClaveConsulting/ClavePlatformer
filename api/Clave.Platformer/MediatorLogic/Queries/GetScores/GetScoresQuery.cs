@@ -1,10 +1,9 @@
 ﻿using System.Collections.Generic;
-using Clave.Platformer.MediatorLogic.GetSingleUser;
 using Clave.Platformer.Models;
 using FluentValidation;
 using MediatR;
 
-namespace Clave.Platformer.MediatorLogic.GetScores;
+namespace Clave.Platformer.MediatorLogic.Queries.GetScores;
 
 public class GetScoresQuery : IRequest<IEnumerable<ClavePlatformerScoreDocument>>
 {
