@@ -8,7 +8,7 @@ using Microsoft.Azure.Cosmos;
 
 namespace Clave.Platformer.MediatorLogic.AddScore;
 
-public class AddScoreHandler : IRequestHandler<AddScoreQuery, SafeLeaderboardItem>
+public class AddScoreHandler : IRequestHandler<AddScoreCommand, SafeLeaderboardItem>
 {
     private readonly DataContext _dataContext;
 
@@ -17,7 +17,7 @@ public class AddScoreHandler : IRequestHandler<AddScoreQuery, SafeLeaderboardIte
         _dataContext = dataContext;
     }
 
-    public async Task<SafeLeaderboardItem> Handle(AddScoreQuery request, CancellationToken cancellationToken)
+    public async Task<SafeLeaderboardItem> Handle(AddScoreCommand request, CancellationToken cancellationToken)
     {
         if (request.Tournament == "") request.Tournament = null;
         var existingScoreInDatabase = await _dataContext.scoresContainer
@@ -34,7 +34,7 @@ public class AddScoreHandler : IRequestHandler<AddScoreQuery, SafeLeaderboardIte
             Tournament = request.Tournament
         };
 
-        var itemResponse = await _dataContext.scoresContainer.UpsertItemAsync(item, new PartitionKey(item.Id));
+        var itemResponse = await _dataContext.scoresContainer.UpsertItemAsync(item, new PartitionKey(item.Id), cancellationToken: cancellationToken);
         return itemResponse.Resource.toSafeLeaderboardItem();
     }
 }

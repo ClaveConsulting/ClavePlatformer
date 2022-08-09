@@ -5,7 +5,7 @@ using MediatR;
 
 namespace Clave.Platformer.MediatorLogic.AddScore;
 
-public class AddScoreQuery : IRequest<SafeLeaderboardItem>
+public class AddScoreCommand : IRequest<SafeLeaderboardItem>
 {
     public string Name { get; set; }
     public string PhoneNumber { get; set; }
@@ -14,7 +14,7 @@ public class AddScoreQuery : IRequest<SafeLeaderboardItem>
     public string Tournament { get; set; }
     public string Signature { get; set; }
 
-    public class Validator : AbstractValidator<AddScoreQuery>
+    public class Validator : AbstractValidator<AddScoreCommand>
     {
         public Validator()
         {
