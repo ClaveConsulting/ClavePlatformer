@@ -34,7 +34,7 @@ jobs:
                   yarn build:production
 
             - name: Upload to cache
-              uses: actions/upload-artifact@v2
+              uses: actions/upload-artifact@v3
               with:
                   name: dist
                   path: /home/runner/work/ClavePlatformer/ClavePlatformer/web/dist
